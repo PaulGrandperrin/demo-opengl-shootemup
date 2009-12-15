@@ -4,8 +4,9 @@
 #include <QtOpenGL>
 #include <QThread>
 #include <math.h>
+//#include "object.h"
 
-bool Enma = true;
+bool Enma = true; // permet d'arreter le qthread lorsquil est a false
 #include <iostream>
 using namespace std;
 
@@ -51,13 +52,18 @@ void Window::VerificationTouche() // defini les actions a effectuer suivant la(e
        Enma = false;
        // close();
     if(kb.toucheActivee(T_GAUCHE))
-        glWidget->setPosx(-0.1);
+        glWidget->getActeur()->Acteur::Deplacement(-0.1,0.0);
     if(kb.toucheActivee(T_DROITE))
-        glWidget->setPosx(0.1);
+        glWidget->getActeur()->Acteur::Deplacement(0.1,0.0);
     if(kb.toucheActivee(T_HAUT))
-        glWidget->setPosy(0.1);
+        glWidget->getActeur()->Acteur::Deplacement(0.0,0.1);
     if(kb.toucheActivee(T_BAS))
-        glWidget->setPosy(-0.1);
+        glWidget->getActeur()->Acteur::Deplacement(0.0,-0.1);
+}
+
+void Window::BougerEnnemie()
+{
+   glWidget->getActeur()->Acteur::Rotation(1);
 }
 
 
@@ -104,6 +110,7 @@ GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent)
 
 GLWidget::~GLWidget()
 {
+  delete acteur;
  makeCurrent(); //??????????????????
 }
 
@@ -121,16 +128,16 @@ QSize GLWidget::sizeHint() const
 
 void GLWidget::initializeGL()
 {
-    angle = 0; // pour les tests
-    posx=0;
-    posy=0;
+
     glClearColor ( 1,1,1,0 );
     glEnable (GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
-    if (QCoreApplication::arguments().count() > 1) // ????????????????????????????????
-        test.load(QCoreApplication::arguments().at(1).toStdString()); // ????????????????????????
-    else
-        test.load("meshes/demon.obj"); // on charge en memoir le demon (objet 3D a afficher dans la vue)
+//     if (QCoreApplication::arguments().count() > 1) // ????????????????????????????????
+//         test.load(QCoreApplication::arguments().at(1).toStdString()); // ????????????????????????
+//     else
+//         test.load("meshes/demon.obj"); // on charge en memoir le demon (objet 3D a afficher dans la vue)
+  Acteur* obj = new Acteur(0,0,1);
+  this->acteur = obj;
 }
 
 void GLWidget::paintGL() // mise a jour de la vue
@@ -144,9 +151,7 @@ void GLWidget::paintGL() // mise a jour de la vue
     
     gluLookAt(0,0,5,0,0,0,0,1,0);
    // gluLookAt(3,4,2,0,0,0,0,0,1);
-    glTranslatef(posx,posy,0);
-    glRotatef(this->angle,0.5,0.5,0); // test : rotation du demon
-    test.render(); 
+    acteur->Afficher(); 
 
     glFlush(); // force l'affichage opengl
 }

@@ -1,7 +1,7 @@
 #ifndef WINDOW_H_
 #define WINDOW_H_
 
-#include "Model3D.h"
+#include "acteur.h"
 #include <QWidget>
 #include <QGLWidget>
 #include <QKeyEvent>
@@ -23,11 +23,12 @@ public:
     QSize sizeHint() const;
     //void VerificationTouche();
     void updateGLView() {
-        angle +=2;    // called with the Update function in Window (Thread)
+      //  angle +=2;    // called with the Update function in Window (Thread)
         updateGL(); //reafficher la vue opengl
     }
-    void setPosx(float x) { posx += x; }
-    void setPosy(float y) { posy += y; }
+    Acteur* getActeur() { return acteur; }
+  //  void setPosx(float x) { posx += x; }
+//    void setPosy(float y) { posy += y; }
 
 protected:
     void initializeGL(); // automatiquement appelée
@@ -36,21 +37,19 @@ protected:
 
 private:
     int width,height; //size of OpenGl view
-    Model3D test;  // 3D objet here, but will be replace by more complet Objects
-    float angle; // just fort test, but will go to the objet (Ennemis...)
-    float posx,posy; // public, more easy, but test
+    Acteur* acteur;  // 3D objet here, but will be replace by more complet Objects
+  //  float angle; // just fort test, but will go to the objet (Ennemis...)
+  //  float posx,posy; // public, more easy, but test
 };
 
 class Window: public QWidget
 {
     Q_OBJECT
 //   private :
-//             int EnMarc = 1;
 public:
     Window();
     ~Window();
 //     GLWidget* getGlWidget();  // pas utile
-//     getEnMarc() { EnMarc = false; }
 
 private:
     Keyboard kb; // le gestion du clavier (reception d'evenement)
@@ -58,10 +57,12 @@ private:
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
     void VerificationTouche();
+    void BougerEnnemie();
 
 
 private slots: // fonction appeller par le thread tout les 20ms.
     void Update() {
+	BougerEnnemie();
         VerificationTouche(); // on recptionnent les actions de l'utilisateur
         glWidget->updateGLView(); // on met a jour la vue.
     }
