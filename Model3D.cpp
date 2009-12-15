@@ -194,7 +194,6 @@ bool Model3D::load(string path)
     }
     OBJFile.close();
     
-    cout << "milieu" << endl;
     //On a fini de charger les donn�es du fichier
     //Maintenant, faut organiser les donn�es de maniere optimale pour les utiliser avec des VBO et IBO.
 
@@ -269,15 +268,12 @@ bool Model3D::load(string path)
     }
 
     //Et on bind
-    
-cout << "milieu2" << endl;
+
 
     glGenBuffers ( 1, &vbo );
-cout << "milieu2.1" << endl;
 
     glBindBuffer ( GL_ARRAY_BUFFER, vbo );
 
-    cout << "milieu2.1" << endl;
     
     glBufferData ( GL_ARRAY_BUFFER,
                    allVertex.size() * ( 3+3+2 ) *sizeof ( float ),
@@ -294,7 +290,6 @@ cout << "milieu2.1" << endl;
     
     //Puis l'ibo
 
-cout << "milieu2.5" << endl;
 
     glGenBuffers ( 1,&ibo );
     glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER,ibo );
@@ -311,7 +306,6 @@ cout << "milieu2.5" << endl;
     cout << "Nb Vertex: " << allVertex.size() << endl;
     cout << "Nb Triangles: " << fVect.size() /3 << endl;
     
-    cout << "milieu3" << endl;
     
     free ( arrayIbo );
     free ( arrayVertex );

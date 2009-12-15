@@ -1,3 +1,6 @@
+#ifndef WINDOW_H_
+#define WINDOW_H_
+
 #include "Model3D.h"
 #include <QWidget>
 #include <QGLWidget>
@@ -5,68 +8,83 @@
 #include "keyboard.h"
 #include <QThread>
 
-class GLWidget : public QGLWidget
+
+// #include <iostream>
+// using namespace std;
+
+class GLWidget : public QGLWidget // It's the widget which will contain openGl view
 {
-  Q_OBJECT
-  
-  public:
-    GLWidget(QWidget *parent = 0);
-     ~GLWidget();
+    Q_OBJECT
 
-     QSize minimumSizeHint() const;
-     QSize sizeHint() const;
-     
-  protected:
-     void initializeGL();
-     void paintGL();
-     void resizeGL(int width, int height);
-
-  private:
-    
-    //rien a foutre ici
-    float angle;
-     float posx,posy,accx,accy,s;
-     int width,height;
-     
-};
-
-
-class Thread : public QThread
-{
-  Q_OBJECT
 public:
-    Thread();
-    void run();
-    void setDisplayWidget(GLWidget* displayWidget);
+    GLWidget(QWidget *parent = 0);
+    ~GLWidget();
+    QSize minimumSizeHint() const;
+    QSize sizeHint() const;
+    //void VerificationTouche();
+    void updateGLView() {
+        angle +=2;    // called with the Update function in Window (Thread)
+        updateGL(); //reafficher la vue opengl
+    }
+    void setPosx(float x) { posx += x; }
+    void setPosy(float y) { posy += y; }
 
-    signals:
-        void updateQt(/* you can put the resulting data */);
-	
-  private:
-        float angle;
-	Model3D test;  
+protected:
+    void initializeGL(); // automatiquement appelée
+    void paintGL(); // appeller pas updateGL
+    void resizeGL(int width, int height);      // public at this momment, but would be change to protected. (for resizeEvent of Window)
+
+private:
+    int width,height; //size of OpenGl view
+    Model3D test;  // 3D objet here, but will be replace by more complet Objects
+    float angle; // just fort test, but will go to the objet (Ennemis...)
+    float posx,posy; // public, more easy, but test
 };
 
 class Window: public QWidget
 {
-  public:
+    Q_OBJECT
+//   private :
+//             int EnMarc = 1;
+public:
     Window();
     ~Window();
-    GLWidget* getGlWidget();
-  private:
-    Keyboard kb;
-    GLWidget* glWidget;
+//     GLWidget* getGlWidget();  // pas utile
+//     getEnMarc() { EnMarc = false; }
+
+private:
+    Keyboard kb; // le gestion du clavier (reception d'evenement)
+    GLWidget* glWidget; // la vue opengl
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
-    
+    void VerificationTouche();
+
+
+private slots: // fonction appeller par le thread tout les 20ms.
+    void Update() {
+        VerificationTouche(); // on recptionnent les actions de l'utilisateur
+        glWidget->updateGLView(); // on met a jour la vue.
+    }
 };
 
 
-//-------------
 
 
+class ThApplication : public QThread
+{
+    Q_OBJECT
+public:
+    ThApplication();
+    void run(); // coeur du thread
+    void setDisplayWidget(Window* displayWidget);
+  //  void 
+  //void quit() { exit(0); }
 
+  private:
+    Window* win;
 
+signals:
+    void updateQt(/* you can put the resulting data */);
+};
 
-
-
+#endif
