@@ -66,6 +66,9 @@ private slots: // fonction appeller par le thread tout les 20ms.
         VerificationTouche(); // on recptionnent les actions de l'utilisateur
         glWidget->updateGLView(); // on met a jour la vue.
     }
+    
+  signals:
+      void killThread();
 };
 
 
@@ -82,10 +85,14 @@ public:
   //void quit() { exit(0); }
 
   private:
+    bool running;
     Window* win;
+    
+    private slots:
+      void suicideThread();
 
-signals:
-    void updateQt(/* you can put the resulting data */);
+    signals:
+      void updateQt(/* you can put the resulting data */);
 };
 
 #endif

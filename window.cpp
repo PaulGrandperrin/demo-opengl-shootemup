@@ -6,7 +6,7 @@
 #include <math.h>
 //#include "object.h"
 
-bool Enma = true; // permet d'arreter le qthread lorsquil est a false
+
 #include <iostream>
 using namespace std;
 
@@ -49,8 +49,11 @@ void Window::keyReleaseEvent(QKeyEvent * event) // idem dessus
 void Window::VerificationTouche() // defini les actions a effectuer suivant la(es) touche(s) presente.
 {
     if (kb.toucheActivee(T_ECHAP))
-       Enma = false;
-       // close();
+    {
+       emit killThread();
+       sleep(0.1);
+       close();
+    }
     if(kb.toucheActivee(T_GAUCHE))
         glWidget->getActeur()->Acteur::Deplacement(-0.1,0.0);
     if(kb.toucheActivee(T_DROITE))
@@ -77,26 +80,32 @@ void Window::BougerEnnemie()
 //-------------------------------------------------------------------------------
 
 ThApplication::ThApplication() 
-{
+{ 
 }
 //        close();
 void ThApplication::run() // le coeur du thread
 {
-    while (Enma) //win->getEnMarc() == 1
+     running=true;
+    while (running) //win->getEnMarc() == 1
     {
         msleep(20); // frequence : 60hz
         emit updateQt(); // on envois un signal au a la fonction Update()
     }
-    win->close();
+    //win->close(); //TEST
 
 }
 
+void ThApplication::suicideThread()
+{
+  running=false;
+}
 
 void ThApplication::setDisplayWidget(Window* displayWidget) // on defini le thread
 {
     win = displayWidget;
     connect(this, SIGNAL(updateQt()), displayWidget, SLOT(Update())); // defini les signaux et slots a utiliser.
-//    displayWidget->makeCurrent(); ????????????
+    connect(displayWidget, SIGNAL(killThread()), this, SLOT(suicideThread()));
+    //    displayWidget->makeCurrent(); ????????????
 }
 
 
@@ -110,8 +119,11 @@ GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent)
 
 GLWidget::~GLWidget()
 {
+  qDebug()<< "0";
   delete acteur;
+  qDebug() << "1";
  makeCurrent(); //??????????????????
+ qDebug()<< "2";
 }
 
 
