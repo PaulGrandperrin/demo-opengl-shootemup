@@ -4,6 +4,7 @@
 #include <QtOpenGL>
 #include <QThread>
 #include <math.h>
+#include <typeinfo>
 //#include "object.h"
 
 
@@ -14,10 +15,13 @@ using namespace std;
 //Window
 //-------------------------------------------------------------------------------
 
-Window::Window() : kb() // windows herite du clavier, il gerera ses evenement.
+Window::Window() : kb(), app() // windows herite du clavier, il gerera ses evenement.
 {
-    glWidget= new GLWidget(this); //creation de la vue opengl, le principel
+    qDebug()<< "avant, gl";
+    glWidget= new GLWidget(this); //creation de la vue opengl, le principel // on donne aussi une app pour facilite l'affichage
     //(seule pour l'instant) widget de la fenetre.
+    qDebug()<< "initializeGL Fin 23243";
+    glWidget->setApplication(&app);
 
     /* Le trois lignes perment de pouvoir redimmesioner
     la vue opengl lors de celle de la fenetre.
@@ -26,13 +30,12 @@ Window::Window() : kb() // windows herite du clavier, il gerera ses evenement.
     mainLayout->addWidget(glWidget);
     setLayout(mainLayout);
     setWindowTitle(tr("Shmup")); // le titre de la fenetre, il est afficher dans la barre des taches
-
     grabKeyboard(); //permet de reagir au evenement clavier !!!
 }
 
 Window::~Window()
 {
-   delete glWidget; // vide la memoire !
+    delete glWidget; // vide la memoire !
 }
 
 
@@ -50,23 +53,55 @@ void Window::VerificationTouche() // defini les actions a effectuer suivant la(e
 {
     if (kb.toucheActivee(T_ECHAP))
     {
-       emit killThread();
-       sleep(0.1);
-       close();
+        emit killThread(); // on ordonne au thread de s'arreter
     }
-    if(kb.toucheActivee(T_GAUCHE))
-        glWidget->getActeur()->Acteur::Deplacement(-0.1,0.0);
-    if(kb.toucheActivee(T_DROITE))
-        glWidget->getActeur()->Acteur::Deplacement(0.1,0.0);
-    if(kb.toucheActivee(T_HAUT))
-        glWidget->getActeur()->Acteur::Deplacement(0.0,0.1);
-    if(kb.toucheActivee(T_BAS))
-        glWidget->getActeur()->Acteur::Deplacement(0.0,-0.1);
+    if (kb.toucheActivee(T_CTRL))
+    {
+        if (kb.toucheActivee(T_GAUCHE)) //zoom -
+            app.getJoueur()->Acteur::Scale(-0.02);
+        if (kb.toucheActivee(T_DROITE)) // zoom +
+            app.getJoueur()->Acteur::Scale(0.02);
+        if (kb.toucheActivee(T_HAUT)) // +z
+            app.getJoueur()->Acteur::Deplacement(0.0,0.0,0.1);
+        if (kb.toucheActivee(T_BAS)) // -z
+            app.getJoueur()->Acteur::Deplacement(0.0,0.0,-0.1);
+    }
+    else if (kb.toucheActivee(T_SHIFT))
+    {
+        if (kb.toucheActivee(T_GAUCHE)) //rot - z
+            app.getJoueur()->Acteur::Rotation(0.0,0.0,-1);
+        if (kb.toucheActivee(T_DROITE)) // rot - z
+            app.getJoueur()->Acteur::Rotation(0.1,0.0,1);
+        if (kb.toucheActivee(T_HAUT)) // rot +x
+            app.getJoueur()->Acteur::Rotation(-1,0.0,0.0);
+        if (kb.toucheActivee(T_BAS)) // rot -x
+            app.getJoueur()->Acteur::Rotation(1,0.0,0.0);
+    }
+    else
+    {
+        if (kb.toucheActivee(T_GAUCHE)) // -x
+            app.getJoueur()->Acteur::Deplacement(-0.1,0.0,0.0);
+        if (kb.toucheActivee(T_DROITE)) // +x
+            app.getJoueur()->Acteur::Deplacement(0.1,0.0,0.0);
+        if (kb.toucheActivee(T_HAUT)) // +y
+            app.getJoueur()->Acteur::Deplacement(0.0,0.1,0.0);
+        if (kb.toucheActivee(T_BAS)) // -y
+            app.getJoueur()->Acteur::Deplacement(0.0,-0.1,0.0);
+    }
 }
 
-void Window::BougerEnnemie()
+void Window::BougerEnnemie() ///////////////// !!!!!!!!!!!!!! ne pas toucher, fait planter l'affichage si transformation sur acteur !!!!!!!!!!!!!!
 {
-   glWidget->getActeur()->Acteur::Rotation(1);
+    //qDebug()<< "0";
+    vector<Acteur*>::iterator it;
+    for (it=app.getActeurs().begin(); it!=app.getActeurs().end(); it++)
+    {
+        //     qDebug()<< "type joueur :"<< typeid(app.getJoueur()).name();
+        //   qDebug()<< "type it :"<< typeid((*it)).name();
+        //   (*it)->Scale(0.01);
+    }
+    //qDebug()<< "0";
+    // app->getActeur()->Acteur::Rotation(1.0,0.0,0.0);
 }
 
 
@@ -79,25 +114,26 @@ void Window::BougerEnnemie()
 //ThApplication : thread de l'application
 //-------------------------------------------------------------------------------
 
-ThApplication::ThApplication() 
-{ 
+ThApplication::ThApplication()
+{
 }
 //        close();
 void ThApplication::run() // le coeur du thread
 {
-     running=true;
-    while (running) //win->getEnMarc() == 1
+
+
+    running=true;
+    while (running) //tant de l'application n'a pas demander a s'arreter
     {
         msleep(20); // frequence : 60hz
         emit updateQt(); // on envois un signal au a la fonction Update()
     }
-    //win->close(); //TEST
-
+    emit closeApp(); // on envois un signal a l'appli pour quel s'arrete enfin
 }
 
 void ThApplication::suicideThread()
 {
-  running=false;
+    running=false; // on arrete la boucle du thread
 }
 
 void ThApplication::setDisplayWidget(Window* displayWidget) // on defini le thread
@@ -105,6 +141,7 @@ void ThApplication::setDisplayWidget(Window* displayWidget) // on defini le thre
     win = displayWidget;
     connect(this, SIGNAL(updateQt()), displayWidget, SLOT(Update())); // defini les signaux et slots a utiliser.
     connect(displayWidget, SIGNAL(killThread()), this, SLOT(suicideThread()));
+    connect(this, SIGNAL(closeApp()), displayWidget, SLOT(closeApp()));
     //    displayWidget->makeCurrent(); ????????????
 }
 
@@ -113,58 +150,68 @@ void ThApplication::setDisplayWidget(Window* displayWidget) // on defini le thre
 //GLWidget
 //-------------------------------------------------------------------------------
 
-GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent)
+GLWidget::GLWidget( QWidget *parent) : QGLWidget(parent)
 {
+    qDebug()<< "GLWidget";
 }
 
 GLWidget::~GLWidget()
 {
-  qDebug()<< "0";
-  delete acteur;
-  qDebug() << "1";
- makeCurrent(); //??????????????????
- qDebug()<< "2";
+// qDebug()<< "0";
+// delete acteur;
+// qDebug() << "1";
+    makeCurrent(); //Context openGl
+// qDebug()<< "2";
+}
+
+void GLWidget::setApplication(Application* app)
+{
+    pApp = app;
 }
 
 
 QSize GLWidget::minimumSizeHint() const
 {
-    return QSize(50,50); // taille minimal de la fenetre
+    return QSize(TAILLE_MIN_X,TAILLE_MIN_Y); // taille minimal de la fenetre
 }
 
 QSize GLWidget::sizeHint() const
 {
-    return QSize(400,400); // taille de base
+    return QSize(TAILLE_DEFAULT_X,TAILLE_DEFAULT_Y); // taille de base
 }
 
 
 void GLWidget::initializeGL()
 {
-
     glClearColor ( 1,1,1,0 );
     glEnable (GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
-//     if (QCoreApplication::arguments().count() > 1) // ????????????????????????????????
-//         test.load(QCoreApplication::arguments().at(1).toStdString()); // ????????????????????????
-//     else
-//         test.load("meshes/demon.obj"); // on charge en memoir le demon (objet 3D a afficher dans la vue)
-  Acteur* obj = new Acteur(0,0,1);
-  this->acteur = obj;
+//------------------
+// besoin, je ne sais pas pourquoi, de chager chaque modele dans cette fonction.
+//------------------
+    vector<ModelActeur>* models = pApp->getModelActeurs(); // on recupere le vecteur de modele d'acteur (maillage)
+//  models getModelActeurs();
+    vector<ModelActeur>::iterator it;
+    for (it=models->begin(); it!= models->end(); it++)
+    {
+        if (QCoreApplication::arguments().count() > 1) // ????????????????????????????????
+            (it)->getMesh()->load(QCoreApplication::arguments().at(1).toStdString()); // ????????????????????????
+        else
+            (it)->getMesh()->load("meshes/" + it->getType() ); // on charge en memoir le demon (objet 3D a afficher dans la vue)
+    }
 }
 
 void GLWidget::paintGL() // mise a jour de la vue
 {
-
-
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
+    qDebug()<< "updateGL";
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // c'est ce qui fait plante l'affichage quand on bouge un acteur (pas joueur)
+    // glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    qDebug()<< "updateGL";
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity( );
-    
     gluLookAt(0,0,5,0,0,0,0,1,0);
-   // gluLookAt(3,4,2,0,0,0,0,0,1);
-    acteur->Afficher(); 
-
+    // gluLookAt(3,4,2,0,0,0,0,0,1);
+    pApp->Afficher(); // on affiche tout les elements
     glFlush(); // force l'affichage opengl
 }
 
@@ -183,5 +230,3 @@ void GLWidget::resizeGL(int width, int height) // pour redimenssioner la vue (ga
     this->width=width;
     this->height=height;
 }
-
-

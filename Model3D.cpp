@@ -6,7 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-
+#include <QtGui>
 #include <math.h>
 #include <algorithm>
 
@@ -317,33 +317,32 @@ bool Model3D::load(string path)
 void Model3D::render()
 {
 	
-
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	
-	
+	     
 
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glVertexPointer(3, GL_FLOAT, sizeof(float)*8, BUFFER_OFFSET(0));
 	glNormalPointer( GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*3);
         glTexCoordPointer(2, GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*6);
-        
+          
         /* activation des tableaux de sommets */
         glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        
-       glBindTexture(GL_TEXTURE_2D, texture);
-
+       
+        glBindTexture(GL_TEXTURE_2D, texture);
         glDrawElements(GL_TRIANGLES, sizeofIbo, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         /* desactivation des tableaux de sommet */
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
     
-    
+        
     //glFlush();
   
   

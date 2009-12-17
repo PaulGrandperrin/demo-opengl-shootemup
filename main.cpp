@@ -16,8 +16,7 @@ int main(int argc, char *argv[])
     application.setDisplayWidget(&window); //Display the thread with Window widget                   //.getGlWidget()
     application.start(); // Start the Thread, run() call to update function in Window
 
-    
-    
+
     
     window.show(); // show the Shump window
     

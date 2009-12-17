@@ -2,15 +2,22 @@
 #define WINDOW_H_
 
 #include "acteur.h"
+#include "parametres.h"
+#include "gameplay.h"
 #include <QWidget>
 #include <QGLWidget>
 #include <QKeyEvent>
 #include "keyboard.h"
 #include <QThread>
 
-
 // #include <iostream>
 // using namespace std;
+class Window;
+class Application;
+class ThApplication;
+class GLWidget;
+
+
 
 class GLWidget : public QGLWidget // It's the widget which will contain openGl view
 {
@@ -22,25 +29,25 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
     //void VerificationTouche();
+    void setApplication(Application* app); // besoin de l'application pour affichage
     void updateGLView() {
-      //  angle +=2;    // called with the Update function in Window (Thread)
+        //  angle +=2;    // called with the Update function in Window (Thread)
         updateGL(); //reafficher la vue opengl
     }
-    Acteur* getActeur() { return acteur; }
-  //  void setPosx(float x) { posx += x; }
-//    void setPosy(float y) { posy += y; }
 
 protected:
     void initializeGL(); // automatiquement appelée
-    void paintGL(); // appeller pas updateGL
+    void paintGL(); // appeller par updateGL
     void resizeGL(int width, int height);      // public at this momment, but would be change to protected. (for resizeEvent of Window)
 
 private:
+    // vector<Model3D> modeles;
+    Application* pApp; //pour l'affichage.
     int width,height; //size of OpenGl view
-    Acteur* acteur;  // 3D objet here, but will be replace by more complet Objects
-  //  float angle; // just fort test, but will go to the objet (Ennemis...)
-  //  float posx,posy; // public, more easy, but test
+
 };
+
+
 
 class Window: public QWidget
 {
@@ -53,22 +60,26 @@ public:
 
 private:
     Keyboard kb; // le gestion du clavier (reception d'evenement)
+    Application app;
     GLWidget* glWidget; // la vue opengl
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
     void VerificationTouche();
     void BougerEnnemie();
 
-
 private slots: // fonction appeller par le thread tout les 20ms.
     void Update() {
-	BougerEnnemie();
         VerificationTouche(); // on recptionnent les actions de l'utilisateur
+        BougerEnnemie();
         glWidget->updateGLView(); // on met a jour la vue.
     }
-    
-  signals:
-      void killThread();
+//private slots: // fonction appeller par le thread tout les 20ms.
+    void closeApp() { // signal recu du thread avant qu'il ne s'arrete.
+        close();// on met a jour la vue.
+    }
+
+signals:
+    void killThread(); // avant de clore la fenetre, il faut arreter le trhead
 };
 
 
@@ -81,18 +92,19 @@ public:
     ThApplication();
     void run(); // coeur du thread
     void setDisplayWidget(Window* displayWidget);
-  //  void 
-  //void quit() { exit(0); }
+    //  void
+    //void quit() { exit(0); }
 
-  private:
+private:
     bool running;
-    Window* win;
-    
-    private slots:
-      void suicideThread();
+    Window* win; // fenetre, je sais plus pouquoi. inutile !
 
-    signals:
-      void updateQt(/* you can put the resulting data */);
+private slots:
+    void suicideThread();
+
+signals:
+    void updateQt(/* you can put the resulting data */);
+    void closeApp(/* you can put the resulting data */);
 };
 
 #endif

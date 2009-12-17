@@ -27,14 +27,18 @@
 #ifndef GESTION_CLAVIER_H_
 #define GESTION_CLAVIER_H_
 
+#include "parametres.h"
+
 #define NB_KEYS 7
 #define T_ECHAP 0
 #define T_GAUCHE 1
 #define T_HAUT 2
 #define T_DROITE 3
 #define T_BAS 4
-#define T_TIR1 5
-#define T_TIR2 6
+//#define T_TIR1 5
+//#define T_TIR2 6
+#define T_CTRL 5
+#define T_SHIFT 6
 
 #include <QKeyEvent>
 
