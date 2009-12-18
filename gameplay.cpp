@@ -7,10 +7,11 @@
 Application::Application()
 {
 // acteurs.NULL;
-    addModelActeur(); // on creer les modele d'acteur
-    joueur = new Acteur(getModelActeur("cube.obj")); // on ajoute le joueur (il faudra creer une fonction appart)
+    addModelActeur("cube.obj"); // on creer les modele d'acteur
+    addModelActeur("demon.obj"); // on creer les modele d'acteur
+    joueur = new Acteur(getModelActeur("demon.obj")); // on ajoute le joueur (il faudra creer une fonction appart)
     addActeur("cube.obj",1,0,0); // on ajoute 3 acteur pour test
-    addActeur("cube.obj",1,2);
+    addActeur("demon.obj",1,1.5);
     addActeur("cube.obj");
 // Acteur* acteur = new Acteur();
 //   vector<Model3D>::iterator it;

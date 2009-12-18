@@ -98,7 +98,7 @@ void Window::BougerEnnemie() ///////////////// !!!!!!!!!!!!!! ne pas toucher, fa
     {
         //     qDebug()<< "type joueur :"<< typeid(app.getJoueur()).name();
         //   qDebug()<< "type it :"<< typeid((*it)).name();
-        //   (*it)->Scale(0.01);
+         //  (*it)->Scale(0.01);
     }
     //qDebug()<< "0";
     // app->getActeur()->Acteur::Rotation(1.0,0.0,0.0);
@@ -203,10 +203,10 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL() // mise a jour de la vue
 {
-    qDebug()<< "updateGL";
+   // qDebug()<< "updateGL";
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // c'est ce qui fait plante l'affichage quand on bouge un acteur (pas joueur)
     // glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    qDebug()<< "updateGL";
+   // qDebug()<< "updateGL";
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity( );
     gluLookAt(0,0,5,0,0,0,0,1,0);
