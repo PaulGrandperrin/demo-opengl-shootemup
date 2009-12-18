@@ -9,9 +9,15 @@ Application::Application()
 // acteurs.NULL;
     addModelActeur("cube.obj"); // on creer les modele d'acteur
     addModelActeur("demon.obj"); // on creer les modele d'acteur
+    addModelActeur("cow.obj"); // on creer les modele d'acteur
+    addModelActeur("UFO.obj"); // on creer les modele d'acteur
+    addModelActeur("tire2.obj"); // on creer les modele d'acteur
+    addModelActeur("avion.obj"); // on creer les modele d'acteur
+		
     joueur = new Acteur(getModelActeur("demon.obj")); // on ajoute le joueur (il faudra creer une fonction appart)
-    addActeur("cube.obj",1,0,0); // on ajoute 3 acteur pour test
-    addActeur("demon.obj",1,1.5);
+   // addActeur("cow.obj",1,0,0); // on ajoute 3 acteur pour test
+    addActeur("UFO.obj",1,1.5);
+    addActeur("avion.obj",-1,-1.5);
     addActeur("cube.obj");
 // Acteur* acteur = new Acteur();
 //   vector<Model3D>::iterator it;
