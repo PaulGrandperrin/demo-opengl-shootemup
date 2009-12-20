@@ -17,7 +17,7 @@ Application::Application()
     joueur = new Acteur(getModelActeur("demon.obj")); // on ajoute le joueur (il faudra creer une fonction appart)
    // addActeur("cow.obj",1,0,0); // on ajoute 3 acteur pour test
     addActeur("UFO.obj",1,1.5);
-    addActeur("avion.obj",-1,-1.5);
+    //addActeur("avion.obj",-1,-1.5);
     addActeur("cube.obj");
 // Acteur* acteur = new Acteur();
 //   vector<Model3D>::iterator it;

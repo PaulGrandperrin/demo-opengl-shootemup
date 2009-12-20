@@ -38,7 +38,7 @@ void Keyboard::poolKeys(int keys[])
 
 Keyboard::Keyboard() {
   // On definit les touches par defaut
-  int tab_temp_corresp[NB_KEYS] = {Qt::Key_Escape, Qt::Key_Left, Qt::Key_Up, Qt::Key_Right, Qt::Key_Down, Qt::Key_Control, Qt::Key_Shift};
+  int tab_temp_corresp[NB_KEYS] = {Qt::Key_Escape, Qt::Key_Left, Qt::Key_Up, Qt::Key_Right, Qt::Key_Down, Qt::Key_Control, Qt::Key_Shift, Qt::Key_Space};
   // Initialisation des attributs
   for(int i = 0; i<NB_KEYS; i++) {
     etatTouche[i] = 0;

@@ -87,6 +87,8 @@ void Window::VerificationTouche() // defini les actions a effectuer suivant la(e
             app.getJoueur()->Acteur::Deplacement(0.0,0.1,0.0);
         if (kb.toucheActivee(T_BAS)) // -y
             app.getJoueur()->Acteur::Deplacement(0.0,-0.1,0.0);
+	if (kb.toucheActivee(T_SPACE)) // ajout ennemi
+            app.addActeur("avion.obj",-1,-1.5);
     }
 }
 
@@ -102,7 +104,7 @@ void Window::BougerEnnemie() ///////////////// !!!!!!!!!!!!!! ne pas toucher, fa
     }
     app.getActeurs()[0]->Scale(0.001);
        // app.getActeurs()[1]->Scale(-0.001);
-	    app.getActeurs()[2]->Rotation(0.0,0.0,-1);
+	    app.getActeurs()[1]->Rotation(0.0,0.0,-1);
 //     app.getActeurs()[1]->Rotation(0.0,0.0,-1);
 //     app.getActeurs()[2]->Deplacement(-0.001,0.0,0.0);
     //qDebug()<< "0";
