@@ -104,7 +104,7 @@ void Window::BougerEnnemie() ///////////////// !!!!!!!!!!!!!! ne pas toucher, fa
     }
     app.getActeurs()[0]->Scale(0.001);
        // app.getActeurs()[1]->Scale(-0.001);
-	    app.getActeurs()[1]->Rotation(0.0,0.0,-1);
+    app.getActeurs()[1]->Rotation(0.0,0.0,-1);
 //     app.getActeurs()[1]->Rotation(0.0,0.0,-1);
 //     app.getActeurs()[2]->Deplacement(-0.001,0.0,0.0);
     //qDebug()<< "0";

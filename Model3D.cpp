@@ -114,7 +114,7 @@ bool Model3D::load(string path)
   glewInit();
     vector<v> vVect; //le vecteur contenant les donnees brutes de positions
     vector<vn> vnVect;//le vecteur contenant les donnees brutes de normales
-    vector<vt> vtVect;//le vecteur contenant les donnees brutes de etxtures
+    vector<vt> vtVect;//le vecteur contenant les donnees brutes de textures
     vector<vertex> fVect; //le vecteur contenant les donnees brutes des faces
 
     ifstream OBJFile ( path.c_str(),ios::in ); //on ouvre le fichier en lecture
