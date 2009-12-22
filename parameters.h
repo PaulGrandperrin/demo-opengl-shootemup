@@ -22,4 +22,15 @@
 #define ACCELERATIONZ_DEFAULT_VAISSEAU 0
 #define TRAJECTORY_DEFAULT_FILE_NAME ""
 
+
+#define NB_KEYS 8
+#define T_ECHAP 0
+#define T_GAUCHE 1
+#define T_HAUT 2
+#define T_DROITE 3
+#define T_BAS 4
+#define T_CTRL 5
+#define T_SHIFT 6
+#define T_SPACE 7
+
 #endif
