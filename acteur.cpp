@@ -1,5 +1,5 @@
 #include "acteur.h"
-#include "modelActeur.h"
+//#include "modelActeur.h"
 #include <QApplication>
 #include <QtGui>
 //#include <QtOpenGL>
@@ -14,7 +14,7 @@ using namespace std;
 //-------------------------------------------------------------------------------
 
 
-Acteur::Acteur(ModelActeur* model, float posx, float posy, float posz, float anglex, float angley, float anglez, float size, float vx, float vy, float vz, float ax, float ay, float az, string fname)
+Acteur::Acteur(Model3D* model, float posx, float posy, float posz, float anglex, float angley, float anglez, float size, float vx, float vy, float vz, float ax, float ay, float az, string fname)
 {    
     this->model = model;
     this->size = size;
@@ -32,7 +32,7 @@ Acteur::Acteur(ModelActeur* model, float posx, float posy, float posz, float ang
     this->az = az;
     this->f = new ifstream(fname.data());
     if(this->f->fail()) {
-      qDebug()<< "Fichier inexistant !";
+      qDebug()<< "Fichier inexistant !"; // a changer en cout <<
       delete this->f;
       f = NULL;
     }
@@ -54,7 +54,7 @@ Acteur::~Acteur() {
 
 void Acteur::Deplacement(float x, float y, float z)
 {
-  qDebug()<< "ma position x : " << posx; 
+ // qDebug()<< "ma position x : " << posx; 
     this->posx += x;
     this->posy += y;
     this->posz += z;
@@ -137,7 +137,7 @@ void Acteur::updatePositionVelocityAcceleration() {
 
 void Acteur::Afficher()
 {
- //   qDebug()<< "afficher";
+  
     glLoadIdentity( );
     gluLookAt(0,0,5,0,0,0,0,1,0);
     glTranslatef(posx,posy,posz);
@@ -147,7 +147,7 @@ void Acteur::Afficher()
     glRotatef(anglez,0,0,1);
 //    if (this->model->getMesh() == NULL)
 //          qDebug()<< "pas de mesh";
-    this->model->getMesh()->render();
+    this->model->render();
 //     glBegin(GL_QUADS);					// Start Drawing The Cube
 //     glColor3f(0.0f,1.0f,0.0f);			// Set The Color To Green
 //     glVertex3f( 1.0f, 1.0f,-1.0f);			// Top Right Of The Quad (Top)

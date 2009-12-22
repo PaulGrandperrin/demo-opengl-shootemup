@@ -1,5 +1,5 @@
 #include <QtGui>
-#include "acteur.h"
+//#include "acteur.h"
 #include "gameplay.h"
 #include <iostream>
 #include <stdio.h>
@@ -14,7 +14,7 @@ Application::Application()
     addModelActeur("tire2.obj"); // on creer les modele d'acteur
     addModelActeur("avion.obj"); // on creer les modele d'acteur
 		
-    joueur = new Acteur(getModelActeur("demon.obj")); // on ajoute le joueur (il faudra creer une fonction appart)
+    joueur = Acteur(getModelActeur("demon.obj")); // on ajoute le joueur (il faudra creer une fonction appart)
    // addActeur("cow.obj",1,0,0); // on ajoute 3 acteur pour test
     addActeur("UFO.obj",1,1.5);
     //addActeur("avion.obj",-1,-1.5);
@@ -32,22 +32,22 @@ Application::Application()
 
 Application::~Application()
 {
-    vector<Acteur*>::iterator it;
-    for (it=acteurs.begin(); it!= acteurs.end(); it++)
-    {
-        delete (*it);
-    }
-    delete joueur;
+//     list<Acteur>::iterator it;
+//     for (it=acteurs.begin(); it!= acteurs.end(); it++)
+//     {
+//         delete (it)->remove;
+//     }
+//     delete joueur;
 }
 
 void Application::Afficher()
 {
     //qDebug()<< "0";
-    joueur->Afficher();
-    vector<Acteur*>::iterator it;
+    joueur.Afficher();
+    list<Acteur>::iterator it;
     for (it=acteurs.begin(); it!= acteurs.end(); it++)
     {
-        (*it)->Afficher();
+        it->Afficher();
     }
 
 }
@@ -57,33 +57,40 @@ void Application::Afficher()
 //   acteurs = act;
 // }
 
-ModelActeur* Application::getModelActeur(string type) // avec le nom du model, on recupere celui ci.
+Model3D* Application::getModelActeur(string type) // avec le nom du model, on recupere celui ci.
 {
-    ModelActeur* modelActeur = NULL;
-    //ModelActeur* modelActeur2 = NULL;
-    //set<ModelActeur>* models;
-    //models* getModelActeurs();
-    vector<ModelActeur>::iterator it;
-    for (it=modeles.begin(); it!= modeles.end(); it++)
-    {
-        //modeles.begin()+it
-        //modelActeur2 = modeles.it();
-        if ((it)->getType() == type)
-            modelActeur = &(*it);
-    }
-//   if (trouver)
-    return modelActeur;
+//     ModelActeur* modelActeur = NULL;
+//     //ModelActeur* modelActeur2 = NULL;
+//     //set<ModelActeur>* models;
+//     //models* getModelActeurs();
+//     vector<ModelActeur>::iterator it;
+//     for (it=modeles.begin(); it!= modeles.end(); it++)
+//     {
+//         //modeles.begin()+it
+//         //modelActeur2 = modeles.it();
+//         if ((it)->getType() == type)
+//             modelActeur = &(*it);
+//     }
+//     modeles.find(type);
+// //   if (trouver)
+    return &(modeles.find(type)->second);
 //   else
 //     return NULL;
 }
 
 void Application::addActeur(string type, float posx, float posy , float posz) // parametre pour test, a completer
 {
-    Acteur* acteur = new Acteur(getModelActeur(type),posx,posy,posz);
+    Acteur acteur = Acteur(getModelActeur(type),posx,posy,posz);
     acteurs.push_back(acteur);
 }
 void Application::addModelActeur(string type)
-{
-    ModelActeur modelActeur = ModelActeur(type);
-    modeles.push_back(modelActeur);
+{ 	
+//   cout << type << endl;
+//             qDebug()<< "debut model add acteur";
+    Model3D model3D = Model3D(); //Model3D(type);
+//                 qDebug()<< "millieu model add acteur";
+
+//     modeles.insert(type,model3D);
+     modeles.insert( pair<string,Model3D>(type,(Model3D)model3D) );
+//                  qDebug()<< "fin model add acteur";
 }

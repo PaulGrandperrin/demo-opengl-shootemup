@@ -9,6 +9,7 @@
 #include <QKeyEvent>
 #include "keyboard.h"
 #include <QThread>
+#include <QtGui>
 
 // #include <iostream>
 // using namespace std;

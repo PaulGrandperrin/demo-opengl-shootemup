@@ -1,4 +1,5 @@
 #include "window.h"
+#include "model3D.h"
 #include <QApplication>
 #include <QtGui>
 #include <QtOpenGL>
@@ -17,10 +18,10 @@ using namespace std;
 
 Window::Window() : kb(), app() // windows herite du clavier, il gerera ses evenement.
 {
-    qDebug()<< "avant, gl";
+   // qDebug()<< "avant, gl";
     glWidget= new GLWidget(this); //creation de la vue opengl, le principel // on donne aussi une app pour facilite l'affichage
     //(seule pour l'instant) widget de la fenetre.
-    qDebug()<< "initializeGL Fin 23243";
+   // qDebug()<< "initializeGL Fin 23243";
     glWidget->setApplication(&app);
 
     /* Le trois lignes perment de pouvoir redimmesioner
@@ -95,16 +96,20 @@ void Window::VerificationTouche() // defini les actions a effectuer suivant la(e
 void Window::BougerEnnemie() ///////////////// !!!!!!!!!!!!!! ne pas toucher, fait planter l'affichage si transformation sur acteur !!!!!!!!!!!!!!
 {
     //qDebug()<< "0";
-    vector<Acteur*>::iterator it;
-    for (it=app.getActeurs().begin(); it!=app.getActeurs().end(); it++)
+    list<Acteur>::iterator it;
+//     getActeurs()
+        list<Acteur>* acteurs = app.getActeurs();
+//                  qDebug()<< "ddscvdvdsvdfvdf";
+    for (it=acteurs->begin(); it!=acteurs->end(); it++)
     {
         //     qDebug()<< "type joueur :"<< typeid(app.getJoueur()).name();
         //   qDebug()<< "type it :"<< typeid((*it)).name();
-          // (*it)->Scale(0.01);
+           (it)->Scale(0.0001);
     }
-    app.getActeurs()[0]->Scale(0.001);
+
+  //  app.getActeurs()[0]->Scale(0.001);
        // app.getActeurs()[1]->Scale(-0.001);
-    app.getActeurs()[1]->Rotation(0.0,0.0,-1);
+  //  app.getActeurs()[1]->Rotation(0.0,0.0,-1);
 //     app.getActeurs()[1]->Rotation(0.0,0.0,-1);
 //     app.getActeurs()[2]->Deplacement(-0.001,0.0,0.0);
     //qDebug()<< "0";
@@ -159,7 +164,7 @@ void ThApplication::setDisplayWidget(Window* displayWidget) // on defini le thre
 
 GLWidget::GLWidget( QWidget *parent) : QGLWidget(parent)
 {
-    qDebug()<< "GLWidget";
+//     qDebug()<< "GLWidget";
 }
 
 GLWidget::~GLWidget()
@@ -193,18 +198,21 @@ void GLWidget::initializeGL()
     glClearColor ( 1,1,1,0 );
     glEnable (GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
+    
+    map<string,Model3D>::iterator it;
+    map<string,Model3D>* models = pApp->getModelActeurs();
 //------------------
 // besoin, je ne sais pas pourquoi, de chager chaque modele dans cette fonction.
 //------------------
-    vector<ModelActeur>* models = pApp->getModelActeurs(); // on recupere le vecteur de modele d'acteur (maillage)
-//  models getModelActeurs();
-    vector<ModelActeur>::iterator it;
+//     vector<ModelActeur>* models = pApp->getModelActeurs(); // on recupere le vecteur de modele d'acteur (maillage)
+// //  models getModelActeurs();
+//     vector<ModelActeur>::iterator it;
     for (it=models->begin(); it!= models->end(); it++)
     {
         if (QCoreApplication::arguments().count() > 1) // ????????????????????????????????
-            (it)->getMesh()->load(QCoreApplication::arguments().at(1).toStdString()); // ????????????????????????
+            (it)->second.load(QCoreApplication::arguments().at(1).toStdString()); // ????????????????????????
         else
-            (it)->getMesh()->load("meshes/" + it->getType() ); // on charge en memoir le demon (objet 3D a afficher dans la vue)
+            (it)->second.load("meshes/" +  (it)->first ); // on charge en memoir le demon (objet 3D a afficher dans la vue)
     }
 }
 

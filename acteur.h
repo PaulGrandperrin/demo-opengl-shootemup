@@ -4,7 +4,7 @@
 #include <QTime>
 #include <fstream>
 #include "parametres.h"
-#include "modelActeur.h"
+#include "model3D.h"
 //#include <QWidget>
 //#include <QGLWidget>
 //#include <QKeyEvent>
@@ -28,7 +28,7 @@ typedef struct {
 
 class Acteur {
 public:
-    Acteur(ModelActeur* model = NULL, float posx = POSX_DEFAULT_VAISSEAU, float posy = POSY_DEFAULT_VAISSEAU, float posz = POSZ_DEFAULT_VAISSEAU, float anglex = ANGLEX_DEFAULT_VAISSEAU, float angley = ANGLEY_DEFAULT_VAISSEAU, float anglez = ANGLEZ_DEFAULT_VAISSEAU, float size = TAILLE_DEFAULT_VAISSEAU, float vx=VELOCITYX_DEFAULT_VAISSEAU, float vy=VELOCITYY_DEFAULT_VAISSEAU, float vz=VELOCITYZ_DEFAULT_VAISSEAU, float ax=ACCELERATIONX_DEFAULT_VAISSEAU, float ay=ACCELERATIONY_DEFAULT_VAISSEAU, float az=ACCELERATIONZ_DEFAULT_VAISSEAU, string fname=TRAJECTORY_DEFAULT_FILE_NAME);
+    Acteur(Model3D* model = NULL, float posx = POSX_DEFAULT_VAISSEAU, float posy = POSY_DEFAULT_VAISSEAU, float posz = POSZ_DEFAULT_VAISSEAU, float anglex = ANGLEX_DEFAULT_VAISSEAU, float angley = ANGLEY_DEFAULT_VAISSEAU, float anglez = ANGLEZ_DEFAULT_VAISSEAU, float size = TAILLE_DEFAULT_VAISSEAU, float vx=VELOCITYX_DEFAULT_VAISSEAU, float vy=VELOCITYY_DEFAULT_VAISSEAU, float vz=VELOCITYZ_DEFAULT_VAISSEAU, float ax=ACCELERATIONX_DEFAULT_VAISSEAU, float ay=ACCELERATIONY_DEFAULT_VAISSEAU, float az=ACCELERATIONZ_DEFAULT_VAISSEAU, string fname=TRAJECTORY_DEFAULT_FILE_NAME);
     ~Acteur();
     void Deplacement(float x, float y, float z); // Modify the position coordinates by adding x,y,z respectively to the x,y,z location coordinates
     void Rotation(float x, float y, float z); // Modify the angle coordinates by adding x,y,z respectively to the x,y,z angle coordinates
@@ -42,7 +42,7 @@ public:
     void Afficher();
 
 private:
-    ModelActeur* model;  // 3D object here, but will be replaced by more complete Objects
+    Model3D* model;  // 3D object here, but will be replaced by more complete Objects
     float size; // Size of the object
     float posx, posy, posz; // X,Y,Z coordinates of the position of the object
     float anglex, angley, anglez; // X,Y,Z coordinates of the angle of the object
