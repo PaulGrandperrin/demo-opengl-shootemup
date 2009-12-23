@@ -22,6 +22,14 @@
 #define ACCELERATIONZ_DEFAULT_VAISSEAU 0
 #define TRAJECTORY_DEFAULT_FILE_NAME ""
 
+#define STRUCT_POSITION_DEF {0,0,0}
+#define STRUCT_ROTATION_DEF {0,0,0}
+#define STRUCT_VELOCITY_DEF {0,0,0}
+#define STRUCT_ACCEL_DEF {0,0,0}
+
+#define INTERVALE_TEMP_SHOOT 25 // temp = X*20ms ex: 50*20 = 1s
+#define INTERVALE_TEMP_ENEMY 500  // provisoire
+
 
 #define NB_KEYS 8
 #define T_ECHAP 0

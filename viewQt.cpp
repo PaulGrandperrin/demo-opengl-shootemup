@@ -134,9 +134,9 @@ void Window::checkKeyboard()
         if (kb.hotKey(T_DROITE)) // zoom +
             game.getPlayer()->scale(0.02);
         if (kb.hotKey(T_HAUT)) // +z
-            game.getPlayer()->move(0.0,0.0,0.1);
+            game.getPlayer()->translate(0.0,0.0,0.1);
         if (kb.hotKey(T_BAS)) // -z
-            game.getPlayer()->move(0.0,0.0,-0.1);
+            game.getPlayer()->translate(0.0,0.0,-0.1);
     }
     else if (kb.hotKey(T_SHIFT))
     {
@@ -152,15 +152,16 @@ void Window::checkKeyboard()
     else
     {
         if (kb.hotKey(T_GAUCHE)) // -x
-            game.getPlayer()->move(-0.1,0.0,0.0);
+            game.getPlayer()->translate(-0.1,0.0,0.0);
         if (kb.hotKey(T_DROITE)) // +x
-            game.getPlayer()->move(0.1,0.0,0.0);
+            game.getPlayer()->translate(0.1,0.0,0.0);
         if (kb.hotKey(T_HAUT)) // +y
-            game.getPlayer()->move(0.0,0.1,0.0);
+            game.getPlayer()->translate(0.0,0.1,0.0);
         if (kb.hotKey(T_BAS)) // -y
-            game.getPlayer()->move(0.0,-0.1,0.0);
+            game.getPlayer()->translate(0.0,-0.1,0.0);
 	if (kb.hotKey(T_SPACE)) // add enemy (currently)
-            game.addActeur("avion.obj",-1,-1.5);
+//             game.addActeur("avion.obj",0.1,game.getPlayer()->getPosition().x,game.getPlayer()->getPosition().y,game.getPlayer()->getPosition().z,0,0,0,0,1,0);
+	    game.addTire();
     }
 }
 

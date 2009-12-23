@@ -9,22 +9,14 @@ using namespace std;
 
 
 
-Actor::Actor(Model3D* model, float posx, float posy, float posz, float anglex, float angley, float anglez, float size, float vx, float vy, float vz, float ax, float ay, float az, string fname)
+Actor::Actor(Model3D* model, float size , t_position pos, t_rotation rot, t_velocity vel, t_accel accel, string fname)
 {
     this->model = model;
     this->size = size;
-    this->posx = posx;
-    this->posy = posy;
-    this->posz = posz;
-    this->anglex = anglex;
-    this->angley = angley;
-    this->anglez = anglez;
-    this->vx = vx;
-    this->vy = vy;
-    this->vz = vz;
-    this->ax = ax;
-    this->ay = ay;
-    this->az = az;
+    this->pos = pos;
+    this->rot = rot;
+    this->vel = vel;
+    this->accel = accel;
     this->f = new ifstream(fname.data());
     if (this->f->fail()) {
         cout << "Fichier inexistant !" <<endl;
@@ -43,18 +35,25 @@ Actor::~Actor() {
     }
 }
 
-void Actor::move(float x, float y, float z)
+void Actor::move()
 {
-    this->posx += x;
-    this->posy += y;
-    this->posz += z;
+    pos.x = pos.x + vel.x/100;
+    pos.y = pos.y + vel.y/100;
+    pos.z = pos.z + vel.z/100;
+}
+
+void Actor::translate(float x, float y, float z)
+{
+    this->pos.x += x;
+    this->pos.y += y;
+    this->pos.z += z;
 }
 
 void Actor::rotation(float x, float y, float z)
 {
-    this->anglex += x;
-    this->angley += y;
-    this->anglez += z;
+    this->rot.x += x;
+    this->rot.y += y;
+    this->rot.z += z;
 }
 
 void Actor::scale(float s)
@@ -63,15 +62,15 @@ void Actor::scale(float s)
 }
 
 void Actor::setAcceleration(float x, float y, float z) {
-    this->ax = x;
-    this->ay = y;
-    this->az = z;
+    this->accel.x = x;
+    this->accel.y = y;
+    this->accel.z = z;
 }
 
 void Actor::setVelocity(float x, float y, float z) {
-    this->vx = x;
-    this->vy = y;
-    this->vz = z;
+    this->vel.x = x;
+    this->vel.y = y;
+    this->vel.z = z;
 }
 
 void Actor::readKeyState() {
@@ -109,20 +108,20 @@ void Actor::updatePositionVelocityAcceleration() {
         // readKeyState(); // We read another key state in the file (impossible for the moment)
     }
     // We modify the position if needed
-    if (this->ax || this->vx)
-        this->posx = 0.5*this->ax*cur_t*cur_t+this->vx*cur_t+this->posx;
-    if (this->ay || this->vy)
-        this->posy = 0.5*this->ay*cur_t*cur_t+this->vy*cur_t+this->posy;
-    if (this->az || this->vz)
-        this->posz = 0.5*this->az*cur_t*cur_t+this->vz*cur_t+this->posz;
+    if (this->accel.x || this->vel.x)
+        this->pos.x = 0.5*this->accel.x*cur_t*cur_t+this->vel.x*cur_t+this->pos.x;
+    if (this->accel.y || this->vel.y)
+        this->pos.y = 0.5*this->accel.y*cur_t*cur_t+this->vel.y*cur_t+this->pos.y;
+    if (this->accel.z || this->vel.z)
+        this->pos.z = 0.5*this->accel.z*cur_t*cur_t+this->vel.z*cur_t+this->pos.z;
 
     // We modify the velocity if needed
-    if (this->ax)
-        this->vx = this->ax*cur_t+this->vx;
-    if (this->ay)
-        this->vy = this->ay*cur_t+this->vy;
-    if (this->az)
-        this->vz = this->az*cur_t+this->vz;
+    if (this->accel.x)
+        this->vel.x = this->accel.x*cur_t+this->vel.x;
+    if (this->accel.y)
+        this->vel.y = this->accel.y*cur_t+this->vel.y;
+    if (this->accel.z)
+        this->vel.z = this->accel.z*cur_t+this->vel.z;
 }
 
 void Actor::display()
@@ -130,11 +129,11 @@ void Actor::display()
 
     glLoadIdentity( );
     gluLookAt(0,0,5,0,0,0,0,1,0);
-    glTranslatef(posx,posy,posz);
+    glTranslatef(pos.x,pos.y,pos.z);
     glScalef(size,size,size);
-    glRotatef(anglex,1,0,0);
-    glRotatef(angley,0,1,0);
-    glRotatef(anglez,0,0,1);
+    glRotatef(rot.x,1,0,0);
+    glRotatef(rot.y,0,1,0);
+    glRotatef(rot.z,0,0,1);
     this->model->render();
 
 }

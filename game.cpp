@@ -17,8 +17,12 @@ Game::Game()
     addModel("avion.obj");
 
     player = Actor(getModel("demon.obj")); // creation of player
-    addActeur("UFO.obj",1,1.5); // creation of enemy
+  //  timerGenEnemy = 0;
+    addActeur("UFO.obj",0.1,1,1.5); // creation of enemy
+  //  timerGenEnemy = 0;
     addActeur("cube.obj");
+    timerGenEnemy=INTERVALE_TEMP_ENEMY;
+    timerGenShoot=INTERVALE_TEMP_SHOOT;   
 }
 
 Game::~Game()
@@ -28,16 +32,40 @@ Game::~Game()
 
 void Game::manager()
 {
-
+    timerGenShoot--;
+    timerGenEnemy--;
+    if (timerGenEnemy <= 0) {
+        addEnemy();
+    }
     list<Actor>::iterator it;
     // list<Actor>* enemies = getEnemies();
     for (it=enemies.begin(); it!=enemies.end(); it++)
     {
-        (it)->scale(0.0005); // for each enemy currently
+        (it)->translate(0,-0.001,0); // for each enemy currently
+        it->move();
+    }
+    player.translate(0,-0.001,0);
+}
+
+void Game::addTire()
+{
+    if (timerGenShoot <= 0) {
+        addActeur("avion.obj",0.1,getPlayer()->getPosition().x,getPlayer()->getPosition().y,getPlayer()->getPosition().z,0,0,0,0,1,0);
+        timerGenShoot=INTERVALE_TEMP_SHOOT;
     }
 }
 
-
+void Game::addEnemy()
+{
+  QTime time;
+    if (timerGenEnemy <= 0) {
+         srand( time.elapsed() );
+	 float randNumber = rand() / static_cast<float>( RAND_MAX );
+	 randNumber = (randNumber-(randNumber/2)); // randomiz posx
+        addActeur("cube.obj",0.1,randNumber,1);
+        timerGenEnemy=INTERVALE_TEMP_ENEMY;
+    }
+}
 
 void Game::display()
 {
@@ -57,10 +85,14 @@ Model3D* Game::getModel(string type)
 }
 
 
-void Game::addActeur(string type, float posx, float posy , float posz) // parameter for test, to complet
+void Game::addActeur(string type, float size, float posx, float posy , float posz, float anglex, float angley, float anglez, float vx, float vy, float vz, float ax, float ay, float az) // parameter for test, to comple
 {
-    Actor acteur = Actor(getModel(type),posx,posy,posz);
-    enemies.push_back(acteur); // add this actor in list enemies
+    t_position pos = {posx,posy,posz};
+    t_rotation rot = {anglex,angley,anglez};
+    t_velocity vel = {vx,vy,vz};
+    t_accel accel = {ax,ay,az};
+    Actor actor = Actor(getModel(type),size,pos,rot,vel,accel);
+    enemies.push_back(actor); // add this actor in list enemies
 }
 
 
