@@ -1,11 +1,11 @@
 #include <QApplication>
 #include <QThread>
+#include <QTime>
 #include "viewQt.h"
 
 // for trace during test , to kept
 #include <iostream>
 using namespace std;
-
 
 int main(int argc, char *argv[])
 {

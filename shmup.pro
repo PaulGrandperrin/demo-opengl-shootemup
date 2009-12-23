@@ -9,8 +9,8 @@ INCLUDEPATH += .
 QT += opengl
 LIBS += -lGLEW  -lIL
 # Input
-HEADERS += actor.h game.h keyboard.h model3D.h viewQt.h
-SOURCES += actor.cpp game.cpp keyboard.cpp main.cpp model3D.cpp viewQt.cpp
+HEADERS += function.h actor.h game.h keyboard.h model3D.h viewQt.h
+SOURCES += function.cpp actor.cpp game.cpp keyboard.cpp main.cpp model3D.cpp viewQt.cpp
 
 QMAKE_CXXFLAGS_DEBUG += -g -pg
 QMAKE_LFLAGS_DEBUG += -g -pg

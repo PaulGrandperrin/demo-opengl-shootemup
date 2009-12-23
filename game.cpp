@@ -1,6 +1,5 @@
 #include <QtGui>
 #include "game.h"
-#include <iostream>
 #include <stdio.h>
 
 // for trace during test , to kept
@@ -51,18 +50,21 @@ void Game::addTire()
 {
     if (timerGenShoot <= 0) {
         addActeur("avion.obj",0.1,getPlayer()->getPosition().x,getPlayer()->getPosition().y,getPlayer()->getPosition().z,0,0,0,0,1,0);
-        timerGenShoot=INTERVALE_TEMP_SHOOT;
+        timerGenShoot=INTERVALE_TEMP_SHOOT; // we can regenerate tire before this val is > 0
     }
 }
 
 void Game::addEnemy()
 {
-  QTime time;
+
     if (timerGenEnemy <= 0) {
-         srand( time.elapsed() );
-	 float randNumber = rand() / static_cast<float>( RAND_MAX );
-	 randNumber = (randNumber-(randNumber/2)); // randomiz posx
-        addActeur("cube.obj",0.1,randNumber,1);
+        float randX = random(-1.0,1.0); // where actor will be in X
+	float randE = random(0.0,1.0); // if RandE pair then demon else cube
+
+	if (etPair(randE))
+	  addActeur("demon.obj",0.08,randX,1);
+	else
+	  addActeur("cube.obj",0.1,randX,1);  
         timerGenEnemy=INTERVALE_TEMP_ENEMY;
     }
 }

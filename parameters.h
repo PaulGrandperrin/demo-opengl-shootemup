@@ -28,7 +28,7 @@
 #define STRUCT_ACCEL_DEF {0,0,0}
 
 #define INTERVALE_TEMP_SHOOT 25 // temp = X*20ms ex: 50*20 = 1s
-#define INTERVALE_TEMP_ENEMY 500  // provisoire
+#define INTERVALE_TEMP_ENEMY 100  // provisoire
 
 
 #define NB_KEYS 8

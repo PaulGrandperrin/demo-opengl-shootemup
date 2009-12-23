@@ -3,10 +3,11 @@
 
 #include <list>
 #include <map>
-#include <QTime>
+//#include <QTime>
 
 #include "actor.h"
 #include "model3D.h"
+#include "function.h"
 
 class Game  // It's the widget which will contain openGl view
 {
