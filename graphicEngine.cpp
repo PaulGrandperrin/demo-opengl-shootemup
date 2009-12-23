@@ -1,35 +1,34 @@
-#include "model3D.h"
+#include "graphicEngine.hpp"
 
-#include <iostream>
 #include <IL/il.h>
-#include <vector>
+#include <GL/glew.h>
+
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <QtGui>
 #include <math.h>
 #include <algorithm>
 
-#define BUFFER_OFFSET(a) ((char*)NULL + (a))
+#define BUFFER_OFFSET(a) ((char*)NULL + (a)) //HACK un gros cast de ouf dingue très pratique
 
 //Quelques définitions de structures
-struct v
+struct v 		//vecteur position 3D
 {
     float x,y,z;
 };
-struct vn
+struct vn		//vecteur normal 3D
 {
     float x,y,z;
 };
-struct vt
+struct vt		//vecteur coordonnée de texture 2D
 {
     float x,y;
 };
-struct vertex
+struct vertex		//vertex=identifiant(vecteur position+vecteur normal+vecteur coordonnée de texture)
 {
     unsigned int vId,vnId,vtId;
 };
-struct vertexf
+struct vertexf		//je sais plus TODO
 {
     int vertexId;
     v vV;
@@ -37,7 +36,7 @@ struct vertexf
     vt vVt;
 };
 
-struct vertexFinal
+struct vertexFinal	//la non plus TODO
 {
     v vV;
     vn vVn;
@@ -96,30 +95,98 @@ bool vertexfLess ( const vertexf &a, const vertexf &b ) //c'est jolie hein, ca f
 }
 
 
-Model3D::Model3D()
+graphicEngine::graphicEngine()
 {  
-  glewInit();
 }
 
-Model3D::Model3D(string path)
+graphicEngine::~graphicEngine()
 {
-    Model3D();
-    load(path);
-
+      //TODO
 }
 
-bool Model3D::load(string path)
+void graphicEngine::init()
 {
-  cout << path << endl;
-  glewInit();
+  glewInit(); 	//chargement des adresses des pointeurs de fonction des extentions d'openGL
+  ilInit();  	//initialisation de devIL
+  
+  glClearColor ( 1,1,1,0 );
+  glEnable (GL_TEXTURE_2D);
+  glEnable(GL_DEPTH_TEST);
+}
+
+void graphicEngine::resize(int width,int height)
+{
+  glViewport(0,0,width,height);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(45,width/(float)height,0.1,100); 
+  this->width=width;
+  this->height=height;
+}
+
+void graphicEngine::render(vector<instance> instances,camera cam)
+{
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(cam.eyex,cam.eyey,cam.eyez,cam.centerx,cam.centery,cam.centerz,cam.upx,cam.upy,cam.upz);
+	
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	
+	/* activation des tableaux de sommets */
+        glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	
+  
+	for(unsigned int i=0; i<models.size();i++)
+	{	
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, models[i].ibo);
+		glBindBuffer(GL_ARRAY_BUFFER, models[i].vbo);
+		glBindTexture(GL_TEXTURE_2D, models[i].texture);
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*8, BUFFER_OFFSET(0));
+		glNormalPointer( GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*3);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*6);
+	
+		
+		for(unsigned int j=0;j<instances.size();j++)
+		{
+			if(instances[j].idModel==i+1) //TODO optimiser ça
+			{
+				glPushMatrix();
+				glTranslatef(instances[j].x,instances[j].y,instances[j].z);
+				glRotatef(instances[j].ax,1,0,0); //TODO à optimiser
+				glRotatef(instances[j].ay,0,1,0);
+				glRotatef(instances[j].az,0,0,1);
+				glScalef(instances[j].sx,instances[j].sy,instances[j].sz);
+				
+				glDrawElements(GL_TRIANGLES, models[i].sizeofIbo, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+				glPopMatrix();
+			}
+		}
+	}
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+    
+}
+
+
+int graphicEngine::loadModel(string pathModel,string pathTexture)
+{
+    cout << "> Loading "<< pathModel<<" ..." << flush;
+    
+    //on déclare les vecteurs contenant les données brutes contenus dans le fichier
     vector<v> vVect; //le vecteur contenant les donnees brutes de positions
     vector<vn> vnVect;//le vecteur contenant les donnees brutes de normales
     vector<vt> vtVect;//le vecteur contenant les donnees brutes de etxtures
     vector<vertex> fVect; //le vecteur contenant les donnees brutes des faces
 
-    ifstream OBJFile ( path.c_str(),ios::in ); //on ouvre le fichier en lecture
+    ifstream OBJFile ( pathModel.c_str(),ios::in ); //on ouvre le fichier en lecture seule
     if ( !OBJFile )
-        return false;
+        return 0;
 
     string buffer,key;
     while ( getline ( OBJFile,buffer ) ) //tant qu'on peut lire une ligne
@@ -148,7 +215,7 @@ bool Model3D::load(string path)
         }
         else if ( key=="g" )
         {
-            //a implémenter
+            //TODO a implémenter ou pas
         }
         else if ( key=="f" )
         {
@@ -191,11 +258,11 @@ bool Model3D::load(string path)
             }
 
         }
+        //sinon on ignore la ligne
     }
     OBJFile.close();
-    
-    //On a fini de charger les donn�es du fichier
-    //Maintenant, faut organiser les donn�es de maniere optimale pour les utiliser avec des VBO et IBO.
+    //On a fini de charger les données du fichier
+    //Maintenant, faut organiser les données de maniere optimale pour les utiliser avec des VBO et IBO.
 
     //On va d'abors construire tout les vertex possibles
     vector<vertexf> allVertex;
@@ -250,11 +317,11 @@ bool Model3D::load(string path)
         arrayIbo[allVertex[i].vertexId]=vectFinal.size()-1;
     }
 
-    //maintenant, on peut remplir les vbo
+    //maintenant, on peut remplir le vbo
 
     float* arrayVertex= ( float* ) malloc ( allVertex.size() * ( 3+3+2 ) *sizeof ( float ) );
 
-
+    //NOTE on rempli le vbo avec des données alignés sur 32bits(8octets) pour optimiser les accès mémoire du GPU
     for ( unsigned int i=0;i<vectFinal.size();i++ )
     {
         arrayVertex[i*8]=vectFinal[i].vV.x;
@@ -268,17 +335,16 @@ bool Model3D::load(string path)
     }
 
     //Et on bind
-
-
+    GLuint vbo;
+    
     glGenBuffers ( 1, &vbo );
 
     glBindBuffer ( GL_ARRAY_BUFFER, vbo );
 
-    
     glBufferData ( GL_ARRAY_BUFFER,
                    allVertex.size() * ( 3+3+2 ) *sizeof ( float ),
                    NULL,
-                   GL_STATIC_DRAW );                           // à remplacer en STREAM
+                   GL_STATIC_DRAW );                           // TODO à remplacer en STREAM lorque les models seront annimés
 
     glBufferSubData ( GL_ARRAY_BUFFER,
                       0,
@@ -289,8 +355,7 @@ bool Model3D::load(string path)
     glBindBuffer ( GL_ARRAY_BUFFER, 0 );
     
     //Puis l'ibo
-
-
+    GLuint ibo;
     glGenBuffers ( 1,&ibo );
     glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER,ibo );
     glBufferData ( GL_ELEMENT_ARRAY_BUFFER,fVect.size() *sizeof ( unsigned int ),NULL,GL_STATIC_DRAW );
@@ -298,61 +363,34 @@ bool Model3D::load(string path)
     glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER,0 );
 
 
-    //On enregistre qlq données
-    sizeofVbo=allVertex.size();
-    sizeofIbo=fVect.size();
-    texture= ( GLuint ) loadTexture ( ( char* ) "textures/bouler.png" );
-
-    cout << "Nb Vertex: " << allVertex.size() << endl;
-    cout << "Nb Triangles: " << fVect.size() /3 << endl;
-    
+    //On enregistre les données
+    model m;
+    m.ibo=ibo;
+    m.vbo=vbo;
+    m.sizeofVbo=allVertex.size();
+    m.sizeofIbo=fVect.size();
     
     free ( arrayIbo );
     free ( arrayVertex );
-
-    return true;
-}
-
-
-void Model3D::render()
-{
-	
-	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	
-	     
-
-	
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glVertexPointer(3, GL_FLOAT, sizeof(float)*8, BUFFER_OFFSET(0));
-	glNormalPointer( GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*3);
-        glTexCoordPointer(2, GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*6);
-          
-        /* activation des tableaux de sommets */
-        glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-       
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glDrawElements(GL_TRIANGLES, sizeofIbo, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        /* desactivation des tableaux de sommet */
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
     
-        
-    //glFlush();
-  
-  
-  
+    cout << " OK\t\t"<<m.sizeofVbo << " vertex / "<< m.sizeofIbo/3<< " triangles"<<endl;
+    
+    
+    m.texture= ( GLuint ) loadTexture ( ( char* ) pathTexture.c_str() ); //TODO trouver le chemin automatiquement
+    
+    models.push_back(m);
+    
+    return models.size();
 }
 
-
-int Model3D::loadTexture ( char* imagePath )
+void graphicEngine::unLoadModel(int id)
 {
-  ilInit();
+      //TODO à implémenter
+}
+
+int graphicEngine::loadTexture ( char* imagePath )
+{
+    cout << "> Loading "<<imagePath<<" ..."<<flush;
     //Chargement de la texture
     ILuint ilTextId;
     GLuint glTextId;
@@ -360,9 +398,9 @@ int Model3D::loadTexture ( char* imagePath )
     ilGenImages ( 1,&ilTextId );
     ilBindImage ( ilTextId );
     if ( !ilLoadImage ( imagePath ) )
-        exit ( 11 );
+        exit ( 007 ); //FIXME utiliser exceptions
     if ( !ilConvertImage ( IL_RGBA,IL_UNSIGNED_BYTE ) )
-        exit ( 11 );
+        exit ( 007 );//FIXME utiliser exceptions
 
     glGenTextures ( 1,&glTextId );
     glBindTexture ( GL_TEXTURE_2D,glTextId );
@@ -382,8 +420,33 @@ int Model3D::loadTexture ( char* imagePath )
         ilGetData()
     );
 
+    
+    cout << " OK\t\t" <<ilGetInteger ( IL_IMAGE_WIDTH )<<"x"<<ilGetInteger ( IL_IMAGE_HEIGHT )<<" pixels"<<endl;
     ilDeleteImages ( 1, &ilTextId );
-
-
     return glTextId;
 }
+
+  /*
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+	
+	GLfloat ambientLight[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
+	GLfloat specularLight[] = { 1, 1, 1, 1.0f };
+	GLfloat position[] = { 10.0f, -10.0f, 0.0f, 1.0f };
+	
+	// Assign created components to GL_LIGHT0
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+	float mcolor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mcolor);
+	glFrontFace(GL_CCW);
+	
+	*/
