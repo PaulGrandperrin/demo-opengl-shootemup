@@ -152,13 +152,13 @@ void Window::checkKeyboard()
     else
     {
         if (kb.hotKey(T_GAUCHE)) // -x
-            game.getPlayer()->translate(-0.1,0.0,0.0);
+            game.getPlayer()->translate(-0.05,0.0,0.0);
         if (kb.hotKey(T_DROITE)) // +x
-            game.getPlayer()->translate(0.1,0.0,0.0);
+            game.getPlayer()->translate(0.05,0.0,0.0);
         if (kb.hotKey(T_HAUT)) // +y
-            game.getPlayer()->translate(0.0,0.1,0.0);
+            game.getPlayer()->translate(0.0,0.05,0.0);
         if (kb.hotKey(T_BAS)) // -y
-            game.getPlayer()->translate(0.0,-0.1,0.0);
+            game.getPlayer()->translate(0.0,-0.05,0.0);
 	if (kb.hotKey(T_SPACE)) // add enemy (currently)
 //             game.addActeur("avion.obj",0.1,game.getPlayer()->getPosition().x,game.getPlayer()->getPosition().y,game.getPlayer()->getPosition().z,0,0,0,0,1,0);
 	    game.addTire();

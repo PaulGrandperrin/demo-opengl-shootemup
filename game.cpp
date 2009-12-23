@@ -18,9 +18,9 @@ Game::Game()
 
     player = Actor(getModel("demon.obj")); // creation of player
   //  timerGenEnemy = 0;
-    addActeur("UFO.obj",0.1,1,1.5); // creation of enemy
+    addActor("UFO.obj",0.1,1,1.5); // creation of enemy
   //  timerGenEnemy = 0;
-    addActeur("cube.obj");
+    addActor("cube.obj");
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;   
 }
@@ -50,7 +50,7 @@ void Game::manager()
 void Game::addTire()
 {
     if (timerGenShoot <= 0) {
-        addActeur("bouler.obj",0.1,getPlayer()->getPosition().x,getPlayer()->getPosition().y,getPlayer()->getPosition().z,0,0,0,0,1,0);
+        addActor("bouler.obj",0.1,getPlayer()->getPosition().x,getPlayer()->getPosition().y,getPlayer()->getPosition().z,0,0,0,0,VELOCITY_BOULET,0);
         timerGenShoot=INTERVALE_TEMP_SHOOT; // we can regenerate tire before this val is > 0
     }
 }
@@ -63,9 +63,9 @@ void Game::addEnemy()
 	float randE = random(0.0,1.0); // if RandE pair then demon else cube
 
 	if (isPair(randE))
-	  addActeur("demon.obj",0.08,randX,1);
+	  addActor("demon.obj",0.08,randX,1);
 	else
-	  addActeur("cube.obj",0.1,randX,1);  
+	  addActor("cube.obj",0.1,randX,1);  
         timerGenEnemy=INTERVALE_TEMP_ENEMY;
     }
 }
@@ -88,7 +88,7 @@ Model3D* Game::getModel(string type)
 }
 
 
-void Game::addActeur(string type, float size, float posx, float posy , float posz, float anglex, float angley, float anglez, float vx, float vy, float vz, float ax, float ay, float az) // parameter for test, to comple
+void Game::addActor(string type, float size, float posx, float posy , float posz, float anglex, float angley, float anglez, float vx, float vy, float vz, float ax, float ay, float az) // parameter for test, to comple
 {
     t_position pos = {posx,posy,posz};
     t_rotation rot = {anglex,angley,anglez};
