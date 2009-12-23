@@ -11,7 +11,7 @@ float random(float min, float max)
      return ((max - min) * rand()/(float)RAND_MAX + min);
 }
 
-bool etPair(float val)
+bool isPair(float val)
 {
   return ((int)(val*10) % 2) == 0;
 }

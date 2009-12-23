@@ -61,7 +61,7 @@ void Game::addEnemy()
         float randX = random(-1.0,1.0); // where actor will be in X
 	float randE = random(0.0,1.0); // if RandE pair then demon else cube
 
-	if (etPair(randE))
+	if (isPair(randE))
 	  addActeur("demon.obj",0.08,randX,1);
 	else
 	  addActeur("cube.obj",0.1,randX,1);  

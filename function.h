@@ -6,6 +6,6 @@
 
 float random(float min, float max);
 
-bool etPair(float val);
+bool isPair(float val);
 
 #endif
