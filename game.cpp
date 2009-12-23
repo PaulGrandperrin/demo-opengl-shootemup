@@ -50,7 +50,7 @@ void Game::manager()
 void Game::addTire()
 {
     if (timerGenShoot <= 0) {
-        addActor("bouler.obj",0.1,getPlayer()->getPosition().x,getPlayer()->getPosition().y,getPlayer()->getPosition().z,0,0,0,0,VELOCITY_BOULET,0);
+        addActor("bouler.obj",TAILLE_BOULET,getPlayer()->getPosition().x,getPlayer()->getPosition().y,getPlayer()->getPosition().z,0,0,0,0,VELOCITY_BOULET,0);
         timerGenShoot=INTERVALE_TEMP_SHOOT; // we can regenerate tire before this val is > 0
     }
 }
