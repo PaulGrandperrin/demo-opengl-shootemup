@@ -103,10 +103,15 @@ Window::Window() : kb(), game() // Window has keyboard and Game
     
     setWindowTitle(tr("Shmup"));
     grabKeyboard();
+    
+    application.setDisplayWidget(this); //Display the thread with Window widget
+    application.start(); // Start the Thread, run() call to update function in Window
 }
 
 Window::~Window()
 {
+    application.stop();
+    application.wait();
     delete viewOpenGl;
 }
 
@@ -125,7 +130,7 @@ void Window::checkKeyboard()
 {
     if (kb.hotKey(T_ECHAP))
     {
-        emit killThread(); // kill thread before application
+        close();
     }
     if (kb.hotKey(T_CTRL))
     {
@@ -176,17 +181,15 @@ ThreadQt::ThreadQt()
 void ThreadQt::run() // le coeur du thread
 {
 
-
     running=true;
     while (running) //tant de l'application n'a pas demander a s'arreter
     {
         msleep(20); // frequence : 50hz
         emit updateGame(); // on envois un signal au a la fonction Update()
     }
-    emit closeApp(); // on envois un signal a l'appli pour quel s'arrete enfin
 }
 
-void ThreadQt::selfKillThread()
+void ThreadQt::stop()
 {
     running=false; // on arrete la boucle du thread
 }

@@ -42,6 +42,26 @@ private:
 
 
 
+
+class Window;
+
+
+class ThreadQt : public QThread
+{
+    Q_OBJECT
+public:
+    ThreadQt();
+    void run(); // what the thread must do
+    void stop();
+    void setDisplayWidget(Window* displayWidget); // connection
+
+private:
+    bool running; // = true while game run.
+
+signals:
+    void updateGame(/* you can put the resulting data */); // update general game.
+};
+
 class Window: public QWidget
 {
     Q_OBJECT
@@ -53,6 +73,7 @@ private:
     Keyboard kb; // keyboard management
     Game game; // game management
     ViewOpenGl* viewOpenGl; // view management
+    ThreadQt application; //One Qt Thread (window.h) Qthread
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
     void checkKeyboard(); //action to do with key(s) activate
@@ -68,30 +89,7 @@ private slots: // function called by threadQt every 20ms.
         close();
     }
 
-signals:
-    void killThread(); // before kill application, we need to kill timer, it resend a signal when it will be done
 };
 
-
-
-
-class ThreadQt : public QThread
-{
-    Q_OBJECT
-public:
-    ThreadQt();
-    void run(); // what the thread must do
-    void setDisplayWidget(Window* displayWidget); // connection
-
-private:
-    bool running; // = true while game run.
-
-private slots:
-    void selfKillThread(); // gamer want to quit, we need to kill thread
-
-signals:
-    void updateGame(/* you can put the resulting data */); // update general game.
-    void closeApp(/* you can put the resulting data */); // just before self-murder
-};
 
 #endif
