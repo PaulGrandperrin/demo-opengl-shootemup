@@ -14,6 +14,7 @@ Game::Game()
     addModel("UFO.obj");
     addModel("tire2.obj");
     addModel("avion.obj");
+    addModel("bouler.obj");
 
     player = Actor(getModel("demon.obj")); // creation of player
   //  timerGenEnemy = 0;
@@ -49,7 +50,7 @@ void Game::manager()
 void Game::addTire()
 {
     if (timerGenShoot <= 0) {
-        addActeur("avion.obj",0.1,getPlayer()->getPosition().x,getPlayer()->getPosition().y,getPlayer()->getPosition().z,0,0,0,0,1,0);
+        addActeur("bouler.obj",0.1,getPlayer()->getPosition().x,getPlayer()->getPosition().y,getPlayer()->getPosition().z,0,0,0,0,1,0);
         timerGenShoot=INTERVALE_TEMP_SHOOT; // we can regenerate tire before this val is > 0
     }
 }

@@ -301,7 +301,7 @@ bool Model3D::load(string path)
     //On enregistre qlq données
     sizeofVbo=allVertex.size();
     sizeofIbo=fVect.size();
-    texture= ( GLuint ) loadTexture ( ( char* ) "textures/demon.png" );
+    texture= ( GLuint ) loadTexture ( ( char* ) "textures/bouler.png" );
 
     cout << "Nb Vertex: " << allVertex.size() << endl;
     cout << "Nb Triangles: " << fVect.size() /3 << endl;
