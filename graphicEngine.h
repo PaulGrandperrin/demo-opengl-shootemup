@@ -1,5 +1,6 @@
 // TODO NOTE HACK FIXME
 
+
 /*
 Format des fichiers .obg
 Le moteur étant basique, il faut exporter les models en suivant quelques
