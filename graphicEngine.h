@@ -1,7 +1,5 @@
-// TODO NOTE HACK FIXME
 
-
-/*
+/* NOTE
 Format des fichiers .obg
 Le moteur étant basique, il faut exporter les models en suivant quelques
 règles précises.
@@ -16,6 +14,19 @@ Les .mtl sont pas encore gérés donc pas de propriétés d'eclairage phong.
 A peu près tout les formats de texture sont supportés: jpg, png, bnp.
 Le cannal alpha est pas encore supporté.
 Le sens de la texture n'est pas le même que celui de Blender, il faut donc faire un flip verticale.
+*/
+
+/* TODO
+-éclairage blinn phong
+-lampe , lumiere parallele , (spot)
+-normal map
+-models annimés par keyframe
+-afficher du texte a l'ecran
+-effet motion-blur
+-effet glow ( lueur diffuse)
+-effet HDR (dur)
+-coronas ( point très lumineux)
+-shadow volumes ( monster dur)
 */
 
 #include <vector>
