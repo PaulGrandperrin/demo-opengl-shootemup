@@ -15,21 +15,15 @@ Les .mtl sont pas encore gérés donc pas de propriétés d'eclairage phong.
 
 A peu près tout les formats de texture sont supportés: jpg, png, bnp.
 Le cannal alpha est pas encore supporté.
+Le sens de la texture n'est pas le même que celui de Blender, il faut donc faire un flip verticale.
 */
+
 #include <vector>
 #include <string>
 
-
 using namespace std;
 
-struct instance
-{
-  float x,y,z;
-  float ax,ay,az;
-  float sx,sy,sz;
-  int idModel;
-  //TODO ajouter coefficient de transparence et d'autres attribus
-};
+#include "instance.h"
 
 struct camera
 {
@@ -51,7 +45,7 @@ class graphicEngine
     int loadModel(string pathModel,string pathTexture);
     void unLoadModel(int id);
     
-    void render(vector<instance> instances, camera cam);
+    void render(vector<instance> instances, camera cam,float time);
     
   private:
     int loadTexture ( char* path );
@@ -64,5 +58,4 @@ class graphicEngine
     vector<model> models;
     
     int width,height;
-    
 };

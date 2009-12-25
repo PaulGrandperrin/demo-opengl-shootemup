@@ -1,30 +1,59 @@
 #include "actor.h"
 
-#include <QApplication>
-#include <QThread>
-
 // for trace during test , to kept
 #include <iostream>
 using namespace std;
 
 
-
-Actor::Actor(Model3D* model, float size , t_position pos, t_rotation rot, t_velocity vel, t_accel accel, string fname)
+Actor::Actor(int idModel, vect position,vect rotation,vect scale)
 {
+	this->position=position;
+	this->rotation=rotation;
+	this->scale=scale;
+	this->idModel=idModel;
+}
+
+ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale)
+{
+	this->position=position;
+	this->rotation=rotation;
+	this->scale=scale;
+	this->idModel=idModel;
+	this->velocity={0,0,0};
+	this->acceleration={0,0,0};
+}
+
+void ActorPhysique::update(float time)
+{
+	velocity.x+=time*acceleration.x/1000;
+	velocity.y+=time*acceleration.y/1000;
+	velocity.z+=time*acceleration.z/1000;
+	
+	position.x+=time*velocity.x/1000;
+	position.y+=time*velocity.y/1000;
+	position.z+=time*velocity.z/1000;
+}
+
+
+// ---------------------Sauvegarde de l'ancienne version---------------------------
+
+/*
+Actor::Actor(int model, float size , t_position pos, t_rotation rot, t_velocity vel, t_accel accel)//, string fname)
+{
+	timeElapsed=0;
     this->model = model;
     this->size = size;
     this->pos = pos;
     this->rot = rot;
     this->vel = vel;
     this->accel = accel;
-    this->f = new ifstream(fname.data());
-    if (this->f->fail()) {
-        cout << "Fichier inexistant !" <<endl;
-        delete this->f;
+    //this->f = new ifstream(fname.data());
+    //if (this->f->fail()) {
+        //cout << "Fichier inexistant !" <<endl;
+        //delete this->f;
         f = NULL;
-    }
-    readKeyState(); // We read a key state in the file
-    time.start();
+    //}
+    //readKeyState(); // We read a key state in the file
 
 }
 
@@ -35,13 +64,6 @@ Actor::~Actor() {
     }
 }
 
-void Actor::move()
-{
-    pos.x = pos.x + vel.x/100;
-    pos.y = pos.y + vel.y/100;
-    pos.z = pos.z + vel.z/100;
-}
-
 void Actor::translate(float x, float y, float z)
 {
     this->pos.x += x;
@@ -49,7 +71,7 @@ void Actor::translate(float x, float y, float z)
     this->pos.z += z;
 }
 
-void Actor::rotation(float x, float y, float z)
+void Actor::rotate(float x, float y, float z)
 {
     this->rot.x += x;
     this->rot.y += y;
@@ -98,9 +120,11 @@ void Actor::setKeyState(short type, float x, float y, float z, float t) {
     this->state->t = t;
 }
 
-void Actor::updatePositionVelocityAcceleration() {
-    float cur_t = (float)time.elapsed()/1000;
-    if (this->state != NULL && this->state->t < cur_t) {
+void Actor::updatePositionVelocityAcceleration(float time)
+{
+	cout << "1"<<endl;
+	timeElapsed+=time;
+    if (this->state != NULL && this->state->t < timeElapsed) {
         if (this->state->type == MODIFY_ACC)
             setAcceleration(this->state->x, this->state->y, this->state->z);
         else
@@ -109,31 +133,18 @@ void Actor::updatePositionVelocityAcceleration() {
     }
     // We modify the position if needed
     if (this->accel.x || this->vel.x)
-        this->pos.x = 0.5*this->accel.x*cur_t*cur_t+this->vel.x*cur_t+this->pos.x;
+        this->pos.x = 0.5*this->accel.x*timeElapsed*timeElapsed+this->vel.x*timeElapsed+this->pos.x;
     if (this->accel.y || this->vel.y)
-        this->pos.y = 0.5*this->accel.y*cur_t*cur_t+this->vel.y*cur_t+this->pos.y;
+        this->pos.y = 0.5*this->accel.y*timeElapsed*timeElapsed+this->vel.y*timeElapsed+this->pos.y;
     if (this->accel.z || this->vel.z)
-        this->pos.z = 0.5*this->accel.z*cur_t*cur_t+this->vel.z*cur_t+this->pos.z;
+        this->pos.z = 0.5*this->accel.z*timeElapsed*timeElapsed+this->vel.z*timeElapsed+this->pos.z;
 
     // We modify the velocity if needed
     if (this->accel.x)
-        this->vel.x = this->accel.x*cur_t+this->vel.x;
+        this->vel.x = this->accel.x*timeElapsed+this->vel.x;
     if (this->accel.y)
-        this->vel.y = this->accel.y*cur_t+this->vel.y;
+        this->vel.y = this->accel.y*timeElapsed+this->vel.y;
     if (this->accel.z)
-        this->vel.z = this->accel.z*cur_t+this->vel.z;
+        this->vel.z = this->accel.z*timeElapsed+this->vel.z;
 }
-
-void Actor::display()
-{
-
-    glLoadIdentity( );
-    gluLookAt(0,0,5,0,0,0,0,1,0);
-    glTranslatef(pos.x,pos.y,pos.z);
-    glScalef(size,size,size);
-    glRotatef(rot.x,1,0,0);
-    glRotatef(rot.y,0,1,0);
-    glRotatef(rot.z,0,0,1);
-    this->model->render();
-
-}
+*/

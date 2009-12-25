@@ -1,4 +1,4 @@
-#include "graphicEngine.hpp"
+#include "graphicEngine.h"
 
 
 #include <IL/il.h>
@@ -113,6 +113,7 @@ void graphicEngine::init()
   glClearColor ( 1,1,1,0 );
   glEnable (GL_TEXTURE_2D);
   glEnable(GL_DEPTH_TEST);
+  cout << "openGL initialized"<<endl;
 }
 
 void graphicEngine::resize(int width,int height)
@@ -125,7 +126,7 @@ void graphicEngine::resize(int width,int height)
   this->height=height;
 }
 
-void graphicEngine::render(vector<instance> instances,camera cam)
+void graphicEngine::render(vector<instance> instances,camera cam,float time)
 {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

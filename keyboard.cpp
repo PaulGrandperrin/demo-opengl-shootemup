@@ -5,12 +5,14 @@
 #include <iostream>
 using namespace std;
 
+//http://doc.trolltech.com/4.1/qt.html
+
 Keyboard::Keyboard() {
     // On definit les touches par defaut
-    int connectionKeyTab[NB_KEYS] = {Qt::Key_Escape, Qt::Key_Left, Qt::Key_Up, Qt::Key_Right, Qt::Key_Down, Qt::Key_Control, Qt::Key_Shift, Qt::Key_Space};
+    int connectionKeyTab[NB_KEYS] = {Qt::Key_Escape, Qt::Key_Left, Qt::Key_Up, Qt::Key_Right, Qt::Key_Down, Qt::Key_Control, Qt::Key_Shift, Qt::Key_Space, Qt::Key_Alt};
     // Initialisation des attributs
     for (int i = 0; i<NB_KEYS; i++) {
-        stateKey[i] = 0;
+        stateKeys[i] = 0;
         connectionKey[i] = connectionKeyTab[i];
     }
 }
@@ -22,12 +24,6 @@ void Keyboard::updateEvent(int key, int state) {
         i++;
     }
     if (i < NB_KEYS)
-        stateKey[i] = state;
+        stateKeys[i] = state;
 }
 
-int Keyboard::hotKey(int key) {
-    if (key >= 0 && key < NB_KEYS)
-        return stateKey[key];
-    else
-        return 0;
-}

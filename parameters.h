@@ -6,7 +6,7 @@
 #define TAILLE_MIN_X 100
 #define TAILLE_MIN_Y 150
 
-#define TYPE_DEFAULT_MESH "cube.obj"
+#define TYPE_DEFAULT_MESH 1
 #define TAILLE_DEFAULT_VAISSEAU 0.1
 #define POSX_DEFAULT_VAISSEAU 0
 #define POSY_DEFAULT_VAISSEAU 0
@@ -33,7 +33,7 @@
 #define INTERVALE_TEMP_ENEMY 100  // provisoire
 
 
-#define NB_KEYS 8
+#define NB_KEYS 9
 #define T_ECHAP 0
 #define T_GAUCHE 1
 #define T_HAUT 2
@@ -42,5 +42,6 @@
 #define T_CTRL 5
 #define T_SHIFT 6
 #define T_SPACE 7
+#define T_ALT 8
 
 #endif

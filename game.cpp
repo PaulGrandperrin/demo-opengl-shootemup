@@ -6,101 +6,174 @@
 #include <iostream>
 using namespace std;
 
-Game::Game()
-{
-    addModel("cube.obj"); // creation of Model for actor
-    addModel("demon.obj");
-    addModel("cow.obj");
-    addModel("UFO.obj");
-    addModel("tire2.obj");
-    addModel("avion.obj");
-    addModel("bouler.obj");
-
-    player = Actor(getModel("demon.obj")); // creation of player
-  //  timerGenEnemy = 0;
-    addActor("UFO.obj",0.1,1,1.5); // creation of enemy
-  //  timerGenEnemy = 0;
-    addActor("cube.obj");
-    timerGenEnemy=INTERVALE_TEMP_ENEMY;
-    timerGenShoot=INTERVALE_TEMP_SHOOT;   
-}
-
 Game::~Game()
 {
+	cout << endl; //a cause du compteur de missile, avant de quitter, il faut un seut de ligne
 }
 
-
-void Game::manager()
+void Game::init()
 {
-    timerGenShoot--;
-    timerGenEnemy--;
-    if (timerGenEnemy <= 0) {
-        addEnemy();
-    }
-    list<Actor>::iterator it;
-    // list<Actor>* enemies = getEnemies();
-    for (it=enemies.begin(); it!=enemies.end(); it++)
+	stop=false;
+    GE.init();
+
+	//TODO charger le fichier de niveau et les trajectoire ici
+	
+    demon=GE.loadModel("meshes/demon.obj","textures/demon.png");
+    UFO=GE.loadModel("meshes/UFO.obj","textures/kde.png");
+    boulet=GE.loadModel("meshes/boulet.obj","textures/boulet.png");
+
+    player = ActorPhysique(UFO,{0,0,0},{0,0,0},{0.25,0.25,0.25});
+
+    timerGenEnemy=INTERVALE_TEMP_ENEMY;
+    timerGenShoot=INTERVALE_TEMP_SHOOT;
+}
+
+void Game::resize(int width,int heigth)
+{
+	GE.resize(width,heigth);
+}
+
+void Game::update(bool stateKeys[],float time)
+{
+	this->stateKeys=stateKeys;
+	this->time=time;
+
+	//NOTE c'est pas forcément la forme définitive mais ca correspond plus a ce que l'on avais dit.
+	playerManager();
+	firesManager();
+	enemiesManager();
+	//bonusManager();
+	//decorManager();
+	collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
+	gameManager(); // gere le menu, les options graphiques, et les autres trucs
+
+	//Pour le fun
+	cout << (char)0x0D <<fires.size()<<" missile(s)  "<<flush;
+	
+	render();
+}
+
+// fin de l'interface, debut des méthodes privés
+
+void Game::render()
+{
+	vector<instance> instances;
+    instances.push_back(player.getInstance());
+
+    list<Actor>::iterator ite;
+    for (ite=enemies.begin(); ite!= enemies.end(); ite++)
     {
-        (it)->translate(0,-0.001,0); // for each enemy currently
-        it->move();
+        instances.push_back(ite->getInstance());
     }
-    player.translate(0,-0.001,0);
+    
+    list<ActorPhysique>::iterator itf;
+	for (itf=fires.begin(); itf!= fires.end(); itf++)
+    {
+        instances.push_back(itf->getInstance());
+    }
+
+    GE.render(instances,{0,0,7,0,0,0,0,1,0},time);
 }
 
-void Game::addTire()
+/*
+*NOTE j'ai fait une version un peu compliqué du déplacement du joueur pour montrer les possibilités de
+* ActorPhysique. Cette simulation est physiquement correcte mais ne correpond pas du tout à ce qu'il y'a d'abitude
+* dans les jeux. Cependant, je trouve le concept interressant, ça oblige le joueur à mieux anticiper ses
+* trajectoires.
+*/
+void Game::playerManager()
 {
-    if (timerGenShoot <= 0) {
-        addActor("bouler.obj",TAILLE_BOULET,getPlayer()->getPosition().x,getPlayer()->getPosition().y,getPlayer()->getPosition().z,0,0,0,0,VELOCITY_BOULET,0);
-        timerGenShoot=INTERVALE_TEMP_SHOOT; // we can regenerate tire before this val is > 0
-    }
-}
+	player.setAcceleration({0,0,0});
+	if (stateKeys[T_GAUCHE]) // -x
+		player.setAcceleration({player.getAcceleration().x-5,player.getAcceleration().y,player.getAcceleration().z});
+	if (stateKeys[T_DROITE]) // +x
+		player.setAcceleration({player.getAcceleration().x+5,player.getAcceleration().y,player.getAcceleration().z});
+	if (stateKeys[T_HAUT]) // +y
+		player.setAcceleration({player.getAcceleration().x,player.getAcceleration().y+5,player.getAcceleration().z});
+	if (stateKeys[T_BAS]) // -y
+		player.setAcceleration({player.getAcceleration().x,player.getAcceleration().y-5,player.getAcceleration().z});
 
-void Game::addEnemy()
-{
+	player.update(time);
+	
+	if (stateKeys[T_CTRL] and timerGenShoot<=0)
+	{
+		//on tire 3 missiles
+		ActorPhysique fire;
+		fire=ActorPhysique(boulet,{player.getPosition().x,player.getPosition().y,player.getPosition().z},{0,0,0},{0.1,0.1,0.1});
+		fire.setVelocity({player.getVelocity().x+2,player.getVelocity().y-5,player.getVelocity().z});
+		fire.setAcceleration({0,20,0});
+		fires.push_back(fire);
 
-    if (timerGenEnemy <= 0) {
-        float randX = random(-1.0,1.0); // where actor will be in X
-	float randE = random(0.0,1.0); // if RandE pair then demon else cube
+		fire=ActorPhysique(boulet,{player.getPosition().x,player.getPosition().y,player.getPosition().z},{0,0,0},{0.1,0.1,0.1});
+		fire.setVelocity({player.getVelocity().x-2,player.getVelocity().y-5,player.getVelocity().z});
+		fire.setAcceleration({0,20,0});
+		fires.push_back(fire);
 
-	if (isPair(randE))
-	  addActor("demon.obj",0.08,randX,1);
+		fire=ActorPhysique(boulet,{player.getPosition().x,player.getPosition().y,player.getPosition().z},{0,0,0},{0.1,0.1,0.1});
+		fire.setVelocity({player.getVelocity().x,player.getVelocity().y+10,player.getVelocity().z});
+		fire.setAcceleration({0,0,0});
+		fires.push_back(fire);
+		
+		timerGenShoot=INTERVALE_TEMP_SHOOT;
+	}
 	else
-	  addActor("cube.obj",0.1,randX,1);  
-        timerGenEnemy=INTERVALE_TEMP_ENEMY;
-    }
+		timerGenShoot--;
+
+    player.rotate({0,-5,0}); //for fun
 }
 
-void Game::display()
+void Game::firesManager()
 {
-    player.display();
-    //  list<Actor>* enemies = getEnemies();
-    list<Actor>::iterator it;
-    for (it=enemies.begin(); it!= enemies.end(); it++)
-    {
-        it->display(); // display each ennemy
-    }
+    list<ActorPhysique>::iterator it;
+
+	for (it=fires.begin(); it!=fires.end(); it++)
+		it->update(time);
 }
 
-
-Model3D* Game::getModel(string type)
+void Game::enemiesManager()
 {
-    return &(models.find(type)->second); // the second is one model3D
+		list<Actor>::iterator it;
+ 	    for (it=enemies.begin(); it!=enemies.end(); it++)
+ 			it->update(time);
 }
 
-
-void Game::addActor(string type, float size, float posx, float posy , float posz, float anglex, float angley, float anglez, float vx, float vy, float vz, float ax, float ay, float az) // parameter for test, to comple
+void Game::collisionManager()
 {
-    t_position pos = {posx,posy,posz};
-    t_rotation rot = {anglex,angley,anglez};
-    t_velocity vel = {vx,vy,vz};
-    t_accel accel = {ax,ay,az};
-    Actor actor = Actor(getModel(type),size,pos,rot,vel,accel);
-    enemies.push_back(actor); // add this actor in list enemies
+	//pour l'instant ne sert a virer les objets sortant du cadre
+	// si on rentre en collision avec la bordure exterieur on efface l'object
+	
+	list<Actor>::iterator ite;
+	ite=enemies.begin(); //HACK c'est la chose la plus moche que j'ai jamais faite, mais pour l'instant, j'arrive pas a faire mieux
+	while(ite!=enemies.end())
+	{
+		for (ite=enemies.begin(); ite!=enemies.end() ; ite++)
+		{
+			if(ite->getPosition().x>4||ite->getPosition().x<-4||ite->getPosition().y>4||ite->getPosition().y<-4)
+			{
+				enemies.erase(ite);
+				break;
+			}
+		}
+	}
+	
+	list<ActorPhysique>::iterator itf;
+	itf=fires.begin();
+	while(itf!=fires.end())
+	{
+		for (itf=fires.begin(); itf!=fires.end() ; itf++)
+		{
+			if(itf->getPosition().x>10||itf->getPosition().x<-10||itf->getPosition().y>10||itf->getPosition().y<-10)
+			{
+				fires.erase(itf);
+				break;
+			}
+		}
+	}
 }
 
-
-void Game::addModel(string type)
+void Game::gameManager()
 {
-    Model3D model3D = Model3D(); //Model3D(type);
-    models.insert( pair<string,Model3D>(type,(Model3D)model3D) );
+	//Si on appuie sur echap, on passe pas par la case menu, on quitte direct
+	if (stateKeys[T_ECHAP])
+		stop=true;
 }
