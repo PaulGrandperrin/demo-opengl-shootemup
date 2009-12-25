@@ -1,4 +1,3 @@
-#include <QtGui>
 #include "game.h"
 #include <stdio.h>
 

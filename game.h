@@ -2,8 +2,6 @@
 #define GAME_H_
 
 #include <list>
-#include <map>
-//#include <QTime>
 
 #include "actor.h"
 #include "graphicEngine.h"

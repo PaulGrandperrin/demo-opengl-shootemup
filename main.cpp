@@ -1,6 +1,4 @@
 #include <QApplication>
-#include <QThread>
-#include <QTime>
 #include "viewQt.h"
 
 // for trace during test , to kept
