@@ -31,7 +31,7 @@ private:
     int timerGenShoot;
     int timerGenEnemy;
 
-	int demon,UFO,boulet;
+	int Mplayer,Mboulet;
 
 	graphicEngine GE;
 

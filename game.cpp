@@ -17,11 +17,10 @@ void Game::init()
 
 	//TODO charger le fichier de niveau et les trajectoire ici
 	
-    demon=GE.loadModel("meshes/demon.obj","textures/demon.png");
-    UFO=GE.loadModel("meshes/UFO.obj","textures/kde.png");
-    boulet=GE.loadModel("meshes/boulet.obj","textures/boulet.png");
+    Mplayer=GE.loadModel("meshes/player.obj","textures/player.png");
+    Mboulet=GE.loadModel("meshes/boulet.obj","textures/boulet.png");
 
-    player = ActorPhysique(UFO,{0,0,0},{0,0,0},{0.25,0.25,0.25});
+    player = ActorPhysique(Mplayer,{0,0,0},{2,0,0},{1,1,1});
 
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
@@ -98,17 +97,17 @@ void Game::playerManager()
 	{
 		//on tire 3 missiles
 		ActorPhysique fire;
-		fire=ActorPhysique(boulet,{player.getPosition().x,player.getPosition().y,player.getPosition().z},{0,0,0},{0.1,0.1,0.1});
+		fire=ActorPhysique(Mboulet,{player.getPosition().x,player.getPosition().y,player.getPosition().z},{0,0,0},{0.1,0.1,0.1});
 		fire.setVelocity({player.getVelocity().x+2,player.getVelocity().y-5,player.getVelocity().z});
 		fire.setAcceleration({0,20,0});
 		fires.push_back(fire);
 
-		fire=ActorPhysique(boulet,{player.getPosition().x,player.getPosition().y,player.getPosition().z},{0,0,0},{0.1,0.1,0.1});
+		fire=ActorPhysique(Mboulet,{player.getPosition().x,player.getPosition().y,player.getPosition().z},{0,0,0},{0.1,0.1,0.1});
 		fire.setVelocity({player.getVelocity().x-2,player.getVelocity().y-5,player.getVelocity().z});
 		fire.setAcceleration({0,20,0});
 		fires.push_back(fire);
 
-		fire=ActorPhysique(boulet,{player.getPosition().x,player.getPosition().y,player.getPosition().z},{0,0,0},{0.1,0.1,0.1});
+		fire=ActorPhysique(Mboulet,{player.getPosition().x,player.getPosition().y,player.getPosition().z},{0,0,0},{0.1,0.1,0.1});
 		fire.setVelocity({player.getVelocity().x,player.getVelocity().y+10,player.getVelocity().z});
 		fire.setAcceleration({0,0,0});
 		fires.push_back(fire);
@@ -118,7 +117,8 @@ void Game::playerManager()
 	else
 		timerGenShoot--;
 
-    player.rotate({0,-5,0}); //for fun
+	player.rotate({0,0.5,0});
+	
 }
 
 void Game::firesManager()
