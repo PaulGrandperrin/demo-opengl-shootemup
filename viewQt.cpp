@@ -6,38 +6,38 @@
 
 ViewOpenGl::ViewOpenGl( QWidget *parent) : QGLWidget(parent)
 {
-	setWindowTitle(tr("Shmup"));
-	grabKeyboard();
-	connect(&thread, SIGNAL(updateGame()), this, SLOT(update()));
-	
+    setWindowTitle(tr("Shmup"));
+    grabKeyboard();
+    connect(&thread, SIGNAL(updateGame()), this, SLOT(update()));
+
     thread.start();
 }
 
 ViewOpenGl::~ViewOpenGl()
 {
     makeCurrent(); //Context openGl
-	thread.stop(); //On demande au thread de se suicider (=! on tue le thread)
+    thread.stop(); //On demande au thread de se suicider (=! on tue le thread)
     thread.wait(); //et donc on attend qu'il soit bien mort (et enterré)
 }
 
 void ViewOpenGl::initializeGL()
 {
-	game.init();
+    game.init();
 }
 
 void ViewOpenGl::paintGL()
 {
-	float t=time.elapsed();
-	time.restart();
+    float t=time.elapsed();
+    time.restart();
     game.update(kb.getStateKeys(),t);
-	
-	if(game.close()) //FIXME il ya surement une place plus adaptée pour ça
-		close();
+
+    if (game.close()) //FIXME il ya surement une place plus adaptée pour ça
+        close();
 }
 
 void ViewOpenGl::resizeGL(int width, int height)
 {
-	game.resize(width,height);
+    game.resize(width,height);
     this->width=width;
     this->height=height;
 }

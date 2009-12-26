@@ -27,8 +27,8 @@
 #define STRUCT_VELOCITY_DEF {0,0,0}
 #define STRUCT_ACCEL_DEF {0,0,0}
 
-#define INTERVALE_TEMP_SHOOT 10 // temp = X*20ms ex: 50*20 = 1s
-#define VELOCITY_BOULET 6
+#define INTERVALE_TEMP_SHOOT 20 // temp = X*20ms ex: 50*20 = 1s
+#define VELOCITY_BOULET 2
 #define TAILLE_BOULET 0.03
 #define INTERVALE_TEMP_ENEMY 100  // provisoire
 

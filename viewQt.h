@@ -32,7 +32,7 @@ class ViewOpenGl : public QGLWidget
 public:
     ViewOpenGl(QWidget *parent = 0);
     ~ViewOpenGl();
-	
+
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
@@ -45,10 +45,10 @@ protected:
     void resizeGL(int width, int height);  // automatic
 
 private:
-	Keyboard kb;
-	ThreadQt thread;
+    Keyboard kb;
+    ThreadQt thread;
     Game game;
-	QTime time;
+    QTime time;
     int width,height;
 };
 

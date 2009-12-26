@@ -7,31 +7,31 @@ using namespace std;
 
 Actor::Actor(int idModel, vect position,vect rotation,vect scale)
 {
-	this->position=position;
-	this->rotation=rotation;
-	this->scale=scale;
-	this->idModel=idModel;
+    this->position=position;
+    this->rotation=rotation;
+    this->scale=scale;
+    this->idModel=idModel;
 }
 
 ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale)
 {
-	this->position=position;
-	this->rotation=rotation;
-	this->scale=scale;
-	this->idModel=idModel;
-	this->velocity={0,0,0};
-	this->acceleration={0,0,0};
+    this->position=position;
+    this->rotation=rotation;
+    this->scale=scale;
+    this->idModel=idModel;
+    this->velocity={0,0,0};
+    this->acceleration={0,0,0};
 }
 
 void ActorPhysique::update(float time)
 {
-	velocity.x+=time*acceleration.x/1000;
-	velocity.y+=time*acceleration.y/1000;
-	velocity.z+=time*acceleration.z/1000;
-	
-	position.x+=time*velocity.x/1000;
-	position.y+=time*velocity.y/1000;
-	position.z+=time*velocity.z/1000;
+    velocity.x+=time*acceleration.x/1000;
+    velocity.y+=time*acceleration.y/1000;
+    velocity.z+=time*acceleration.z/1000;
+
+    position.x+=time*velocity.x/1000;
+    position.y+=time*velocity.y/1000;
+    position.z+=time*velocity.z/1000;
 }
 
 

@@ -12,7 +12,9 @@ private:
 public:
     Keyboard();
     void updateEvent(int key, int state);  // change state of key : state of key = state. If invalid key, nothing
-    inline bool* getStateKeys(){return stateKeys;};
+    inline bool* getStateKeys() {
+        return stateKeys;
+    };
 };
 
 #endif

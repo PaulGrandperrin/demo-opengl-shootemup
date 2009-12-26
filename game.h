@@ -10,19 +10,21 @@
 class Game
 {
 public:
-	~Game();
-	void init();
-	void update(bool stateKeys[],float time);
-	void resize(int width,int heigth);
-	bool close(){return stop;}
+    ~Game();
+    void init();
+    void update(bool stateKeys[],float time);
+    void resize(int width,int heigth);
+    bool close() {
+        return stop;
+    }
 private:
-	
-	void render();
-	void playerManager();
-	void firesManager();
-	void enemiesManager();
-	void collisionManager();
-	void gameManager();
+
+    void render();
+    void playerManager();
+    void firesManager();
+    void enemiesManager();
+    void collisionManager();
+    void gameManager();
 
     list<Actor> enemies; //TODO remplacer en ActorKeyFrame
     list<ActorPhysique> fires;
@@ -31,13 +33,16 @@ private:
     int timerGenShoot;
     int timerGenEnemy;
 
-	int Mplayer,Mboulet;
+    int Mplayer,Mboulet;
 
-	graphicEngine GE;
+    graphicEngine GE;
 
-	bool* stateKeys;
-	float time;
-	bool stop;
+    bool* stateKeys;
+    float time;
+    bool stop;
+
+    bool pause;
+    bool passagePause; //permet une bonne transition entre pause-!pause
 };
 
 #endif
