@@ -15,17 +15,8 @@ void Game::init()
     stop=false;
     pause=false;
     passagePause = false;
-    //cam={0,0,7,0,0,0,0,1,0};
-    cam.eyex = 0;
-    cam.eyey = 0;
-    cam.eyez = ZOOM_DEFAULT;
-    cam.centerx = 0;
-    cam.centery = 0;
-    cam.centerz = 0;
-    cam.upx = 0;
-    cam.upy = 1;
-    cam.upz = 0; 
-    //zoom = ZOOM_DEFAULT;
+    resetCam();
+
 
     GE.init();
 
@@ -45,9 +36,12 @@ void Game::resize(int width,int heigth)
     GE.resize(width,heigth);
 }
 
-void Game::update(bool stateKeys[],float time)
+void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int deltaWheel,float time) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
     this->stateKeys=stateKeys;
+    this->stateButtons=stateButtons;
+    this->deltaMouse=deltaMouse;
+    this->deltaWheel=deltaWheel;
     this->time=time;
 
     //NOTE c'est pas forcément la forme définitive mais ca correspond plus a ce que l'on avais dit.
@@ -88,8 +82,7 @@ void Game::render()
     {
         instances.push_back(itf->getInstance());
     }
-
-    GE.render(instances, cam ,time);
+    GE.render(instances, {sin(longitude)*zoom,sin(latitude)*zoom,cos(longitude)*cos(latitude)*zoom,centerX,centerY,0,0,1,0} ,time);
 }
 
 /*
@@ -101,18 +94,18 @@ void Game::render()
 void Game::playerManager()
 {
     player.setAcceleration( {0,0,0});
-    if (stateKeys[T_GAUCHE]) // -x
+    if (stateKeys[K_LEFT]) // -x
         player.setAcceleration( {player.getAcceleration().x-5,player.getAcceleration().y,player.getAcceleration().z});
-    if (stateKeys[T_DROITE]) // +x
+    if (stateKeys[K_RIGHT]) // +x
         player.setAcceleration( {player.getAcceleration().x+5,player.getAcceleration().y,player.getAcceleration().z});
-    if (stateKeys[T_HAUT]) // +y
+    if (stateKeys[K_UP]) // +y
         player.setAcceleration( {player.getAcceleration().x,player.getAcceleration().y+5,player.getAcceleration().z});
-    if (stateKeys[T_BAS]) // -y
+    if (stateKeys[K_DOWN]) // -y
         player.setAcceleration( {player.getAcceleration().x,player.getAcceleration().y-5,player.getAcceleration().z});
 
     player.update(time);
 
-    if (stateKeys[T_CTRL] and timerGenShoot<=0)
+    if ((((stateKeys[K_CTRL]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
         //on tire 3 missiles
         ActorPhysique fire;
@@ -164,8 +157,10 @@ void Game::collisionManager()
 
     list<Actor>::iterator ite;
     ite=enemies.begin(); //HACK c'est la chose la plus moche que j'ai jamais faite, mais pour l'instant, j'arrive pas a faire mieux
-    while (ite!=enemies.end())
-    {
+    //NOTE Pourquoi (paul) as tu mis une bouche while autour du for ? je comprend vraiment pas !
+    //NOTE C'est pas si horrible (sans le while) tu parcour toute les enemi (et fires) en verifiant s'il sont hors jeu our pas !
+//     while (ite!=enemies.end())
+//     {
         for (ite=enemies.begin(); ite!=enemies.end() ; ite++)
         {
             if (ite->getPosition().x>4||ite->getPosition().x<-4||ite->getPosition().y>4||ite->getPosition().y<-4)
@@ -174,12 +169,12 @@ void Game::collisionManager()
                 break;
             }
         }
-    }
+//     }
 
     list<ActorPhysique>::iterator itf;
     itf=fires.begin();
-    while (itf!=fires.end())
-    {
+//     while (itf!=fires.end())
+//     {
         for (itf=fires.begin(); itf!=fires.end() ; itf++)
         {
             if (itf->getPosition().x>10||itf->getPosition().x<-10||itf->getPosition().y>10||itf->getPosition().y<-10)
@@ -188,69 +183,79 @@ void Game::collisionManager()
                 break;
             }
         }
-    }
+//     }
 }
 
 void Game::gameManager()
 {
     // Si on est en transition et que la touche pause est relaché, alors fini transition
-    if (passagePause && (!stateKeys[T_SPACE])) {
+    if (passagePause && (!stateKeys[K_SPACE])) {
         passagePause = false;
         pause= (!pause); // seulement une fois que la transition est fini, on change l'etat.
     }
     // Si on est pas en transition et que touche pause est appuyé, alors on passe en transition (et en pause ou !pause)
-    if (!passagePause && stateKeys[T_SPACE]) {
-      if (pause == true)
-      {
-	resetCam();
-      }
+    if (!passagePause && stateKeys[K_SPACE]) {
+        if (pause == true)
+        {
+            resetCam();
+        }
         passagePause = true;
     }
     //Si on appuie sur echap, on passe pas par la case menu, on quitte direct
-    if (stateKeys[T_ECHAP])
+    if (stateKeys[K_ESC])
         stop=true;
 }
 
 // Lors du zoom ou des translation, c'est la camera qui bouge, lors des rotation, c'est la scene.
-void Game::pauseManager() // TODO gestion a la souris, TODO acceleration, reset camera "avec douceur"
+//NOTE Toute les valeur ici sont prisent "au hasard" (0.05,0.02 ...) peut etre trouver des relation avec des nombre representant quelques choses pour nous !?
+void Game::pauseManager() // NOTE rotation bizare, zoom souris pas fini, TODO acceleration, reset camera "avec douceur"
 {
-    if (stateKeys[T_CTRL]) {
-        if (stateKeys[T_HAUT]) {
-            cam.eyez -= 0.05;
+    if (stateKeys[K_CTRL]) {
+        if (stateKeys[K_UP]) {
+            zoom -= 0.05;
         }
-        if (stateKeys[T_BAS]) {
-            cam.eyez += 0.05;
+        if (stateKeys[K_DOWN]) {
+            zoom += 0.05;
         }
-        if ((stateKeys[T_GAUCHE]) && (stateKeys[T_DROITE])) {
-	    resetCam();
+//         if (deltaWheel !=0) // probleme avec la molette
+//             zoom +=deltaWheel*0.0000000001;
+        if ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT])) {
+            resetCam();
         }
     }
-    else if (stateKeys[T_SHIFT]) {
-        if (stateKeys[T_HAUT]) {
-            cam.centery += 0.05;
+    else if (stateKeys[K_SHIFT]) {
+        if (stateKeys[K_UP]) {
+            centerY += 0.05;
         }
-        if (stateKeys[T_BAS]) {
-            cam.centery -= 0.05;
+        if (stateKeys[K_DOWN]) {
+            centerY -= 0.05;
         }
-        if (stateKeys[T_GAUCHE]) {
-            cam.centerx -= 0.05;
+        if (stateKeys[K_LEFT]) {
+            centerX -= 0.05;
         }
-        if (stateKeys[T_DROITE]) {
-            cam.centerx += 0.05;
+        if (stateKeys[K_RIGHT]) {
+            centerX += 0.05;
         }
+    }
+    else if (stateButtons[B_LEFT])
+    {
+        if ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2)) //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
+            centerY +=deltaMouse.y()*0.02;
+        if ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))
+            centerX +=-deltaMouse.x()*0.02;
     }
     else {
-        if (stateKeys[T_HAUT]) {
-            GE.changeAngleX(1);
-        }
-        if (stateKeys[T_BAS]) {
-            GE.changeAngleX(-1);
-        }
-        if (stateKeys[T_GAUCHE]) {
-            GE.changeAngleY(1);
-        }
-        if (stateKeys[T_DROITE]) {
-            GE.changeAngleY(-1);
-        }
+        if (stateKeys[K_UP])
+            latitude+=0.02;
+        if (stateKeys[K_DOWN])
+            latitude-=0.02;
+        if (stateKeys[K_LEFT])
+            longitude-=0.02;
+        if (stateKeys[K_RIGHT])
+            longitude+=0.02;
+        if ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2) && (stateButtons[B_MIDLE]))
+            latitude+=0.01*deltaMouse.y();
+        if ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2) && (stateButtons[B_MIDLE]))
+            longitude+=0.01*-deltaMouse.x();
     }
 }

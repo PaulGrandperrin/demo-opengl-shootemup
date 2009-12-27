@@ -19,12 +19,12 @@ QMAKE_LFLAGS_DEBUG += -ggdb -p -pg
 HEADERS += actor.h \
            game.h \
            graphicEngine.h \
-           keyboard.h \
+           inputDevice.h \
            parameters.h \
            viewQt.h
 SOURCES += actor.cpp \
            game.cpp \
            graphicEngine.cpp \
-           keyboard.cpp \
+           inputDevice.cpp \
            main.cpp \
            viewQt.cpp

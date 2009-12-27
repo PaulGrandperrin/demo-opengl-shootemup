@@ -8,6 +8,8 @@ ViewOpenGl::ViewOpenGl( QWidget *parent) : QGLWidget(parent)
 {
     setWindowTitle(tr("Shmup"));
     grabKeyboard();
+    grabMouse();
+    setMouseTracking(true);
     connect(&thread, SIGNAL(updateGame()), this, SLOT(update()));
 
     thread.start();
@@ -29,8 +31,8 @@ void ViewOpenGl::paintGL()
 {
     float t=time.elapsed();
     time.restart();
-    game.update(kb.getStateKeys(),t);
-
+    game.update(kb.getStateKeys(),mouse.getStateButtons(),mouse.getDeltaMouse(), mouse.getDeltaWheel(),t);
+    
     if (game.close()) //FIXME il ya surement une place plus adaptée pour ça
         close();
 }
@@ -70,6 +72,26 @@ void ViewOpenGl::keyPressEvent(QKeyEvent * event) // action on keyboard
 void ViewOpenGl::keyReleaseEvent(QKeyEvent * event)
 {
     kb.updateEvent(event->key(),false); // update tab state of key
+}
+
+void ViewOpenGl::mousePressEvent(QMouseEvent * event) // action on keyboard
+{
+    mouse.updateEvent(event->button(),true); // update tab state of key
+}
+
+void ViewOpenGl::mouseReleaseEvent(QMouseEvent * event)
+{
+    mouse.updateEvent(event->button(),false); // update tab state of key
+}
+
+void ViewOpenGl::mouseMoveEvent(QMouseEvent * event)
+{
+    mouse.updateXY(event->pos());
+}
+
+void ViewOpenGl::wheelEvent(QWheelEvent * event)
+{
+    mouse.updateWheel(event->delta());
 }
 
 QSize ViewOpenGl::minimumSizeHint() const

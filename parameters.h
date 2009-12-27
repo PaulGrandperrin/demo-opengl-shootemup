@@ -1,7 +1,9 @@
 #ifndef PARAMETRE_H_
 #define PARAMETRE_H_
 
-#define TAILLE_DEFAULT_X 400
+// TODO faire le menage !
+
+#define TAILLE_DEFAULT_X 600
 #define TAILLE_DEFAULT_Y 600
 #define TAILLE_MIN_X 100
 #define TAILLE_MIN_Y 150
@@ -30,20 +32,26 @@
 #define INTERVALE_TEMP_SHOOT 20 // temp = X*20ms ex: 50*20 = 1s
 #define VELOCITY_BOULET 2
 #define TAILLE_BOULET 0.03
-#define INTERVALE_TEMP_ENEMY 100  // provisoire
+#define INTERVALE_TEMP_ENEMY 50  // provisoire
 
 #define ZOOM_DEFAULT 8 // temps mis pour reset l'angle apres la pause
 
 
 #define NB_KEYS 9
-#define T_ECHAP 0
-#define T_GAUCHE 1
-#define T_HAUT 2
-#define T_DROITE 3
-#define T_BAS 4
-#define T_CTRL 5
-#define T_SHIFT 6
-#define T_SPACE 7
-#define T_ALT 8
+#define K_ESC 0
+#define K_UP 1
+#define K_DOWN 2
+#define K_LEFT 3
+#define K_RIGHT 4
+#define K_CTRL 5
+#define K_SHIFT 6
+#define K_ALT 7
+#define K_SPACE 8
+
+
+#define NB_BUTTON 9 // mouse
+#define B_LEFT 0
+#define B_MIDLE 1
+#define B_RIGHT 2
 
 #endif

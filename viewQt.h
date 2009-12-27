@@ -3,7 +3,7 @@
 
 #include "parameters.h" // general settings
 #include "game.h" // general application, 
-#include "keyboard.h"
+#include "inputDevice.h"
 
 #include <QWidget>
 #include <QGLWidget>
@@ -38,6 +38,10 @@ public:
 
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
+    void mousePressEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent * event);
+    void mouseMoveEvent(QMouseEvent * event);
+    void wheelEvent(QWheelEvent * event);
 
 protected:
     void initializeGL(); // automatic
@@ -46,6 +50,7 @@ protected:
 
 private:
     Keyboard kb;
+    Mouse mouse;
     ThreadQt thread;
     Game game;
     QTime time;

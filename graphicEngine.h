@@ -56,12 +56,6 @@ public:
     //renvoie 0 si echec sinon renvoie l'id du model
     int loadModel(string pathModel,string pathTexture);
     void unLoadModel(int id);
-    void changeAngleX(float angle);
-    void changeAngleY(float angle);
-    inline void initAngle() {
-        angleY=0;
-        angleX=0;
-    }
 
     void render(vector<instance> instances, camera cam,float time);
 
@@ -76,5 +70,4 @@ private:
     vector<model> models;
 
     int width,height;
-    float angleX,angleY; // l'angle de la scene en mode Pause
 };

@@ -8,28 +8,24 @@
 #include "graphicEngine.h"
 #include "parameters.h"
 
-struct gluLookAt
-{
-  float eyex,eyey,eyez;
-  float centerx,centery,centerz;
-  float upx,upy,upz;
-};
+#include <QPoint>
 
 class Game
 {
 public:
     ~Game();
     void init();
-    void update(bool stateKeys[],float time);
+    void update(bool stateKeys[],  bool stateButtons[], QPoint deltaMouse, int deltaWheel,float time);
     void resize(int width,int heigth);
     inline bool close() {
         return stop;
     }
     inline void resetCam() {
-      	GE.initAngle();
-        cam.eyez=ZOOM_DEFAULT;
-	cam.centerx = 0;
-	cam.centery = 0;
+        longitude=0;
+        latitude=0;
+        zoom=ZOOM_DEFAULT; // ZOOM_DEFAULT = 8
+        centerX = 0;
+        centerY = 0;
     }
 private:
 
@@ -51,15 +47,18 @@ private:
     int Mplayer,Mboulet;
 
     graphicEngine GE;
-    camera cam;
+    float longitude, latitude, zoom, centerX, centerY; // parametre de la camera
 
     bool* stateKeys;
+    bool* stateButtons;
+    QPoint deltaMouse;
+    int deltaWheel;
     float time;
     bool stop;
 
     bool pause;
     bool passagePause; //permet une bonne transition entre pause-!pause
-    
+
 };
 
 #endif
