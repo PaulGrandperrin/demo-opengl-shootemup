@@ -15,6 +15,18 @@ void Game::init()
     stop=false;
     pause=false;
     passagePause = false;
+    //cam={0,0,7,0,0,0,0,1,0};
+    cam.eyex = 0;
+    cam.eyey = 0;
+    cam.eyez = ZOOM_DEFAULT;
+    cam.centerx = 0;
+    cam.centery = 0;
+    cam.centerz = 0;
+    cam.upx = 0;
+    cam.upy = 1;
+    cam.upz = 0; 
+    //zoom = ZOOM_DEFAULT;
+
     GE.init();
 
     //TODO charger le fichier de niveau et les trajectoire ici
@@ -22,7 +34,7 @@ void Game::init()
     Mplayer=GE.loadModel("meshes/player.obj","textures/player.png");
     Mboulet=GE.loadModel("meshes/boulet.obj","textures/boulet.png");
 
-    player = ActorPhysique(Mplayer, {0,0,0}, {2,0,0}, {1,1,1});
+    player = ActorPhysique(Mplayer, {0,0,0}, {0,0,0}, {1,1,1});
 
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
@@ -49,9 +61,11 @@ void Game::update(bool stateKeys[],float time)
         collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
     }
     gameManager(); // gere le menu, les options graphiques, et les autres trucs
+    if (pause)
+        pauseManager();
 
     //Pour le fun
-    cout << (char)0x0D <<fires.size()<<" missile(s)  "<<flush;
+    cout << (char)0x0D <<fires.size()<<" missile(s) "<<flush;
 
     render();
 }
@@ -75,7 +89,7 @@ void Game::render()
         instances.push_back(itf->getInstance());
     }
 
-    GE.render(instances, {0,0,7,0,0,0,0,1,0},time);
+    GE.render(instances, cam ,time);
 }
 
 /*
@@ -179,16 +193,64 @@ void Game::collisionManager()
 
 void Game::gameManager()
 {
-    // si on est en transition et que la touche pause et relacher, alors fini transition
+    // Si on est en transition et que la touche pause est relaché, alors fini transition
     if (passagePause && (!stateKeys[T_SPACE])) {
         passagePause = false;
+        pause= (!pause); // seulement une fois que la transition est fini, on change l'etat.
     }
-    // si on est pas en transition et que touche pause est appuyer, alors on passe en transition (et en pause ou !pause)
+    // Si on est pas en transition et que touche pause est appuyé, alors on passe en transition (et en pause ou !pause)
     if (!passagePause && stateKeys[T_SPACE]) {
-        pause= (!pause);
+      if (pause == true)
+      {
+	resetCam();
+      }
         passagePause = true;
     }
     //Si on appuie sur echap, on passe pas par la case menu, on quitte direct
     if (stateKeys[T_ECHAP])
         stop=true;
+}
+
+// Lors du zoom ou des translation, c'est la camera qui bouge, lors des rotation, c'est la scene.
+void Game::pauseManager() // TODO gestion a la souris, TODO acceleration, reset camera "avec douceur"
+{
+    if (stateKeys[T_CTRL]) {
+        if (stateKeys[T_HAUT]) {
+            cam.eyez -= 0.05;
+        }
+        if (stateKeys[T_BAS]) {
+            cam.eyez += 0.05;
+        }
+        if ((stateKeys[T_GAUCHE]) && (stateKeys[T_DROITE])) {
+	    resetCam();
+        }
+    }
+    else if (stateKeys[T_SHIFT]) {
+        if (stateKeys[T_HAUT]) {
+            cam.centery += 0.05;
+        }
+        if (stateKeys[T_BAS]) {
+            cam.centery -= 0.05;
+        }
+        if (stateKeys[T_GAUCHE]) {
+            cam.centerx -= 0.05;
+        }
+        if (stateKeys[T_DROITE]) {
+            cam.centerx += 0.05;
+        }
+    }
+    else {
+        if (stateKeys[T_HAUT]) {
+            GE.changeAngleX(1);
+        }
+        if (stateKeys[T_BAS]) {
+            GE.changeAngleX(-1);
+        }
+        if (stateKeys[T_GAUCHE]) {
+            GE.changeAngleY(1);
+        }
+        if (stateKeys[T_DROITE]) {
+            GE.changeAngleY(-1);
+        }
+    }
 }

@@ -2,10 +2,18 @@
 #define GAME_H_
 
 #include <list>
+#include <math.h>
 
 #include "actor.h"
 #include "graphicEngine.h"
 #include "parameters.h"
+
+struct gluLookAt
+{
+  float eyex,eyey,eyez;
+  float centerx,centery,centerz;
+  float upx,upy,upz;
+};
 
 class Game
 {
@@ -14,8 +22,14 @@ public:
     void init();
     void update(bool stateKeys[],float time);
     void resize(int width,int heigth);
-    bool close() {
+    inline bool close() {
         return stop;
+    }
+    inline void resetCam() {
+      	GE.initAngle();
+        cam.eyez=ZOOM_DEFAULT;
+	cam.centerx = 0;
+	cam.centery = 0;
     }
 private:
 
@@ -25,6 +39,7 @@ private:
     void enemiesManager();
     void collisionManager();
     void gameManager();
+    void pauseManager();
 
     list<Actor> enemies; //TODO remplacer en ActorKeyFrame
     list<ActorPhysique> fires;
@@ -36,6 +51,7 @@ private:
     int Mplayer,Mboulet;
 
     graphicEngine GE;
+    camera cam;
 
     bool* stateKeys;
     float time;
@@ -43,6 +59,7 @@ private:
 
     bool pause;
     bool passagePause; //permet une bonne transition entre pause-!pause
+    
 };
 
 #endif

@@ -109,6 +109,7 @@ void graphicEngine::init()
 {
   glewInit(); 	//chargement des adresses des pointeurs de fonction des extentions d'openGL
   ilInit();  	//initialisation de devIL
+  initAngle();
   
   glClearColor ( 1,1,1,0 );
   glEnable (GL_TEXTURE_2D);
@@ -131,6 +132,8 @@ void graphicEngine::render(vector<instance> instances,camera cam,float time)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(cam.eyex,cam.eyey,cam.eyez,cam.centerx,cam.centery,cam.centerz,cam.upx,cam.upy,cam.upz);
+	glRotatef(angleX,1,0,0); // En mode Pause, on peut faire tourner la scene.
+	glRotatef(angleY,0,1,0);
 	
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	
@@ -426,6 +429,18 @@ int graphicEngine::loadTexture ( char* imagePath )
     cout << " OK\t\t" <<ilGetInteger ( IL_IMAGE_WIDTH )<<"x"<<ilGetInteger ( IL_IMAGE_HEIGHT )<<" pixels"<<endl;
     ilDeleteImages ( 1, &ilTextId );
     return glTextId;
+}
+
+
+void graphicEngine::changeAngleX(float angle) {
+    angleX+=angle;    //changer l'angle de la scene en mode pause
+    if (angleX<0) angleX=360;
+    if (angleX>360) angleX=0;
+}
+void graphicEngine::changeAngleY(float angle) {
+    angleY+=angle;
+    if (angleY<0) angleY=360;
+    if (angleY>360) angleY=0;
 }
 
   /*

@@ -32,6 +32,8 @@
 #define TAILLE_BOULET 0.03
 #define INTERVALE_TEMP_ENEMY 100  // provisoire
 
+#define ZOOM_DEFAULT 8 // temps mis pour reset l'angle apres la pause
+
 
 #define NB_KEYS 9
 #define T_ECHAP 0

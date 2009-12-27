@@ -35,38 +35,46 @@ Le sens de la texture n'est pas le même que celui de Blender, il faut donc fair
 using namespace std;
 
 #include "instance.h"
+#include "parameters.h"
 
 struct camera
 {
-  float eyex,eyey,eyez;
-  float centerx,centery,centerz;
-  float upx,upy,upz;
+    float eyex,eyey,eyez;
+    float centerx,centery,centerz;
+    float upx,upy,upz;
 };
 
 class graphicEngine
 {
-  public:
+public:
     graphicEngine();
     ~graphicEngine();
     void init();
-    
+
     void resize(int width,int height);
-    
+
     //renvoie 0 si echec sinon renvoie l'id du model
     int loadModel(string pathModel,string pathTexture);
     void unLoadModel(int id);
-    
+    void changeAngleX(float angle);
+    void changeAngleY(float angle);
+    inline void initAngle() {
+        angleY=0;
+        angleX=0;
+    }
+
     void render(vector<instance> instances, camera cam,float time);
-    
-  private:
+
+private:
     int loadTexture ( char* path );
-    
+
     struct model
     {
-      unsigned int ibo,vbo,texture;
-      int sizeofIbo,sizeofVbo;
+        unsigned int ibo,vbo,texture;
+        int sizeofIbo,sizeofVbo;
     };
     vector<model> models;
-    
+
     int width,height;
+    float angleX,angleY; // l'angle de la scene en mode Pause
 };
