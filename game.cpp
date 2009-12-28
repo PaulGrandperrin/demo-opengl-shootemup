@@ -86,7 +86,7 @@ void Game::render()
     {
         instances.push_back(itf->getInstance());
     }
-    GE.render(instances, {-sin(longitude)*cos(latitude)*zoom,sin(latitude)*zoom,cos(longitude)*cos(latitude)*zoom,centerX,centerY,0,0,1,0} ,{0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},time);
+    GE.render(instances, {-sin(longitude)*cos(latitude)*zoom,sin(latitude)*zoom,cos(longitude)*cos(latitude)*zoom,centerX,centerY,0,0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},time);
 }
 
 /*
@@ -232,64 +232,70 @@ void Game::gameManager()
 
 // Lors du zoom ou des translation, c'est la camera qui bouge, lors des rotation, c'est la scene.
 //NOTE Toute les valeur ici sont prisent "au hasard" (0.05,0.02 ...) peut etre trouver des relation avec des nombre representant quelques choses pour nous !?
-void Game::pauseManager() // NOTE rotation bizare, zoom souris pas fini, TODO acceleration, reset camera "avec douceur"
+void Game::pauseManager() // TODO acceleration, reset camera "avec douceur"
 {
 
-    if ((stateKeys[K_CTRL]) && (stateKeys[K_UP])) {
-        zoom -= 0.05;
-    }
-    else if ((stateKeys[K_CTRL]) && (stateKeys[K_DOWN])) {
-        zoom += 0.05;
-    }
-    else if ((stateKeys[K_CTRL]) && ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT]))) {
-        resetCam();
-    }
-
-    else if ((stateKeys[K_SHIFT]) && (stateKeys[K_UP])) {
-        centerY += 0.05;
-    }
-    else if ((stateKeys[K_SHIFT]) && (stateKeys[K_DOWN])) {
-        centerY -= 0.05;
-    }
-    else if ((stateKeys[K_SHIFT]) && (stateKeys[K_LEFT])) {
-        centerX -= 0.05;
-    }
-    else if ((stateKeys[K_SHIFT]) && (stateKeys[K_RIGHT])) {
-        centerX += 0.05;
+    if (stateKeys[K_CTRL]) {
+        if (stateKeys[K_UP]) {
+            zoom -= 0.05;
+        }
+        else if (stateKeys[K_DOWN]) {
+            zoom += 0.05;
+        }
+        else if ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT])) {
+            resetCam();
+        }
     }
 
-    else if ((stateButtons[B_LEFT]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
-    {
-        centerY +=deltaMouse.y()*0.02;
-    }
-    else if ((stateButtons[B_LEFT]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
-        centerX +=-deltaMouse.x()*0.02;
-    }
-        
-    else if ((stateKeys[K_SHIFT]) && ((zoom >= 2) and (deltaWheel > 0))) {
-        zoom +=(-deltaWheel/120);
-    }
-    else if ((stateKeys[K_SHIFT]) && ((zoom <= 20) and (deltaWheel < 0))) {
-        zoom +=(-deltaWheel/120);
+    else if (stateKeys[K_SHIFT]) {
+        if (stateKeys[K_UP]) {
+            centerY += 0.05;
+        }
+        else if  (stateKeys[K_DOWN]) {
+            centerY -= 0.05;
+        }
+        if (stateKeys[K_LEFT]) {
+            centerX -= 0.05;
+        }
+        else if (stateKeys[K_RIGHT]) {
+            centerX += 0.05;
+        }
+        if ((zoom >= ZOOM_MIN) and (deltaWheel > 0)) {
+            zoom +=(-deltaWheel/(float)240);
+            if (zoom<ZOOM_MIN)
+                zoom = ZOOM_MIN;
+        }
+        else if ((zoom <= ZOOM_MAX) and (deltaWheel < 0)) {
+            zoom +=(-deltaWheel/(float)240);
+            if (zoom>ZOOM_MAX)
+                zoom =ZOOM_MAX;
+        }
     }
 
-    else if ((zoom >= 2) and (deltaWheel > 0)) {
-        zoom +=(-deltaWheel/40);
-    }
-    else if ((zoom <= 20) and (deltaWheel < 0)) {
-        zoom +=(-deltaWheel/40);
-    }
-
-
-    else if ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2) && (stateButtons[B_MIDLE]))
-    {
-        latitude+=0.01*deltaMouse.y();
-    }
-    else if ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2) && (stateButtons[B_MIDLE]))
-    {
-        longitude+=0.01*deltaMouse.x();
-    }
     else {
+        //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
+        if ((stateButtons[B_LEFT]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
+            centerY +=deltaMouse.y()*0.02;
+        }
+        if ((stateButtons[B_LEFT]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
+            centerX +=-deltaMouse.x()*0.02;
+        }
+        if ((stateButtons[B_MIDLE]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
+            latitude+=0.01*deltaMouse.y();
+        }
+        if ((stateButtons[B_MIDLE]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
+            longitude+=0.01*deltaMouse.x();
+        }
+        if ((zoom >= ZOOM_MIN) and (deltaWheel > 0)) {
+            zoom +=(-deltaWheel/(float)60);
+            if (zoom<ZOOM_MIN)
+                zoom = ZOOM_MIN;
+        }
+        else if ((zoom <= ZOOM_MAX) and (deltaWheel < 0)) {
+            zoom +=(-deltaWheel/(float)60);
+            if (zoom>ZOOM_MAX)
+                zoom =ZOOM_MAX;
+        }
         if (stateKeys[K_UP])
             latitude+=0.02;
         if (stateKeys[K_DOWN])
@@ -298,9 +304,7 @@ void Game::pauseManager() // NOTE rotation bizare, zoom souris pas fini, TODO ac
             longitude-=0.02;
         if (stateKeys[K_RIGHT])
             longitude+=0.02;
-
     }
-
     if (latitude >3.1415/2)
         latitude=3.1415/2;
     if (latitude < -3.1415/2)

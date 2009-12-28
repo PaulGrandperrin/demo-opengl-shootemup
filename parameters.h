@@ -35,7 +35,9 @@
 #define INTERVALE_TEMP_ENEMY 50  // provisoire
 
 #define ZOOM_DEFAULT 8 // temps mis pour reset l'angle apres la pause
-
+#define ZOOM_MIN 3 // le plus proche
+#define ZOOM_MAX 30 // le plus loins
+ 
 
 #define NB_KEYS 9
 #define K_ESC 0
