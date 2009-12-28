@@ -281,5 +281,10 @@ void Game::pauseManager() // NOTE rotation bizare, zoom souris pas fini, TODO ac
             latitude+=0.01*deltaMouse.y();
         if ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2) && (stateButtons[B_MIDLE]))
             longitude+=0.01*-deltaMouse.x();
+
+		if (latitude >3.1415/2)
+			latitude=3.1415/2;
+		if(latitude < -3.1415/2)
+			latitude=-3.1415/2;
     }
 }
