@@ -126,7 +126,7 @@ void graphicEngine::resize(int width,int height)
   this->height=height;
 }
 
-void graphicEngine::render(vector<instance> instances,camera cam,float time)
+void graphicEngine::render(vector<instance> instances,camera cam,lightVec lv,float time) //TODO bien tt desactiver
 {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -135,9 +135,24 @@ void graphicEngine::render(vector<instance> instances,camera cam,float time)
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	
 	/* activation des tableaux de sommets */
-        glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	// gestion de la lumière
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	GLfloat position[] = { lv.x, lv.y, lv.z, 0};
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+	float Al[4] = {lv.al.r, lv.al.g, lv.al.b, lv.al.a };
+	glLightfv( GL_LIGHT0, GL_AMBIENT, Al );
+
+	float Dl[4] = {lv.dl.r,lv.dl.g,lv.dl.b,lv.dl.a };
+	glLightfv( GL_LIGHT0, GL_DIFFUSE, Dl );
+
+	float Sl[4] = {lv.sl.r,lv.sl.g,lv.sl.b,lv.sl.a };
+	glLightfv( GL_LIGHT0, GL_SPECULAR, Sl );
 	
   
 	for(unsigned int i=0; i<models.size();i++)
@@ -148,7 +163,8 @@ void graphicEngine::render(vector<instance> instances,camera cam,float time)
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*8, BUFFER_OFFSET(0));
 		glNormalPointer( GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*3);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*6);
-	
+
+		glUseProgram(models[i].shaders);
 		
 		for(unsigned int j=0;j<instances.size();j++)
 		{
@@ -166,19 +182,39 @@ void graphicEngine::render(vector<instance> instances,camera cam,float time)
 			}
 		}
 	}
+
+	glDisable(GL_LIGHT0);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
     
 }
 
 
-int graphicEngine::loadModel(string pathModel,string pathTexture)
+unsigned int graphicEngine::loadModel(string pathModel,string pathTexture)
 {
-    cout << "> Loading "<< pathModel<<" ..." << flush;
+	model m={0,0,0,0,0,0};
+	unsigned int id=models.size();
+	models.push_back(m);
+
+	loadMeshe(id,pathModel.c_str());
+	loadTexture(id,pathTexture.c_str());
+	loadShaders(id,"shaders/vs.glsl","shaders/ps.glsl");
+
+	return id+1;
+}
+
+void graphicEngine::unLoadModel(unsigned int id)
+{
+      //TODO à implémenter
+}
+
+void graphicEngine::loadMeshe (unsigned int id,const char* path)
+{
+    cout << "> Loading "<< path<<" ..." << flush;
     
     //on déclare les vecteurs contenant les données brutes contenus dans le fichier
     vector<v> vVect; //le vecteur contenant les donnees brutes de positions
@@ -186,9 +222,9 @@ int graphicEngine::loadModel(string pathModel,string pathTexture)
     vector<vt> vtVect;//le vecteur contenant les donnees brutes de etxtures
     vector<vertex> fVect; //le vecteur contenant les donnees brutes des faces
 
-    ifstream OBJFile ( pathModel.c_str(),ios::in ); //on ouvre le fichier en lecture seule
+    ifstream OBJFile ( path,ios::in ); //on ouvre le fichier en lecture seule
     if ( !OBJFile )
-        return 0;
+        exit(0);
 
     string buffer,key;
     while ( getline ( OBJFile,buffer ) ) //tant qu'on peut lire une ligne
@@ -366,43 +402,30 @@ int graphicEngine::loadModel(string pathModel,string pathTexture)
 
 
     //On enregistre les données
-    model m;
-    m.ibo=ibo;
-    m.vbo=vbo;
-    m.sizeofVbo=allVertex.size();
-    m.sizeofIbo=fVect.size();
+    models[id].ibo=ibo;
+    models[id].vbo=vbo;
+    models[id].sizeofVbo=allVertex.size();
+    models[id].sizeofIbo=fVect.size();
     
     free ( arrayIbo );
     free ( arrayVertex );
     
-    cout << " OK\t\t"<<m.sizeofVbo << " vertex / "<< m.sizeofIbo/3<< " triangles"<<endl;
-    
-    
-    m.texture= ( GLuint ) loadTexture ( ( char* ) pathTexture.c_str() ); //TODO trouver le chemin automatiquement
-    
-    models.push_back(m);
-    
-    return models.size();
+    cout << " OK\t\t"<<models[id].sizeofVbo << " vertex / "<< models[id].sizeofIbo/3<< " triangles"<<endl; //FIXME calcul faux
 }
 
-void graphicEngine::unLoadModel(int id)
+void graphicEngine::loadTexture ( unsigned int id,const char* path )
 {
-      //TODO à implémenter
-}
-
-int graphicEngine::loadTexture ( char* imagePath )
-{
-    cout << "> Loading "<<imagePath<<" ..."<<flush;
+    cout << "> Loading "<<path<<" ..."<<flush;
     //Chargement de la texture
     ILuint ilTextId;
     GLuint glTextId;
 
     ilGenImages ( 1,&ilTextId );
     ilBindImage ( ilTextId );
-    if ( !ilLoadImage ( imagePath ) )
-        exit ( 007 ); //FIXME utiliser exceptions
+    if ( !ilLoadImage ( path ) )
+        exit ( 0 ); //FIXME utiliser exceptions
     if ( !ilConvertImage ( IL_RGBA,IL_UNSIGNED_BYTE ) )
-        exit ( 007 );//FIXME utiliser exceptions
+        exit ( 0 );//FIXME utiliser exceptions
 
     glGenTextures ( 1,&glTextId );
     glBindTexture ( GL_TEXTURE_2D,glTextId );
@@ -421,35 +444,128 @@ int graphicEngine::loadTexture ( char* imagePath )
         GL_UNSIGNED_BYTE,
         ilGetData()
     );
-
-    
-    cout << " OK\t\t" <<ilGetInteger ( IL_IMAGE_WIDTH )<<"x"<<ilGetInteger ( IL_IMAGE_HEIGHT )<<" pixels"<<endl;
+	cout << " OK\t\t" <<ilGetInteger ( IL_IMAGE_WIDTH )<<"x"<<ilGetInteger ( IL_IMAGE_HEIGHT )<<" pixels"<<endl;
     ilDeleteImages ( 1, &ilTextId );
-    return glTextId;
+
+	models[id].texture= glTextId;
 }
 
+GLuint LoadShader ( GLenum type, const char *filename );
 
-  /*
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glShadeModel(GL_SMOOTH);
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+void graphicEngine::loadShaders(unsigned int id,const char* vsPath,const char* psPath)
+{
+	cout << "> Loading "<<vsPath<<" && " << psPath << " ..."<<flush;
+	
+	GLuint prog = 0;
+    GLuint vs = 0, ps = 0;
+    GLint link_status = GL_TRUE;
+    GLint logsize = 0;
+    char *log = NULL;
+
+
+	vs = LoadShader ( GL_VERTEX_SHADER, vsPath );
+	if ( vs == 0 )
+		exit(0);
+
+	ps = LoadShader ( GL_FRAGMENT_SHADER, psPath );
+	if ( ps == 0 )
+	{
+		if ( glIsShader ( vs ) )
+			glDeleteShader ( vs );
+		exit(0);
+	}
+
+    /* creation du program */
+    prog = glCreateProgram();
+
+    /* on envoie nos shaders a notre program */
+    if ( vs )
+        glAttachShader ( prog, vs );
+    if ( ps )
+        glAttachShader ( prog, ps );
+
+    /* on lie le tout */
+    glLinkProgram ( prog );
 
 	
-	GLfloat ambientLight[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
-	GLfloat specularLight[] = { 1, 1, 1, 1.0f };
-	GLfloat position[] = { 10.0f, -10.0f, 0.0f, 1.0f };
-	
-	// Assign created components to GL_LIGHT0
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
+    /* on verifie que tout s'est bien passe */
+    glGetProgramiv ( prog, GL_LINK_STATUS, &link_status );
+    if ( link_status != GL_TRUE )
+    {
+        glGetProgramiv ( prog, GL_INFO_LOG_LENGTH, &logsize );
+        log = ( char* ) malloc ( logsize + 1 );
+		
+        glGetProgramInfoLog ( prog, logsize, &logsize, log );
 
-	float mcolor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mcolor);
-	glFrontFace(GL_CCW);
+        cout << endl<< "Erreur lors du linkage:"<< endl << log << endl;
+
+        free ( log );
+        glDeleteProgram ( prog );
+        glDeleteShader ( vs );
+        glDeleteShader ( ps );
+
+        exit(0);
+    }
+
+    /* les shaders sont dans le program maintenant, on en a plus besoin */
+    glDeleteShader ( vs );
+    glDeleteShader ( ps );
+
+	models[id].shaders=( unsigned int ) prog;
 	
-	*/
+    cout << " OK\t\t" <<endl;
+}
+
+GLuint LoadShader ( GLenum type, const char *filename )
+{
+	GLuint shader = 0;
+    GLsizei logsize = 0;
+    GLint compile_status = GL_TRUE;
+    char *log = NULL;
+
+    // creation d'un shader de sommet
+    shader = glCreateShader ( type );
+
+    // chargement du code source
+
+	ifstream file(filename,ios::in);
+	string src,line;
+	while(getline(file,line))
+	{
+		src+="\n"+line;
+	}
+	file.close();
+
+	const char* strchar=src.c_str();
+    // assignation du code source 
+    glShaderSource ( shader, 1, ( const GLchar** ) &(strchar), NULL );
+
+
+    // compilation du shader
+    glCompileShader ( shader );
+
+    // verification du succes de la compilation
+    glGetShaderiv ( shader, GL_COMPILE_STATUS, &compile_status );
+    if ( compile_status != GL_TRUE )
+    {
+        // erreur a la compilation recuperation du log d'erreur
+
+        // on recupere la taille du message d'erreur
+        glGetShaderiv ( shader, GL_INFO_LOG_LENGTH, &logsize );
+
+        // on alloue un esapce memoire dans lequel OpenGL ecrira le message
+        log = ( char * ) malloc ( logsize + 1 );
+
+        glGetShaderInfoLog ( shader, logsize, &logsize, log );
+		cout << endl << "Compilation de " << filename << " impossible : " <<endl << log << endl;
+
+        // ne pas oublier de liberer la memoire et notre shader
+        free ( log );
+        glDeleteShader ( shader );
+
+        return 0;
+    }
+
+    return shader;
+
+}
