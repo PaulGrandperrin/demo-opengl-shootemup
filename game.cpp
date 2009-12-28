@@ -47,7 +47,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int 
     this->heightView=height;
     this->width=3;
     this->height=3;
-    
+
     //NOTE c'est pas forcément la forme définitive mais ca correspond plus a ce que l'on avais dit.
     if (!pause)
     {
@@ -63,7 +63,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int 
         pauseManager();
 
     //Pour le fun
-    cout << (char)0x0D <<fires.size()<<" missile(s) "<<flush;
+    cout << (char)0x0D <<fires.size()<<" missile(s)  et delta wheel : " << deltaWheel << flush;
 
     render();
 }
@@ -165,49 +165,49 @@ void Game::collisionManager()
     //NOTE C'est pas si horrible (sans le while) tu parcour toute les enemi (et fires) en verifiant s'il sont hors jeu our pas !
 //     while (ite!=enemies.end())
 //     {
-        for (ite=enemies.begin(); ite!=enemies.end() ; ite++)
+    for (ite=enemies.begin(); ite!=enemies.end() ; ite++)
+    {
+        if (ite->getPosition().x>4||ite->getPosition().x<-4||ite->getPosition().y>4||ite->getPosition().y<-4)
         {
-            if (ite->getPosition().x>4||ite->getPosition().x<-4||ite->getPosition().y>4||ite->getPosition().y<-4)
-            {
-                enemies.erase(ite);
-                break;
-            }
+            enemies.erase(ite);
+            break;
         }
+    }
 //     }
 
     list<ActorPhysique>::iterator itf;
     itf=fires.begin();
 //     while (itf!=fires.end())
 //     {
-        for (itf=fires.begin(); itf!=fires.end() ; itf++)
+    for (itf=fires.begin(); itf!=fires.end() ; itf++)
+    {
+        if (itf->getPosition().x>10||itf->getPosition().x<-10||itf->getPosition().y>10||itf->getPosition().y<-10)
         {
-            if (itf->getPosition().x>10||itf->getPosition().x<-10||itf->getPosition().y>10||itf->getPosition().y<-10)
-            {
-                fires.erase(itf);
-                break;
-            }
+            fires.erase(itf);
+            break;
         }
+    }
 //     }
-  // TODO ameliorer definition des bords
-  //verification des bords verticaux ensuite des bords horizontaux. (evite de sortir sur les coins.)
-  if (player.getPosition().x<-width)
-  {
-    player.setVelocity({-player.getVelocity().x*0.2,player.getVelocity().y,player.getVelocity().z});
-  }
-  else if(player.getPosition().x>width)
-  {
-    player.setVelocity({-player.getVelocity().x*0.2,player.getVelocity().y,player.getVelocity().z});
-  }
-  
-  if (player.getPosition().y<-height-1)
-  {
-    player.setVelocity({player.getVelocity().x,-player.getVelocity().y*0.2,player.getVelocity().z});
-  }
-  
-  else if(player.getPosition().y>height-2)
-  {
-    player.setVelocity({player.getVelocity().x,-player.getVelocity().y*0.2,player.getVelocity().z});
-  }
+    // TODO ameliorer definition des bords
+    //verification des bords verticaux ensuite des bords horizontaux. (evite de sortir sur les coins.)
+    if (player.getPosition().x<-width)
+    {
+        player.setVelocity( {-player.getVelocity().x*0.2,player.getVelocity().y,player.getVelocity().z});
+    }
+    else if (player.getPosition().x>width)
+    {
+        player.setVelocity( {-player.getVelocity().x*0.2,player.getVelocity().y,player.getVelocity().z});
+    }
+
+    if (player.getPosition().y<-height-1)
+    {
+        player.setVelocity( {player.getVelocity().x,-player.getVelocity().y*0.2,player.getVelocity().z});
+    }
+
+    else if (player.getPosition().y>height-2)
+    {
+        player.setVelocity( {player.getVelocity().x,-player.getVelocity().y*0.2,player.getVelocity().z});
+    }
 }
 
 void Game::gameManager()
@@ -234,39 +234,60 @@ void Game::gameManager()
 //NOTE Toute les valeur ici sont prisent "au hasard" (0.05,0.02 ...) peut etre trouver des relation avec des nombre representant quelques choses pour nous !?
 void Game::pauseManager() // NOTE rotation bizare, zoom souris pas fini, TODO acceleration, reset camera "avec douceur"
 {
-    if (stateKeys[K_CTRL]) {
-        if (stateKeys[K_UP]) {
-            zoom -= 0.05;
-        }
-        if (stateKeys[K_DOWN]) {
-            zoom += 0.05;
-        }
-//         if (deltaWheel !=0) // probleme avec la molette
-//             zoom +=deltaWheel*0.0000000001;
-        if ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT])) {
-            resetCam();
-        }
+
+    if ((stateKeys[K_CTRL]) && (stateKeys[K_UP])) {
+        zoom -= 0.05;
     }
-    else if (stateKeys[K_SHIFT]) {
-        if (stateKeys[K_UP]) {
-            centerY += 0.05;
-        }
-        if (stateKeys[K_DOWN]) {
-            centerY -= 0.05;
-        }
-        if (stateKeys[K_LEFT]) {
-            centerX -= 0.05;
-        }
-        if (stateKeys[K_RIGHT]) {
-            centerX += 0.05;
-        }
+    else if ((stateKeys[K_CTRL]) && (stateKeys[K_DOWN])) {
+        zoom += 0.05;
     }
-    else if (stateButtons[B_LEFT])
+    else if ((stateKeys[K_CTRL]) && ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT]))) {
+        resetCam();
+    }
+
+    else if ((stateKeys[K_SHIFT]) && (stateKeys[K_UP])) {
+        centerY += 0.05;
+    }
+    else if ((stateKeys[K_SHIFT]) && (stateKeys[K_DOWN])) {
+        centerY -= 0.05;
+    }
+    else if ((stateKeys[K_SHIFT]) && (stateKeys[K_LEFT])) {
+        centerX -= 0.05;
+    }
+    else if ((stateKeys[K_SHIFT]) && (stateKeys[K_RIGHT])) {
+        centerX += 0.05;
+    }
+
+    else if ((stateButtons[B_LEFT]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
     {
-        if ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2)) //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
-            centerY +=deltaMouse.y()*0.02;
-        if ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))
-            centerX +=-deltaMouse.x()*0.02;
+        centerY +=deltaMouse.y()*0.02;
+    }
+    else if ((stateButtons[B_LEFT]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
+        centerX +=-deltaMouse.x()*0.02;
+    }
+        
+    else if ((stateKeys[K_SHIFT]) && ((zoom >= 2) and (deltaWheel > 0))) {
+        zoom +=(-deltaWheel/120);
+    }
+    else if ((stateKeys[K_SHIFT]) && ((zoom <= 20) and (deltaWheel < 0))) {
+        zoom +=(-deltaWheel/120);
+    }
+
+    else if ((zoom >= 2) and (deltaWheel > 0)) {
+        zoom +=(-deltaWheel/40);
+    }
+    else if ((zoom <= 20) and (deltaWheel < 0)) {
+        zoom +=(-deltaWheel/40);
+    }
+
+
+    else if ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2) && (stateButtons[B_MIDLE]))
+    {
+        latitude+=0.01*deltaMouse.y();
+    }
+    else if ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2) && (stateButtons[B_MIDLE]))
+    {
+        longitude+=0.01*deltaMouse.x();
     }
     else {
         if (stateKeys[K_UP])
@@ -277,14 +298,11 @@ void Game::pauseManager() // NOTE rotation bizare, zoom souris pas fini, TODO ac
             longitude-=0.02;
         if (stateKeys[K_RIGHT])
             longitude+=0.02;
-        if ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2) && (stateButtons[B_MIDLE]))
-            latitude+=0.01*deltaMouse.y();
-        if ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2) && (stateButtons[B_MIDLE]))
-            longitude+=0.01*-deltaMouse.x();
 
-		if (latitude >3.1415/2)
-			latitude=3.1415/2;
-		if(latitude < -3.1415/2)
-			latitude=-3.1415/2;
     }
+
+    if (latitude >3.1415/2)
+        latitude=3.1415/2;
+    if (latitude < -3.1415/2)
+        latitude=-3.1415/2;
 }

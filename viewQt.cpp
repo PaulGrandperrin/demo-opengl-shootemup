@@ -32,6 +32,7 @@ void ViewOpenGl::paintGL()
     float t=time.elapsed();
     time.restart();
     game.update(kb.getStateKeys(),mouse.getStateButtons(),mouse.getDeltaMouse(), mouse.getDeltaWheel(),t,width,height);
+    mouse.updateWheel(0);
     
     if (game.close()) //FIXME il ya surement une place plus adaptée pour ça
         close();

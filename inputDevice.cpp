@@ -36,7 +36,7 @@ Mouse::Mouse() {
     }
     lastPMouse.setX(0); // lastPMouse est un QPoint donc methode set().
     lastPMouse.setY(0);
-    lastDWheel = 0;
+    dWheel=0;
 }
 
 void Mouse::updateEvent(int button, int state) {
@@ -55,6 +55,5 @@ void Mouse::updateXY(QPoint pt) { // avec lastxy et xy on recupere le delta de l
 
 //FIXME : quelque probleme de fonctionnement, je mis prend peut etre pas de la bonne maniere.
 void Mouse::updateWheel(int d) { // idem udpdateXY, mais sur un seul axe pour la molette
-    lastDWheel = dWheel;
     dWheel = d;
 }

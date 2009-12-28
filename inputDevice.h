@@ -23,7 +23,7 @@ private:
     int connectionButton[NB_BUTTON];  // connection bettewen keycode of Qt, and our keycode
     bool stateButtons[NB_BUTTON]; // every key has one state (push or not)
     QPoint pMouse, lastPMouse;
-    int dWheel,lastDWheel;
+    int dWheel;
 public:
     Mouse();
     void updateEvent(int button, int state);  // change state of key : state of key = state. If invalid key, nothing
@@ -39,7 +39,7 @@ public:
         return pt; // return un couple du delta de la souris
     };
     inline int getDeltaWheel() { //TODO terminer gestion molette
-        return (dWheel - lastDWheel);
+        return (dWheel); // - lastDWheel
     };
 
 };
