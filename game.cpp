@@ -86,7 +86,7 @@ void Game::render()
     {
         instances.push_back(itf->getInstance());
     }
-    GE.render(instances, {sin(longitude)*zoom,sin(latitude)*zoom,cos(longitude)*cos(latitude)*zoom,centerX,centerY,0,0,1,0} ,time);
+    GE.render(instances, {-sin(longitude)*cos(latitude)*zoom,sin(latitude)*zoom,cos(longitude)*cos(latitude)*zoom,centerX,centerY,0,0,1,0} ,time);
 }
 
 /*
