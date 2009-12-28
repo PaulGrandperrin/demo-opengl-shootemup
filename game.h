@@ -15,7 +15,7 @@ class Game
 public:
     ~Game();
     void init();
-    void update(bool stateKeys[],  bool stateButtons[], QPoint deltaMouse, int deltaWheel,float time);
+    void update(bool stateKeys[],  bool stateButtons[], QPoint deltaMouse, int deltaWheel,float time, int width, int height);
     void resize(int width,int heigth);
     inline bool close() {
         return stop;
@@ -23,7 +23,7 @@ public:
     inline void resetCam() {
         longitude=0;
         latitude=0;
-        zoom=ZOOM_DEFAULT; // ZOOM_DEFAULT = 8
+        zoom=ZOOM_DEFAULT;
         centerX = 0;
         centerY = 0;
     }
@@ -43,6 +43,9 @@ private:
 
     int timerGenShoot;
     int timerGenEnemy;
+    float width, height; // correspond au nombre d'uniter "opengl" sur la larger et la hauteur
+    //TODO metre a jour c'est valeur lorsque l'a fenetre est resizé
+    //TODO Savoir exaxtement combien d'uniter il y a (hauteur et largeur)
 
     int Mplayer,Mboulet;
 
@@ -55,6 +58,7 @@ private:
     int deltaWheel;
     float time;
     bool stop;
+    int widthView,heightView;
 
     bool pause;
     bool passagePause; //permet une bonne transition entre pause-!pause

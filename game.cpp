@@ -36,14 +36,18 @@ void Game::resize(int width,int heigth)
     GE.resize(width,heigth);
 }
 
-void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int deltaWheel,float time) // NOTE peut etre passer un pointeur sur kb et mouse !
+void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
     this->stateKeys=stateKeys;
     this->stateButtons=stateButtons;
     this->deltaMouse=deltaMouse;
     this->deltaWheel=deltaWheel;
     this->time=time;
-
+    this->widthView=width;
+    this->heightView=height;
+    this->width=3;
+    this->height=3;
+    
     //NOTE c'est pas forcément la forme définitive mais ca correspond plus a ce que l'on avais dit.
     if (!pause)
     {
@@ -184,6 +188,26 @@ void Game::collisionManager()
             }
         }
 //     }
+  // TODO ameliorer definition des bords
+  //verification des bords verticaux ensuite des bords horizontaux. (evite de sortir sur les coins.)
+  if (player.getPosition().x<-width)
+  {
+    player.setVelocity({-player.getVelocity().x*0.2,player.getVelocity().y,player.getVelocity().z});
+  }
+  else if(player.getPosition().x>width)
+  {
+    player.setVelocity({-player.getVelocity().x*0.2,player.getVelocity().y,player.getVelocity().z});
+  }
+  
+  if (player.getPosition().y<-height-1)
+  {
+    player.setVelocity({player.getVelocity().x,-player.getVelocity().y*0.2,player.getVelocity().z});
+  }
+  
+  else if(player.getPosition().y>height-2)
+  {
+    player.setVelocity({player.getVelocity().x,-player.getVelocity().y*0.2,player.getVelocity().z});
+  }
 }
 
 void Game::gameManager()
