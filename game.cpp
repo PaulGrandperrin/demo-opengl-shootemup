@@ -15,9 +15,9 @@ void Game::init()
     stop=false;
     pause=false;
     passagePause = false;
-    resetCam();
+    resetCam=false;
 
-
+    camera.init();
     GE.init();
 
     //TODO charger le fichier de niveau et les trajectoire ici
@@ -63,7 +63,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int 
         pauseManager();
 
     //Pour le fun
-    cout << (char)0x0D <<fires.size()<<" missile(s)  et delta wheel : " << deltaWheel << flush;
+    cout << (char)0x0D <<fires.size()<<" missile(s) " << flush;
 
     render();
 }
@@ -86,7 +86,7 @@ void Game::render()
     {
         instances.push_back(itf->getInstance());
     }
-    GE.render(instances, {-sin(longitude)*cos(latitude)*zoom,sin(latitude)*zoom,cos(longitude)*cos(latitude)*zoom,centerX,centerY,0,0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},time);
+    GE.render(instances, {-sin(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(),sin(camera.getLatitude())*camera.getZoom(),cos(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(),camera.getCenterX(),camera.getCenterY(),0,0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},time);
 }
 
 /*
@@ -212,17 +212,18 @@ void Game::collisionManager()
 
 void Game::gameManager()
 {
+    // si on saure de pause, on reset la camera de facon douce, elegante jusqu'a ce que la camera ai sa position initial.
+    if (passagePause && (!camera.camOK()) && pause) {
+        camera.resetSmart();
+    }
     // Si on est en transition et que la touche pause est relaché, alors fini transition
-    if (passagePause && (!stateKeys[K_SPACE])) {
+    if (passagePause && ((!stateKeys[K_SPACE]) && (camera.camOK()))) {
         passagePause = false;
         pause= (!pause); // seulement une fois que la transition est fini, on change l'etat.
+       // TODO leger pause avant de reprendre le jeu (sleep ne marche pas ici ni ailleur dans game).
     }
     // Si on est pas en transition et que touche pause est appuyé, alors on passe en transition (et en pause ou !pause)
     if (!passagePause && stateKeys[K_SPACE]) {
-        if (pause == true)
-        {
-            resetCam();
-        }
         passagePause = true;
     }
     //Si on appuie sur echap, on passe pas par la case menu, on quitte direct
@@ -232,81 +233,71 @@ void Game::gameManager()
 
 // Lors du zoom ou des translation, c'est la camera qui bouge, lors des rotation, c'est la scene.
 //NOTE Toute les valeur ici sont prisent "au hasard" (0.05,0.02 ...) peut etre trouver des relation avec des nombre representant quelques choses pour nous !?
-void Game::pauseManager() // TODO acceleration, reset camera "avec douceur"
+//TODO lors du changement de centre afficher un plan xy (avec alpha) et un curseur ce "baladant" dessus de facons a bien indiquer le centre.
+void Game::pauseManager() // TODO acceleration
 {
-
-    if (stateKeys[K_CTRL]) {
+    if (resetCam) {
+        camera.resetSmart();
+        if (camera.camOK())
+            resetCam=false;
+    }
+    else if (stateKeys[K_CTRL]) {
         if (stateKeys[K_UP]) {
-            zoom -= 0.05;
+            camera.setZoom(-0.05);
         }
         else if (stateKeys[K_DOWN]) {
-            zoom += 0.05;
+            camera.setZoom(0.05);
         }
         else if ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT])) {
-            resetCam();
+            resetCam=true;
+            camera.resetSmart();
+            if (camera.camOK())
+                resetCam=false;
         }
     }
 
     else if (stateKeys[K_SHIFT]) {
         if (stateKeys[K_UP]) {
-            centerY += 0.05;
+            camera.setCenterY(0.05);
         }
         else if  (stateKeys[K_DOWN]) {
-            centerY -= 0.05;
+            camera.setCenterY(-0.05);
         }
         if (stateKeys[K_LEFT]) {
-            centerX -= 0.05;
+            camera.setCenterX(-0.05);
         }
         else if (stateKeys[K_RIGHT]) {
-            centerX += 0.05;
+            camera.setCenterX(0.05);
         }
-        if ((zoom >= ZOOM_MIN) and (deltaWheel > 0)) {
-            zoom +=(-deltaWheel/(float)240);
-            if (zoom<ZOOM_MIN)
-                zoom = ZOOM_MIN;
-        }
-        else if ((zoom <= ZOOM_MAX) and (deltaWheel < 0)) {
-            zoom +=(-deltaWheel/(float)240);
-            if (zoom>ZOOM_MAX)
-                zoom =ZOOM_MAX;
+        if ((deltaWheel != 0)) {
+            camera.setZoom(-deltaWheel/(float)240);
         }
     }
 
     else {
         //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
         if ((stateButtons[B_LEFT]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
-            centerY +=deltaMouse.y()*0.02;
+            camera.setCenterY(deltaMouse.y()*0.02);
         }
         if ((stateButtons[B_LEFT]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
-            centerX +=-deltaMouse.x()*0.02;
+            camera.setCenterX(-deltaMouse.x()*0.02);
         }
         if ((stateButtons[B_MIDLE]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
-            latitude+=0.01*deltaMouse.y();
+            camera.setLatitude(0.01*deltaMouse.y());
         }
         if ((stateButtons[B_MIDLE]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
-            longitude+=0.01*deltaMouse.x();
+            camera.setLongitude(0.01*deltaMouse.x());
         }
-        if ((zoom >= ZOOM_MIN) and (deltaWheel > 0)) {
-            zoom +=(-deltaWheel/(float)60);
-            if (zoom<ZOOM_MIN)
-                zoom = ZOOM_MIN;
-        }
-        else if ((zoom <= ZOOM_MAX) and (deltaWheel < 0)) {
-            zoom +=(-deltaWheel/(float)60);
-            if (zoom>ZOOM_MAX)
-                zoom =ZOOM_MAX;
+        if ((deltaWheel != 0)) {
+            camera.setZoom(-deltaWheel/(float)60);
         }
         if (stateKeys[K_UP])
-            latitude+=0.02;
+            camera.setLatitude(0.02);
         if (stateKeys[K_DOWN])
-            latitude-=0.02;
+            camera.setLatitude(-0.02);
         if (stateKeys[K_LEFT])
-            longitude-=0.02;
+            camera.setLongitude(-0.02);
         if (stateKeys[K_RIGHT])
-            longitude+=0.02;
+            camera.setLongitude(0.02);
     }
-    if (latitude >3.1415/2)
-        latitude=3.1415/2;
-    if (latitude < -3.1415/2)
-        latitude=-3.1415/2;
 }

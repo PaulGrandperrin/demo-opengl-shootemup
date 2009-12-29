@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include "actor.h"
+#include "camera.h"
 #include "graphicEngine.h"
 #include "parameters.h"
 
@@ -20,13 +21,7 @@ public:
     inline bool close() {
         return stop;
     }
-    inline void resetCam() {
-        longitude=0;
-        latitude=0;
-        zoom=ZOOM_DEFAULT;
-        centerX = 0;
-        centerY = 0;
-    }
+
 private:
 
     void render();
@@ -36,6 +31,7 @@ private:
     void collisionManager();
     void gameManager();
     void pauseManager();
+
 
     list<Actor> enemies; //TODO remplacer en ActorKeyFrame
     list<ActorPhysique> fires;
@@ -50,7 +46,7 @@ private:
     int Mplayer,Mboulet;
 
     graphicEngine GE;
-    float longitude, latitude, zoom, centerX, centerY; // parametre de la camera
+    Camera camera;
 
     bool* stateKeys;
     bool* stateButtons;
@@ -61,7 +57,9 @@ private:
     int widthView,heightView;
 
     bool pause;
-    bool passagePause; //permet une bonne transition entre pause-!pause
+    bool passagePause; //permet une bonne transition entre pause-!pause.
+    bool resetCam; // savoir si on est en train de reinitialiser la camera ou pas.
+    
 
 };
 

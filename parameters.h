@@ -34,9 +34,16 @@
 #define TAILLE_BOULET 0.03
 #define INTERVALE_TEMP_ENEMY 50  // provisoire
 
+
+//camera settings (surtout pour le mode pause)
 #define ZOOM_DEFAULT 8 // temps mis pour reset l'angle apres la pause
 #define ZOOM_MIN 3 // le plus proche
 #define ZOOM_MAX 30 // le plus loins
+#define TEMP_RESETCAM_SMART_PAUSE 50
+#define CENTERX_MIN -10 // le plus proche
+#define CENTERX_MAX 10 // le plus loins
+#define CENTERY_MIN -10 // le plus proche
+#define CENTERY_MAX 10 // le plus loins
  
 
 #define NB_KEYS 9
