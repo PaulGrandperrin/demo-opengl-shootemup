@@ -8,6 +8,7 @@
 #include "camera.h"
 #include "graphicEngine.h"
 #include "parameters.h"
+#include "function.h"
 
 #include <QPoint>
 
@@ -38,6 +39,7 @@ private:
     ActorPhysique player;
 
     int timerGenShoot;
+    int timerGenShootGros;
     int timerGenEnemy;
     float width, height; // correspond au nombre d'uniter "opengl" sur la larger et la hauteur
     //TODO metre a jour c'est valeur lorsque l'a fenetre est resizé

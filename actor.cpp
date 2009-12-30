@@ -29,9 +29,9 @@ void ActorPhysique::update(float time)
     velocity.y+=time*acceleration.y/1000;
     velocity.z+=time*acceleration.z/1000;
 
-    position.x+=time*velocity.x/1000;
-    position.y+=time*velocity.y/1000;
-    position.z+=time*velocity.z/1000;
+      position.x+=time*velocity.x/1000;
+      position.y+=time*velocity.y/1000;
+      position.z+=time*velocity.z/1000;
 }
 
 

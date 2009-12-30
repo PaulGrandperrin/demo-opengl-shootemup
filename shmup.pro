@@ -16,14 +16,16 @@ QMAKE_LFLAGS_DEBUG += -ggdb -p -pg
 
 
 # Input
-HEADERS += actor.h \
+HEADERS += function.h \
+	   actor.h \
 	   camera.h \
            game.h \
            graphicEngine.h \
            inputDevice.h \
            parameters.h \
            viewQt.h
-SOURCES += actor.cpp \
+SOURCES += function.cpp \
+	   actor.cpp \
 	   camera.cpp \
            game.cpp \
            graphicEngine.cpp \

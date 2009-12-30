@@ -25,10 +25,11 @@ void Game::init()
     Mplayer=GE.loadModel("meshes/player.obj","textures/player.png");
     Mboulet=GE.loadModel("meshes/boulet.obj","textures/boulet.png");
 
-    player = ActorPhysique(Mplayer, {0,0,0}, {0,0,0}, {1,1,1});
+    player = ActorPhysique(Mplayer, {0,0,0}, {90,-90,0}, {1,1,1}); //{0,0,0}, {90,-90,0}, {1,1,1}
 
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
+    timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
 }
 
 void Game::resize(int width,int heigth)
@@ -86,7 +87,7 @@ void Game::render()
     {
         instances.push_back(itf->getInstance());
     }
-    GE.render(instances, {-sin(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(),sin(camera.getLatitude())*camera.getZoom(),cos(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(),camera.getCenterX(),camera.getCenterY(),0,0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},time);
+    GE.render(instances, {-sin(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), sin(camera.getLatitude())*camera.getZoom(), cos(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), camera.getCenterX(), camera.getCenterY(), 0,0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},time);
 }
 
 /*
@@ -114,28 +115,37 @@ void Game::playerManager()
         //on tire 3 missiles
         ActorPhysique fire;
         fire=ActorPhysique(Mboulet, {player.getPosition().x,player.getPosition().y,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
-        fire.setVelocity( {player.getVelocity().x+2,player.getVelocity().y-5,player.getVelocity().z});
-        fire.setAcceleration( {0,20,0});
-        fires.push_back(fire);
-
-        fire=ActorPhysique(Mboulet, {player.getPosition().x,player.getPosition().y,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
-        fire.setVelocity( {player.getVelocity().x-2,player.getVelocity().y-5,player.getVelocity().z});
-        fire.setAcceleration( {0,20,0});
-        fires.push_back(fire);
-
-        fire=ActorPhysique(Mboulet, {player.getPosition().x,player.getPosition().y,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
         fire.setVelocity( {player.getVelocity().x,player.getVelocity().y+10,player.getVelocity().z});
         fire.setAcceleration( {0,0,0});
         fires.push_back(fire);
 
         timerGenShoot=INTERVALE_TEMP_SHOOT;
     }
-    else
+    if ((((stateKeys[K_ALT]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
+    {
+        //on tire 3 missiles
+	ActorPhysique fire;
+	for (float f =-0.8;f<=0.8;f+=0.2)
+	{
+	    fire=ActorPhysique(Mboulet, {player.getPosition().x+0.3,player.getPosition().y+f,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
+	    fire.setVelocity( {player.getVelocity().x+6*random(0.5,2,(time+f)*f*f),player.getVelocity().y+f*random(-1,1,time*f*f),player.getVelocity().z});
+	    fire.setAcceleration( {random(2,4,(time+f)*f*f),0,0});
+	    fires.push_back(fire);
+	    fire=ActorPhysique(Mboulet, {player.getPosition().x-0.3,player.getPosition().y+f,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
+	    fire.setVelocity( {player.getVelocity().x-6*random(0.5,2,(time-f+2)*f*f),player.getVelocity().y+f*random(-1,1,time*f*f),player.getVelocity().z});
+	    fire.setAcceleration( {random(2,4,(time+f)*f*f),0,0});
+	    fires.push_back(fire);
+	}
+        timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
+    }
+    else {
         timerGenShoot--;
+        timerGenShootGros--;
+    }
 
-    player.rotate( {
-                       0,0.5,0
-                   });
+//     player.rotate( {
+//                        0,0.5,0
+//                    });
 
 }
 
