@@ -138,10 +138,10 @@ void Game::playerManager()
 	for (float f =-0.8;f<=0.8;f+=0.2)
 	{
 	    fire=ActorPhysique(Mboulet, {player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
-	    fire.setVelocity( {player.getVelocity().x+random(10,12),player.getVelocity().y,player.getVelocity().z});
+	    fire.setVelocity( {player.getVelocity().x+random(10,12),player.getVelocity().y,player.getVelocity().z+random(0,1)});
 	    fires.push_back(fire);
 	    fire=ActorPhysique(Mboulet, {player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
-	    fire.setVelocity( {player.getVelocity().x-random(10,12),player.getVelocity().y,player.getVelocity().z});
+	    fire.setVelocity( {player.getVelocity().x-random(10,12),player.getVelocity().y,player.getVelocity().z+random(0,1)});
 	    fires.push_back(fire);
 	}
         timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
