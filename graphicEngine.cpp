@@ -131,7 +131,6 @@ void graphicEngine::render(vector<instance> instances,camera cam,lightVec lv,flo
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(cam.eyex,cam.eyey,cam.eyez,cam.centerx,cam.centery,cam.centerz,cam.upx,cam.upy,cam.upz);
-	
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	
 	/* activation des tableaux de sommets */

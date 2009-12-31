@@ -14,7 +14,7 @@ void Camera::setLongitude(float f) {
     longitude +=f;
     if (longitude >3.1415) // permet de continuer en gardant l'angle le plus faible.
         longitude=-3.1415;
-    if (longitude < -3.1415)
+    if (longitude <-3.1415)
         longitude=3.1415;
 }
 
@@ -75,7 +75,7 @@ void Camera::resetSmart()
     
     if (nbfoisResetCamSmart == 0) { // on est tres proche donc on peut le faire
         longitude=0;
-        latitude=0;
+        latitude=1.5;
         zoom=ZOOM_DEFAULT;
         centerX = 0;
         centerY = 0;

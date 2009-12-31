@@ -29,7 +29,7 @@ void ViewOpenGl::initializeGL()
 
 void ViewOpenGl::paintGL()
 {
-    float t=time.elapsed();
+    float t=time.elapsed(); // TODO Delta time
     time.restart();
     game.update(kb.getStateKeys(),mouse.getStateButtons(),mouse.getDeltaMouse(), mouse.getDeltaWheel(),t,width,height);
     mouse.updateWheel(0); //naicessaire, sinon le delta (molette) reste

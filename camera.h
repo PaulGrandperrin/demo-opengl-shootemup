@@ -11,7 +11,7 @@ public:
   
     inline void init() {
         longitude=0;
-        latitude=0;
+        latitude=1.5; //3.14158/2
         zoom=ZOOM_DEFAULT;
         centerX = 0;
         centerY = 0;
@@ -19,7 +19,8 @@ public:
 	nbfoisResetCamSmart = 0;
     }
     inline bool camOK() {
-      return (longitude==0 && latitude==0 && zoom==ZOOM_DEFAULT && centerX == 0 && centerY == 0);
+      return ((longitude==0) && (latitude==(1.5)) && (zoom==ZOOM_DEFAULT) && (centerX == 0) && (centerY == 0));
+      //return true;
     }
     
     void setZoom(float f);

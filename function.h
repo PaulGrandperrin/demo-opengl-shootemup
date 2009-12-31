@@ -5,6 +5,6 @@
 #include <stdio.h>
 
 
-float random(float min, float max, float time);
+float random(float min, float max);
 
 #endif

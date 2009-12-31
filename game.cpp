@@ -1,5 +1,15 @@
 #include "game.h"
 #include <stdio.h>
+#include <ctime>
+#include <cstdlib>
+
+/* le plan de jeu ce fait sur xz */
+
+//     Y--------X
+//     |
+//     |
+//     |
+//     Z
 
 // for trace during test , to kept
 #include <iostream>
@@ -20,12 +30,14 @@ void Game::init()
     camera.init();
     GE.init();
 
+    srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
+
     //TODO charger le fichier de niveau et les trajectoire ici
 
     Mplayer=GE.loadModel("meshes/player.obj","textures/player.png");
     Mboulet=GE.loadModel("meshes/boulet.obj","textures/boulet.png");
 
-    player = ActorPhysique(Mplayer, {0,0,0}, {90,-90,0}, {1,1,1}); //{0,0,0}, {90,-90,0}, {1,1,1}
+    player = ActorPhysique(Mplayer, {0,0,0}, {0,-90,0}, {1,1,1}); //{0,0,0}, {90,-90,0}, {1,1,1}
 
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
@@ -43,7 +55,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int 
     this->stateButtons=stateButtons;
     this->deltaMouse=deltaMouse;
     this->deltaWheel=deltaWheel;
-    this->time=time;
+    this->dTime=time;
     this->widthView=width;
     this->heightView=height;
     this->width=3;
@@ -87,7 +99,7 @@ void Game::render()
     {
         instances.push_back(itf->getInstance());
     }
-    GE.render(instances, {-sin(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), sin(camera.getLatitude())*camera.getZoom(), cos(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), camera.getCenterX(), camera.getCenterY(), 0,0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},time);
+        GE.render(instances, {-sin(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), sin(camera.getLatitude())*camera.getZoom(), cos(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), camera.getCenterX(), camera.getCenterY(), 0,0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},dTime);
 }
 
 /*
@@ -104,18 +116,18 @@ void Game::playerManager()
     if (stateKeys[K_RIGHT]) // +x
         player.setAcceleration( {player.getAcceleration().x+5,player.getAcceleration().y,player.getAcceleration().z});
     if (stateKeys[K_UP]) // +y
-        player.setAcceleration( {player.getAcceleration().x,player.getAcceleration().y+5,player.getAcceleration().z});
+        player.setAcceleration( {player.getAcceleration().x,player.getAcceleration().y,player.getAcceleration().z-5});
     if (stateKeys[K_DOWN]) // -y
-        player.setAcceleration( {player.getAcceleration().x,player.getAcceleration().y-5,player.getAcceleration().z});
+        player.setAcceleration( {player.getAcceleration().x,player.getAcceleration().y,player.getAcceleration().z+5});
 
-    player.update(time);
+    player.update(dTime);
 
     if ((((stateKeys[K_CTRL]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
         //on tire 3 missiles
         ActorPhysique fire;
         fire=ActorPhysique(Mboulet, {player.getPosition().x,player.getPosition().y,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
-        fire.setVelocity( {player.getVelocity().x,player.getVelocity().y+10,player.getVelocity().z});
+        fire.setVelocity( {player.getVelocity().x,player.getVelocity().y,player.getVelocity().z-10});
         fire.setAcceleration( {0,0,0});
         fires.push_back(fire);
 
@@ -127,13 +139,13 @@ void Game::playerManager()
 	ActorPhysique fire;
 	for (float f =-0.8;f<=0.8;f+=0.2)
 	{
-	    fire=ActorPhysique(Mboulet, {player.getPosition().x+0.3,player.getPosition().y+f,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
-	    fire.setVelocity( {player.getVelocity().x+6*random(0.5,2,(time+f)*f*f),player.getVelocity().y+f*random(-1,1,time*f*f),player.getVelocity().z});
-	    fire.setAcceleration( {random(2,4,(time+f)*f*f),0,0});
+	    fire=ActorPhysique(Mboulet, {player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
+	    fire.setVelocity( {player.getVelocity().x+6*random(0.5,1),player.getVelocity().y,-player.getVelocity().z/5+f*random(-1,1)});
+	    fire.setAcceleration( {random(2,3),0,0});
 	    fires.push_back(fire);
 	    fire=ActorPhysique(Mboulet, {player.getPosition().x-0.3,player.getPosition().y+f,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
-	    fire.setVelocity( {player.getVelocity().x-6*random(0.5,2,(time-f+2)*f*f),player.getVelocity().y+f*random(-1,1,time*f*f),player.getVelocity().z});
-	    fire.setAcceleration( {random(2,4,(time+f)*f*f),0,0});
+	    fire.setVelocity( {player.getVelocity().x-6*random(0.5,1),player.getVelocity().y,-player.getVelocity().z/5+f*random(-1,1)});
+	    fire.setAcceleration( {random(2,3),0,0});
 	    fires.push_back(fire);
 	}
         timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
@@ -143,10 +155,6 @@ void Game::playerManager()
         timerGenShootGros--;
     }
 
-//     player.rotate( {
-//                        0,0.5,0
-//                    });
-
 }
 
 void Game::firesManager()
@@ -154,14 +162,14 @@ void Game::firesManager()
     list<ActorPhysique>::iterator it;
 
     for (it=fires.begin(); it!=fires.end(); it++)
-        it->update(time);
+        it->update(dTime);
 }
 
 void Game::enemiesManager()
 {
     list<Actor>::iterator it;
     for (it=enemies.begin(); it!=enemies.end(); it++)
-        it->update(time);
+        it->update(dTime);
 }
 
 void Game::collisionManager()
@@ -170,34 +178,27 @@ void Game::collisionManager()
     // si on rentre en collision avec la bordure exterieur on efface l'object
 
     list<Actor>::iterator ite;
-    ite=enemies.begin(); //HACK c'est la chose la plus moche que j'ai jamais faite, mais pour l'instant, j'arrive pas a faire mieux
-    //NOTE Pourquoi (paul) as tu mis une bouche while autour du for ? je comprend vraiment pas !
-    //NOTE C'est pas si horrible (sans le while) tu parcour toute les enemi (et fires) en verifiant s'il sont hors jeu our pas !
-//     while (ite!=enemies.end())
-//     {
+    ite=enemies.begin();
     for (ite=enemies.begin(); ite!=enemies.end() ; ite++)
     {
-        if (ite->getPosition().x>4||ite->getPosition().x<-4||ite->getPosition().y>4||ite->getPosition().y<-4)
+        if (ite->getPosition().x>4||ite->getPosition().x<-4||ite->getPosition().z>4||ite->getPosition().z<-4)
         {
             enemies.erase(ite);
             break;
         }
     }
-//     }
 
     list<ActorPhysique>::iterator itf;
     itf=fires.begin();
-//     while (itf!=fires.end())
-//     {
+
     for (itf=fires.begin(); itf!=fires.end() ; itf++)
     {
-        if (itf->getPosition().x>10||itf->getPosition().x<-10||itf->getPosition().y>10||itf->getPosition().y<-10)
+        if (itf->getPosition().x>10||itf->getPosition().x<-10||itf->getPosition().z>10||itf->getPosition().z<-10)
         {
             fires.erase(itf);
             break;
         }
     }
-//     }
     // TODO ameliorer definition des bords
     //verification des bords verticaux ensuite des bords horizontaux. (evite de sortir sur les coins.)
     if (player.getPosition().x<-width)
@@ -209,14 +210,14 @@ void Game::collisionManager()
         player.setVelocity( {-player.getVelocity().x*0.2,player.getVelocity().y,player.getVelocity().z});
     }
 
-    if (player.getPosition().y<-height-1)
+    if (player.getPosition().z<-height-1)
     {
-        player.setVelocity( {player.getVelocity().x,-player.getVelocity().y*0.2,player.getVelocity().z});
+        player.setVelocity( {player.getVelocity().x,-player.getVelocity().y,player.getVelocity().z*0.2});
     }
 
-    else if (player.getPosition().y>height-2)
+    else if (player.getPosition().z>height-2)
     {
-        player.setVelocity( {player.getVelocity().x,-player.getVelocity().y*0.2,player.getVelocity().z});
+        player.setVelocity( {player.getVelocity().x,-player.getVelocity().y,player.getVelocity().z*0.2});
     }
 }
 
@@ -293,10 +294,10 @@ void Game::pauseManager() // TODO acceleration
             camera.setCenterX(-deltaMouse.x()*0.02);
         }
         if ((stateButtons[B_MIDLE]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
-            camera.setLatitude(0.01*deltaMouse.y());
+            camera.setLatitude(0.01*deltaMouse.y()); //Lat
         }
         if ((stateButtons[B_MIDLE]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
-            camera.setLongitude(0.01*deltaMouse.x());
+            camera.setLongitude(0.01*deltaMouse.x()); // Long
         }
         if ((deltaWheel != 0)) {
             camera.setZoom(-deltaWheel/(float)60);

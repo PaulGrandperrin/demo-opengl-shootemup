@@ -54,7 +54,7 @@ private:
     bool* stateButtons;
     QPoint deltaMouse;
     int deltaWheel;
-    float time;
+    float dTime;
     bool stop;
     int widthView,heightView;
 
