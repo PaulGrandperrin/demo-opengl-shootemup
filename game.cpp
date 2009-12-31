@@ -138,12 +138,10 @@ void Game::playerManager()
 	for (float f =-0.8;f<=0.8;f+=0.2)
 	{
 	    fire=ActorPhysique(Mboulet, {player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
-	    fire.setVelocity( {player.getVelocity().x+6*random(0.5,1),player.getVelocity().y,-player.getVelocity().z/5+f*random(-1,1)});
-	    fire.setAcceleration( {random(2,3),0,0});
+	    fire.setVelocity( {player.getVelocity().x+random(10,12),player.getVelocity().y,player.getVelocity().z});
 	    fires.push_back(fire);
 	    fire=ActorPhysique(Mboulet, {player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
-	    fire.setVelocity( {player.getVelocity().x-6*random(0.5,1),player.getVelocity().y,-player.getVelocity().z/5+f*random(-1,1)});
-	    fire.setAcceleration( {-random(2,3),0,0});
+	    fire.setVelocity( {player.getVelocity().x-random(10,12),player.getVelocity().y,player.getVelocity().z});
 	    fires.push_back(fire);
 	}
         timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
@@ -199,21 +197,21 @@ void Game::collisionManager()
     }
     // TODO ameliorer definition des bords
     //verification des bords verticaux ensuite des bords horizontaux. (evite de sortir sur les coins.)
-    if (player.getPosition().x<-width)
+    if (player.getPosition().x<=-width)
     {
         player.setVelocity( {-player.getVelocity().x*0.2,player.getVelocity().y,player.getVelocity().z});
     }
-    else if (player.getPosition().x>width)
+    else if (player.getPosition().x>=width)
     {
         player.setVelocity( {-player.getVelocity().x*0.2,player.getVelocity().y,player.getVelocity().z});
     }
 
-    if (player.getPosition().z<-height-1)
+    if (player.getPosition().z<=-height-1)
     {
         player.setVelocity( {player.getVelocity().x,-player.getVelocity().y,player.getVelocity().z*0.2});
     }
 
-    else if (player.getPosition().z>height-2)
+    else if (player.getPosition().z>=height-2)
     {
         player.setVelocity( {player.getVelocity().x,-player.getVelocity().y,player.getVelocity().z*0.2});
     }
