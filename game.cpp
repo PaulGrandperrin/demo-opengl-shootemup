@@ -99,7 +99,7 @@ void Game::render()
     {
         instances.push_back(itf->getInstance());
     }
-        GE.render(instances, {-sin(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), sin(camera.getLatitude())*camera.getZoom(), cos(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), camera.getCenterX(), camera.getCenterY(), 0,0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},dTime);
+        GE.render(instances, {-sin(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), sin(camera.getLatitude())*camera.getZoom(), cos(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom(), camera.getCenterX(), camera.getCenterZ(), 0,0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},dTime);
 }
 
 /*
@@ -124,7 +124,6 @@ void Game::playerManager()
 
     if ((((stateKeys[K_CTRL]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
-        //on tire 3 missiles
         ActorPhysique fire;
         fire=ActorPhysique(Mboulet, {player.getPosition().x,player.getPosition().y,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
         fire.setVelocity( {player.getVelocity().x,player.getVelocity().y,player.getVelocity().z-10});
@@ -135,7 +134,6 @@ void Game::playerManager()
     }
     if ((((stateKeys[K_ALT]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
     {
-        //on tire 3 missiles
 	ActorPhysique fire;
 	for (float f =-0.8;f<=0.8;f+=0.2)
 	{
@@ -143,9 +141,9 @@ void Game::playerManager()
 	    fire.setVelocity( {player.getVelocity().x+6*random(0.5,1),player.getVelocity().y,-player.getVelocity().z/5+f*random(-1,1)});
 	    fire.setAcceleration( {random(2,3),0,0});
 	    fires.push_back(fire);
-	    fire=ActorPhysique(Mboulet, {player.getPosition().x-0.3,player.getPosition().y+f,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
+	    fire=ActorPhysique(Mboulet, {player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
 	    fire.setVelocity( {player.getVelocity().x-6*random(0.5,1),player.getVelocity().y,-player.getVelocity().z/5+f*random(-1,1)});
-	    fire.setAcceleration( {random(2,3),0,0});
+	    fire.setAcceleration( {-random(2,3),0,0});
 	    fires.push_back(fire);
 	}
         timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
@@ -269,10 +267,10 @@ void Game::pauseManager() // TODO acceleration
 
     else if (stateKeys[K_SHIFT]) {
         if (stateKeys[K_UP]) {
-            camera.setCenterY(0.05);
+            camera.setCenterZ(-0.05); // axe Z ver le "bas"
         }
         else if  (stateKeys[K_DOWN]) {
-            camera.setCenterY(-0.05);
+            camera.setCenterZ(0.05);
         }
         if (stateKeys[K_LEFT]) {
             camera.setCenterX(-0.05);
@@ -288,16 +286,16 @@ void Game::pauseManager() // TODO acceleration
     else {
         //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
         if ((stateButtons[B_LEFT]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
-            camera.setCenterY(deltaMouse.y()*0.02);
+            camera.setCenterZ(-deltaMouse.y()*0.02);
         }
         if ((stateButtons[B_LEFT]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
-            camera.setCenterX(-deltaMouse.x()*0.02);
+            camera.setCenterX(deltaMouse.x()*0.02);
         }
         if ((stateButtons[B_MIDLE]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
-            camera.setLatitude(0.01*deltaMouse.y()); //Lat
+            camera.setLatitude(0.01*deltaMouse.y());
         }
         if ((stateButtons[B_MIDLE]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
-            camera.setLongitude(0.01*deltaMouse.x()); // Long
+            camera.setLongitude(0.01*deltaMouse.x());
         }
         if ((deltaWheel != 0)) {
             camera.setZoom(-deltaWheel/(float)60);

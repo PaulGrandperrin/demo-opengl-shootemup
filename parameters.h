@@ -36,13 +36,14 @@
 
 //camera settings (surtout pour le mode pause)
 #define ZOOM_DEFAULT 20 // temps mis pour reset l'angle apres la pause
+#define LATITUDE_DEFAULT 1.5 // temps mis pour reset l'angle apres la pause
 #define ZOOM_MIN 3 // le plus proche
 #define ZOOM_MAX 100 // le plus loins
 #define TEMP_RESETCAM_SMART_PAUSE 50
 #define CENTERX_MIN -100 // le plus proche
 #define CENTERX_MAX 100 // le plus loins
-#define CENTERY_MIN -100 // le plus proche
-#define CENTERY_MAX 100 // le plus loins
+#define CENTERZ_MIN -100 // le plus proche
+#define CENTERZ_MAX 100 // le plus loins
  
 
 #define NB_KEYS 9
