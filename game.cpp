@@ -123,7 +123,7 @@ void Game::playerManager()
     player.colisionBord(width,height); // donner une leger rotation au vaisseau 
     // TODO ameliorer definition des bords
     
-    if ((((stateKeys[K_TIRE]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
+    if ((((stateKeys[K_TIR]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
         ActorPhysique fire;
         fire=ActorPhysique(Mboulet, {player.getPosition().x,player.getPosition().y,player.getPosition().z}, {0,0,0}, {0.05,0.05,0.05});
@@ -133,7 +133,7 @@ void Game::playerManager()
 
         timerGenShoot=INTERVALE_TEMP_SHOOT;
     }
-    if ((((stateKeys[K_TIRE_SECOND]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
+    if ((((stateKeys[K_TIR_SECOND]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
     {
 	ActorPhysique fire;
 	for (float f =-0.8;f<=0.8;f+=0.2)

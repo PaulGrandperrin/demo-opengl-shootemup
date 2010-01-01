@@ -8,7 +8,7 @@
 
 class Keyboard {
 private:
-    int connectionKey[NB_KEYS];  // connection bettewen keycode of Qt, and our keycode
+    int connectionKey[NB_KEYS];  // connection between keycode of Qt, and our keycode
     bool stateKeys[NB_KEYS]; // every key has one state (push or not)
 public:
     Keyboard();
@@ -20,7 +20,7 @@ public:
 
 class Mouse {
 private:
-    int connectionButton[NB_BUTTON];  // connection bettewen keycode of Qt, and our keycode
+    int connectionButton[NB_BUTTON];  // connection between keycode of Qt, and our keycode
     bool stateButtons[NB_BUTTON]; // every key has one state (push or not)
     QPoint pMouse, lastPMouse;
     int dWheel;

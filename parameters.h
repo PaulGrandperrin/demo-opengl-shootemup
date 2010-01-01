@@ -57,8 +57,8 @@
 #define K_DOWN 5
 #define K_LEFT 6
 #define K_RIGHT 7
-#define K_TIRE 8
-#define K_TIRE_SECOND 9
+#define K_TIR 8
+#define K_TIR_SECOND 9
 #define K_PAUSE 10
 
 #define QT_K_QUIT Key_Escape
@@ -69,8 +69,8 @@
 #define QT_K_DOWN Key_Down
 #define QT_K_LEFT Key_Left
 #define QT_K_RIGHT Key_Right
-#define QT_K_TIRE Key_W
-#define QT_K_TIRE_SECOND Key_X
+#define QT_K_TIR Key_W
+#define QT_K_TIR_SECOND Key_X
 #define QT_K_PAUSE Key_P
 
 
