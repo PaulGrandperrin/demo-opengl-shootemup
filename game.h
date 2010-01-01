@@ -2,14 +2,12 @@
 #define GAME_H_
 
 #include <list>
-#include <vector>
 #include <math.h>
 
 #include "actor.h"
 #include "camera.h"
 #include "graphicEngine.h"
 #include "parameters.h"
-#include "enemy.h"
 #include "function.h"
 
 #include <QPoint>
@@ -30,25 +28,20 @@ private:
     void render();
     void playerManager();
     void firesManager();
-    void trajectoriesManager();
     void enemiesManager();
     void collisionManager();
     void gameManager();
     void pauseManager();
 
 
-    vector<EnemyInfo> enemiesInfos;
-    list<Trajectory> trajectories;
+    list<ActorPhysique> enemies; //TODO remplacer en ActorKeyFrame
     list<ActorPhysique> friendFires;
     list<ActorPhysique> enemiesFires;
     ActorPlayer player;
 
     int timerGenShoot;
-    int timerGenTrajectorySequence; // Correspond à l'intervalle de temps qui sépare l'apparition de 2 ennemis situes sur une trajectoire differente
-    list<int> timersGenEnemy; // chaque element de cette liste correspond au timer d'apparition d'un ennemi sur la trajectoire de meme rang que cet 
-			      // element dans la liste des trajectoires (ex : 1er timer de la liste <=> 1ere trajectoire de la liste des trajectoires)
-    // int timerGenEnemy; // NOTE fait parti des attributs des trajectoires
     int timerGenShootGros;
+    int timerGenEnemy;
     float width, height; // correspond au nombre d'uniter "opengl" sur la larger et la hauteur
     //TODO metre a jour c'est valeur lorsque l'a fenetre est resizé
     //TODO Savoir exaxtement combien d'uniter il y a (hauteur et largeur)

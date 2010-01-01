@@ -4,9 +4,9 @@
 #include <iostream>
 using namespace std;
 
-////////////////////////////////////////
+//---------------------------------------------------------------
 // Actor
-////////////////////////////////////////
+//---------------------------------------------------------------
 
 Actor::Actor(int idModel, vect position,vect rotation,vect scale)
 {
@@ -16,9 +16,9 @@ Actor::Actor(int idModel, vect position,vect rotation,vect scale)
     this->idModel=idModel;
 }
 
-////////////////////////////////////////
-// Actor Physique
-////////////////////////////////////////
+//---------------------------------------------------------------
+// ActorPhysiqye
+//---------------------------------------------------------------
 
 ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale) : Actor(idModel,position,rotation,scale)
 {
@@ -186,32 +186,6 @@ void ActorPlayer::update(float time)
 
 }
 
-////////////////////////////////////////
-// Actor KeyFrame
-////////////////////////////////////////
-
-ActorKeyFrame::ActorKeyFrame(int idModel, vect position,vect rotation,vect scale,Trajectory * traj)
-: ActorPhysique(idModel,position,rotation,scale) {
-  this->traj = traj;
-  timeElapsed = 0;
-}
-
-void ActorKeyFrame::update(float time) {
-  timeElapsed += time;
-  vector<t_key_state>::reverse_iterator rit;
-  for(rit=traj->getKeyStates().rbegin(); rit<traj->getKeyStates().rend(); rit++)
-  {
-    if(timeElapsed > rit->t)
-    {
-      if(!rit->type)
-	setAcceleration({rit->x,rit->y,rit->z});
-      else
-	setVelocity({rit->x,rit->y,rit->z});
-      break;
-    }
-  }
-  ActorPhysique::update(time);
-}
 
 // ---------------------Sauvegarde de l'ancienne version---------------------------
 

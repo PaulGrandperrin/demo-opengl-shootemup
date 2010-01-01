@@ -32,8 +32,6 @@
 #define INTERVALE_TEMP_SHOOT 20 // temp = X*20ms ex: 50*20 = 1s
 #define INTERVALE_TEMP_SHOOT_GROS 100 // temp = X*20ms ex: 50*20 = 1s
 #define INTERVALE_TEMP_ENEMY 50  // provisoire
-#define INTERVALE_TEMP_TRAJECTORY_SEQUENCE 100 // à vérifier ce que ca va donner in game
-#define TIMER_OFF -123456789
 
 
 //camera settings (surtout pour le mode pause)
