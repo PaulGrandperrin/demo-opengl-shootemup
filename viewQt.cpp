@@ -10,6 +10,7 @@ ViewOpenGl::ViewOpenGl( QWidget *parent) : QGLWidget(parent)
     grabKeyboard();
     grabMouse();
     setMouseTracking(true);
+    changeModeScreen = false;
     connect(&thread, SIGNAL(updateGame()), this, SLOT(update()));
 
     thread.start();
@@ -37,11 +38,17 @@ void ViewOpenGl::paintGL()
     if (game.close()) //FIXME il ya surement une place plus adaptée pour ça
         close();
     
-    if (kb.getStateKeys()[K_FULLSCREEN]) {
+    if (changeModeScreen && (!kb.getStateKeys()[K_FULLSCREEN])) {
+        changeModeScreen = false;
 	if(isFullScreen())
             setWindowState(Qt::WindowMaximized);
         else
             setWindowState(Qt::WindowFullScreen);
+    }
+    
+    if (!changeModeScreen && kb.getStateKeys()[K_FULLSCREEN]) {
+
+	changeModeScreen = true;
     }
 }
 
