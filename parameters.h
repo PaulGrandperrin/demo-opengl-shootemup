@@ -35,7 +35,9 @@
 
 
 //camera settings (surtout pour le mode pause)
-#define ZOOM_DEFAULT 20 // temps mis pour reset l'angle apres la pause
+#define ZOOM_DEFAULT 30 // temps mis pour reset l'angle apres la pause
+#define NB_UNITY_WIDTH 12
+#define NB_UNITY_HEIGHT 12
 #define LATITUDE_DEFAULT 1.5 // temps mis pour reset l'angle apres la pause
 #define ZOOM_MIN 3 // le plus proche
 #define ZOOM_MAX 100 // le plus loins
@@ -46,16 +48,32 @@
 #define CENTERZ_MAX 100 // le plus loins
  
 
-#define NB_KEYS 9
-#define K_ESC 0
-#define K_UP 1
-#define K_DOWN 2
-#define K_LEFT 3
-#define K_RIGHT 4
-#define K_CTRL 5
-#define K_SHIFT 6
-#define K_ALT 7
-#define K_SPACE 8
+#define NB_KEYS 11
+#define K_QUIT 0
+#define K_CTRL 1
+#define K_SHIFT 2
+#define K_ALT 3
+#define K_UP 4
+#define K_DOWN 5
+#define K_LEFT 6
+#define K_RIGHT 7
+#define K_TIRE 8
+#define K_TIRE_SECOND 9
+#define K_PAUSE 10
+
+#define QT_K_QUIT Key_Escape
+#define QT_K_CTRL Key_Control
+#define QT_K_SHIFT Key_Shift
+#define QT_K_ALT Key_Alt
+#define QT_K_UP Key_Up
+#define QT_K_DOWN Key_Down
+#define QT_K_LEFT Key_Left
+#define QT_K_RIGHT Key_Right
+#define QT_K_TIRE Key_W
+#define QT_K_TIRE_SECOND Key_X
+#define QT_K_PAUSE Key_P
+
+
 
 
 #define NB_BUTTON 9 // mouse

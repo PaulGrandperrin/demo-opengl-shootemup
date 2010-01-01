@@ -9,7 +9,8 @@ using namespace std;
 
 Keyboard::Keyboard() {
     // On definit les touches par defaut
-    int connectionKeyTab[NB_KEYS] = {Qt::Key_Escape, Qt::Key_Up, Qt::Key_Down, Qt::Key_Left, Qt::Key_Right, Qt::Key_Control, Qt::Key_Shift, Qt::Key_Alt, Qt::Key_Space};
+    
+    int connectionKeyTab[NB_KEYS] = {Qt::QT_K_QUIT, Qt::QT_K_CTRL, Qt::QT_K_SHIFT, Qt::QT_K_ALT, Qt::QT_K_UP, Qt::QT_K_DOWN, Qt::QT_K_LEFT, Qt::QT_K_RIGHT, Qt::QT_K_TIRE, Qt::QT_K_TIRE_SECOND, Qt::QT_K_PAUSE};
     // Initialisation des attributs
     for (int i = 0; i<NB_KEYS; i++) {
         stateKeys[i] = 0;

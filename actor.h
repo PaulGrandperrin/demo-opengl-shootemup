@@ -55,6 +55,7 @@ public:
     ActorPhysique() {}
     ActorPhysique(int idModel, vect position,vect rotation,vect scale);
     void update(float time);
+    bool sortieEcran(float width, float height);
 
     inline void setVelocity(vect v) {
         velocity=v;
@@ -69,10 +70,25 @@ public:
         return acceleration;
     }
 
-private:
+protected:
     vect velocity;
     vect acceleration;
+    //masque
 
+};
+
+class ActorPlayer: public ActorPhysique
+{
+public:
+    ActorPlayer() {}
+    ActorPlayer(int idModel, vect position,vect rotation,vect scale, float decX, float decZ);
+    void update(float time);
+    void colisionBord(float width, float height);
+
+protected:
+    float decelerationX, decelerationZ;
+    //vie
+    //score NOTE Un score appartient a un joueur !
 };
 
 /* TODO a remplir par Romain

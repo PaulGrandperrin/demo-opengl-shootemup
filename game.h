@@ -34,9 +34,10 @@ private:
     void pauseManager();
 
 
-    list<Actor> enemies; //TODO remplacer en ActorKeyFrame
-    list<ActorPhysique> fires;
-    ActorPhysique player;
+    list<ActorPhysique> enemies; //TODO remplacer en ActorKeyFrame
+    list<ActorPhysique> friendFires;
+    list<ActorPhysique> enemiesFires;
+    ActorPlayer player;
 
     int timerGenShoot;
     int timerGenShootGros;

@@ -4,6 +4,9 @@
 #include <iostream>
 using namespace std;
 
+//---------------------------------------------------------------
+// Actor
+//---------------------------------------------------------------
 
 Actor::Actor(int idModel, vect position,vect rotation,vect scale)
 {
@@ -13,25 +16,174 @@ Actor::Actor(int idModel, vect position,vect rotation,vect scale)
     this->idModel=idModel;
 }
 
-ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale)
+//---------------------------------------------------------------
+// ActorPhysiqye
+//---------------------------------------------------------------
+
+ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale) : Actor(idModel,position,rotation,scale)
 {
-    this->position=position;
-    this->rotation=rotation;
-    this->scale=scale;
-    this->idModel=idModel;
     this->velocity={0,0,0};
     this->acceleration={0,0,0};
 }
 
-void ActorPhysique::update(float time)
+void ActorPhysique::update(float time) // pas de deleration, gestion simple;
 {
     velocity.x+=time*acceleration.x/1000;
     velocity.y+=time*acceleration.y/1000;
     velocity.z+=time*acceleration.z/1000;
+    
+    position.x+=time*velocity.x/1000;
+    position.y+=time*velocity.y/1000;
+    position.z+=time*velocity.z/1000;
+}
 
-      position.x+=time*velocity.x/1000;
-      position.y+=time*velocity.y/1000;
-      position.z+=time*velocity.z/1000;
+bool ActorPhysique::sortieEcran(float width, float height)
+{
+    return  ((position.x<=-width) || (position.x>=width) || (position.z<=-height) || (position.z>=height));
+}
+
+//---------------------------------------------------------------
+// ActorPlayer
+//---------------------------------------------------------------
+
+
+ActorPlayer::ActorPlayer(int idModel, vect position,vect rotation,vect scale, float decX, float decZ) : ActorPhysique(idModel,position,rotation,scale)
+{
+  decelerationX = decX;
+  decelerationZ = decZ;
+}
+
+void ActorPlayer::colisionBord(float width, float height)
+{
+    //verification des bords verticaux ensuite des bords horizontaux. (evite de sortir sur les coins.)
+    if (position.x<-width) {
+        velocity = {-velocity.x*0.2,velocity.y,velocity.z};
+        acceleration = {-acceleration.x*0.2,0,0};
+        position = {-width,position.y,position.z};
+    }
+    else if (position.x>width) {
+        velocity = {-velocity.x*0.2,velocity.y,velocity.z};
+        acceleration = {-acceleration.x*0.2,0,0};
+        position = {width,position.y,position.z};
+    }
+
+    if (position.z<-height) {
+        velocity = {velocity.x,velocity.y,-velocity.z*0.2};
+        acceleration = {0,0,-acceleration.z*0.2};
+        position = {position.x,position.y,-height};
+    }
+    else if (position.z>height) {
+        velocity = {velocity.x,velocity.y,-velocity.z*0.2};
+        acceleration = {0,0,-acceleration.z*0.2};
+        position = {position.x,position.y,height};
+    }
+}
+
+void ActorPlayer::update(float time)
+{
+    if (velocity.x > 4)
+        velocity.x = 4;
+    if (velocity.x < -4)
+        velocity.x = -4;
+    if (velocity.z > 8)
+        velocity.z = 8;
+    if (velocity.z < -8)
+        velocity.z = -8;
+
+// Pour les tests
+//     cout << "velX = " << velocity.x << endl;
+//     cout << "velZ = " << velocity.z << endl;
+    
+    if ((velocity.x > 0) && (acceleration.x != 0)) { // > 0
+        if (acceleration.x < 0) {
+            acceleration.x +=decelerationX;    // TODO factoriser
+            if (acceleration.x > 0) {
+                acceleration.x =0;
+            }
+        }
+        else {
+            acceleration.x -=decelerationX;
+        }
+        velocity.x+=time*acceleration.x/1000;
+    }
+    else if ((velocity.x < 0) && (acceleration.x != 0)) {
+        if (acceleration.x < 0) {
+            acceleration.x +=decelerationX;
+        }
+        else {
+            acceleration.x -= decelerationX;
+            if (acceleration.x < 0) {
+                acceleration.x =0;
+            }
+        }
+        velocity.x+=time*acceleration.x/1000;
+    }
+    else if ((velocity.x != 0) && (acceleration.x == 0)) {
+        if (velocity.x < 0) {
+            velocity.x+=time*decelerationX/1000;
+            if (velocity.x > 0) {
+                velocity.x =0;
+            }
+        }
+        else {
+            velocity.x-=time*decelerationX/1000;
+            if (velocity.x < 0) {
+                velocity.x =0;
+            }
+        }
+    }
+    else {
+        velocity.x+=time*acceleration.x/1000;
+    }
+
+    velocity.y+=time*acceleration.y/1000;
+
+    if ((velocity.z > 0) && (acceleration.z != 0)) { // > 0
+        if (acceleration.z < 0) {
+            acceleration.z +=decelerationZ;    // TODO factoriser
+            if (acceleration.z > 0) {
+                acceleration.z =0;
+            }
+        }
+        else {
+            acceleration.z -=decelerationZ;
+        }
+        velocity.z+=time*acceleration.z/1000;
+    }
+    else if ((velocity.z < 0) && (acceleration.z != 0)) {
+        if (acceleration.z < 0) {
+            acceleration.z +=decelerationZ;
+        }
+        else {
+            acceleration.z -= decelerationZ;
+            if (acceleration.z < 0) {
+                acceleration.z =0;
+            }
+        }
+        velocity.z+=time*acceleration.z/1000;
+    }
+    else if ((velocity.z != 0) && (acceleration.z == 0)) {
+        if (velocity.z < 0) {
+            velocity.z+=time*decelerationZ/1000;
+            if (velocity.z > 0) {
+                velocity.z =0;
+            }
+        }
+        else {
+            velocity.z-=time*decelerationZ/1000;
+            if (velocity.z < 0) {
+                velocity.z =0;
+            }
+        }
+    }
+    else {
+        velocity.z+=time*acceleration.z/1000;
+    }
+
+    position.x+=time*velocity.x/1000;
+    position.y+=time*velocity.y/1000;
+    position.z+=time*velocity.z/1000;
+
 }
 
 
