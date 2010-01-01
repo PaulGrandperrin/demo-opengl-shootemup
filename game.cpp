@@ -30,17 +30,42 @@ void Game::init()
     camera.init();
     GE.init();
 
+    // Chargement des infos des ennemis
+    // NOTE j'ai (normalement) fait en sorte qu'on n'ait pas à modifier le code si on rajoute un ennemi dans le fichier d'ennemis
+    // TODO gerer plusieurs niveaux (2 fichiers par niveau : un "enem_lvl_<n°_du_niveau>.data" et un "traj_lvl_<n°_du_niveau>.data"
+    // dans le dossier levels
+    EnemyInfosFile eFile("levels/enem_lvl_default.data");
+    string s;
+    int h, idM;
+    while(!eFile.isEnded()) {
+	eFile.read(s);
+	eFile.read(h);
+	idM = GE.loadModel("meshes/"+s+".obj","textures/"+s+".png");
+	enemiesInfos.push_back({idM,h});
+	cout << "Enemy infos : (idModel = " << idM << ", Health = " << h << ") ... Loaded" << endl;
+    }
+	
+    // Chargement des trajectoires
+    TrajectoryFile tFile("levels/traj_lvl_default.data");
+    if(!tFile.isEnded())
+      tFile.read(trajectories); // On charge les trajectoires dans trajectories
+      
+      
     srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
 
-    //TODO charger le fichier de niveau et les trajectoire ici
-
+    // Chargement du modele du joueur et de son boulet
     Mplayer=GE.loadModel("meshes/player.obj","textures/player.png");
     Mboulet=GE.loadModel("meshes/boulet.obj","textures/boulet.png");
 
     player = ActorPlayer(Mplayer, {0,0,0}, {0,-90,0}, {1,1,1}, 2, 10/3);
 
-    timerGenEnemy=INTERVALE_TEMP_ENEMY;
-    timerGenShoot=INTERVALE_TEMP_SHOOT;
+    // timerGenEnemy=INTERVALE_TEMP_ENEMY; // NOTE cf game.h
+    timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
+    timerGenShoot = INTERVALE_TEMP_SHOOT;
+    
+    // On initialise les timers de generation d'ennemi à TIMER_OFF pour dire qu'ils sont désactivés au début
+    for(int i=0; i<trajectories.size(); i++)
+        timersGenEnemy.push_back(TIMER_OFF);
     timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
 }
 
@@ -67,6 +92,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int 
     { 
         playerManager();
         firesManager();
+	trajectoriesManager();
         enemiesManager();
         //bonusManager();
         //decorManager();
@@ -87,11 +113,19 @@ void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int 
 void Game::render()
 {
     vector<instance> instances;
-    list<ActorPhysique>::iterator itAP;
     instances.push_back(player.getInstance());
-    for (itAP=enemies.begin(); itAP!= enemies.end(); itAP++) {
-        instances.push_back(itAP->getInstance());
+
+    list<Trajectory>::iterator it_traj;
+    for(it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
+    {
+      list<Enemy>::iterator it_enn;
+      for(it_enn=it_traj->getEnemies().begin(); it_enn != it_traj->getEnemies().end(); it_enn++)
+      {
+	  instances.push_back(it_enn->getInstance());
+      }
     }
+    
+    list<ActorPhysique>::iterator itAP;
     for (itAP=enemiesFires.begin(); itAP!= enemiesFires.end(); itAP++) {
         instances.push_back(itAP->getInstance());
     }
@@ -170,11 +204,60 @@ void Game::firesManager()
     }
 }
 
+void Game::trajectoriesManager() {
+  bool timerGenEnemyStarted = FALSE;
+  bool timerOffMet = FALSE; // Booleen pour savoir s'il est toujours utile de faire une decrementation du timer (s'il reste des sequences à demarrer)
+  list<Trajectory>::iterator it_traj = trajectories.begin();
+  list<int>::iterator it_gene = timersGenEnemy.begin();
+  // On parcourt les trajectoires pour supprimer celles qui n'ont plus d'ennemis, et pour démarrer la génération des ennemis de chaque trajectoire
+  // de facon ordonnée (ex : on démarre la première trajectoire, puis au prochain top, on en démarre une autre...)
+  while(it_traj != trajectories.end())
+  {
+    // Si tous les ennemis ont ete generes et qu'il n'en reste plus, alors on supprime la trajectoire et son timer
+    if(it_traj->getRecordNumbers().size() == 0 && it_traj->getEnemies().size() == 0) {
+      it_traj = trajectories.erase(it_traj);
+      it_gene = timersGenEnemy.erase(it_gene);
+    }
+    else {
+      if(*it_gene == TIMER_OFF)
+      {
+	if(timerGenTrajectorySequence <= 0) {
+	  *it_gene = it_traj->getInterval(); // On demarre le timer d'ennemis de cette trajectoire en quelque sorte
+	  timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
+	  timerGenEnemyStarted = TRUE;
+	}
+	timerOffMet = TRUE;
+      }
+      it_traj++;
+      it_gene++;
+    }
+  }
+  if(timerOffMet && timerGenTrajectorySequence > 0 && !timerGenEnemyStarted)
+    timerGenTrajectorySequence--;
+}
+
 void Game::enemiesManager()
 {
-    list<ActorPhysique>::iterator it;
-    for (it=enemies.begin(); it!=enemies.end(); it++) {
-        it->update(dTime);
+    list<Trajectory>::iterator it_traj = trajectories.begin();
+    list<int>::iterator it_gene = timersGenEnemy.begin();
+    for(int i = 0; i<timersGenEnemy.size(); i++)
+    {
+      // On met a jour la position de chacun des ennemis presents sur la trajectoire
+      list<Enemy>::iterator it_enn;
+      for(it_enn = it_traj->getEnemies().begin(); it_enn < it_traj->getEnemies().end(); it_enn++)
+	it_enn->update(dTime);
+      if(it_traj->getRecordNumbers().size() && *it_gene <=0)
+      {
+	int rec_num = *(it_traj->getRecordNumbers().begin());
+	Enemy e(enemiesInfos[rec_num].idModel,it_traj->getInitialPosition(),{0,0,0},{1,1,1},it_traj,enemiesInfos[rec_num].health);
+	it_traj->addEnemy(e);
+	it_traj->removeFirstRecordNumber(); // On enleve le numero d'enregistrement pour dire qu'on a bien cree l'ennemi
+	*it_gene = it_traj->getInterval();
+      }
+      else
+	*it_gene = *it_gene - 1;
+      it_traj++;
+      it_gene++;
     }
 }
 
@@ -183,6 +266,28 @@ void Game::collisionManager()
     //pour l'instant ne sert a virer les objets sortant du cadre
     // si on rentre en collision avec la bordure exterieur on efface l'object
 
+    list<Trajectory>::iterator it_traj;
+    for(it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
+    {
+      list<Enemy>::iterator it_enn;
+      it_enn = it_traj->getEnemies().begin();
+      while(it_enn != it_traj->getEnemies().end())
+      {
+	if (it_enn->sortieEcran(width+5,height+5))
+	  it_enn = it_traj->getEnemies().erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
+	else
+	  it_enn++;
+      }
+    }
+/* ---------------------Sauvegarde de l'ancienne version---------------------------
+    
+    //HACK c'est la chose la plus moche que j'ai jamais faite, mais pour l'instant, j'arrive pas a faire mieux
+    //NOTE Pourquoi (paul) as tu mis une bouche while autour du for ? je comprend vraiment pas !
+    //NOTE C'est pas si horrible (sans le while) tu parcour toute les enemi (et fires) en verifiant s'il sont hors jeu our pas !
+    //NOTE (romain) En fait il me semble que sans le while tu dois pouvoir supprimer qu'un seul ennemi a la fois parce que tu break au
+    // premier ennemi supprime
+//     while (ite!=enemies.end())
+//     {
     list<ActorPhysique>::iterator itAP;
     for (itAP=enemies.begin(); itAP!=enemies.end() ; itAP++) {
         if (itAP-> sortieEcran(width+5,height+5))
@@ -191,6 +296,21 @@ void Game::collisionManager()
             break;
         }
     }
+//     }
+-------------------------------------------------------------------------------*/
+
+    list<ActorPhysique>::iterator itf;
+    itf=friendFires.begin();
+    while (itf!=friendFires.end())
+    {
+        if (itf->sortieEcran(width+5,height+5))
+	  itf = friendFires.erase(itf);
+	else
+	  itf++;
+    }
+/* ---------------------Sauvegarde de l'ancienne version---------------------------
+//     while (itf!=fires.end())
+//     {
     for (itAP=friendFires.begin(); itAP!=friendFires.end() ; itAP++)
     {
         if (itAP-> sortieEcran(width+5,height+5))
@@ -199,6 +319,12 @@ void Game::collisionManager()
             break;
         }
     }
+//     }
+-------------------------------------------------------------------------------*/
+
+    // TODO ameliorer definition des bords
+    //verification des bords verticaux ensuite des bords horizontaux. (evite de sortir sur les coins.)
+    if (player.getPosition().x<-width)
     for (itAP=enemiesFires.begin(); itAP!=enemiesFires.end() ; itAP++)
     {
         if (itAP-> sortieEcran(width+5,height+5))

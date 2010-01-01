@@ -1,18 +1,13 @@
 #ifndef ACTOR_H_
 #define ACTOR_H_
 
-#include <fstream>
+#include "trajectory.h"
 #include <string>
 using namespace std;
 
 #include "parameters.h"
 #include "instance.h"
-
-struct vect
-{
-    float x,y,z;
-};
-
+#include "vect.h"
 
 class Actor
 {
@@ -30,6 +25,11 @@ public:
     inline vect getPosition() {
         return position;
     }
+    
+    inline int getIdModel() {
+	return idModel;
+    }
+    
     inline void translate(vect t) {
         position.x+=t.x;
         position.y+=t.y;
@@ -52,7 +52,7 @@ protected:
 class ActorPhysique: public Actor
 {
 public:
-    ActorPhysique() {}
+    ActorPhysique() {};
     ActorPhysique(int idModel, vect position,vect rotation,vect scale);
     void update(float time);
     bool sortieEcran(float width, float height);
@@ -91,76 +91,30 @@ protected:
     //score NOTE Un score appartient a un joueur !
 };
 
-/* TODO a remplir par Romain
-
-NOTE les trajectoires seront chargées une seule fois de la même maniere que les
-models.
-
-class ActorKeyFrame: public Actor
+class ActorKeyFrame : public ActorPhysique
 {
-	ActorKeyFrame(){}
-	ActorKeyFrame(int idModel, vect position,vect rotation,vect scale);
-	void update(float time);
+  public:
+    ActorKeyFrame() {};
+    ActorKeyFrame(int idModel, vect position,vect rotation,vect scale,Trajectory * traj);
+    void update(float time);
 
-	inline setTraject(traject t){this->traj=t;}
-
-	private:
-		traject traj;
-}
-*/
+  private:
+    Trajectory * traj;
+    float timeElapsed;
+};
+//*/
 
 // ---------------------Sauvegarde de l'ancienne version---------------------------
 
 /*
-#define MODIFY_ACC 0
-#define MODIFY_VEL 1
+
+static const vect stDefPosition = STRUCT_POSITION_DEF;
+static const vect stDefRotation = STRUCT_ROTATION_DEF;
+static const vect stDefVelocity = STRUCT_VELOCITY_DEF;
+static const vect stDefAccel = STRUCT_ACCEL_DEF;
 
 
-
-// Structure to define changes on the trajectory
-struct t_key_state {
-    short type; // Does it modify the velocity or the acceleration ?
-    float x; // X new coordinate (velocity or acceleration)
-    float y; // Y new coordinate (velocity or acceleration)
-    float z; // Z new coordinate (velocity or acceleration)
-    float t; // (relative) time when the modification has to be applied
-} ;
-
-// Structure to define position
-struct t_position {
-    float x; // X new coordinate (velocity or acceleration)
-    float y; // Y new coordinate (velocity or acceleration)
-    float z; // Z new coordinate (velocity or acceleration)
-} ;
-
-// Structure to define rotation
-struct t_rotation {
-    float x; // X new coordinate (velocity or acceleration)
-    float y; // Y new coordinate (velocity or acceleration)
-    float z; // Z new coordinate (velocity or acceleration)
-} ;
-
-// Structure to define velocity
-struct t_velocity {
-    float x; // X new coordinate (velocity or acceleration)
-    float y; // Y new coordinate (velocity or acceleration)
-    float z; // Z new coordinate (velocity or acceleration)
-} ;
-
-// Structure to define acceleration
-struct t_accel {
-    float x; // X new coordinate (velocity or acceleration)
-    float y; // Y new coordinate (velocity or acceleration)
-    float z; // Z new coordinate (velocity or acceleration)
-} ;
-
-static const t_position stDefPosition = STRUCT_POSITION_DEF;
-static const t_rotation stDefRotation = STRUCT_ROTATION_DEF;
-static const t_velocity stDefVelocity = STRUCT_VELOCITY_DEF;
-static const t_accel stDefAccel = STRUCT_ACCEL_DEF;
-
-
-class Actor {
+class ActorKeyFrame {
 public:
     Actor(int model = 0, float size = TAILLE_DEFAULT_VAISSEAU , t_position pos = stDefPosition, t_rotation rot  = stDefRotation, t_velocity vel  = stDefVelocity, t_accel accel  = stDefAccel);//, string fname=TRAJECTORY_DEFAULT_FILE_NAME);
     ~Actor();
@@ -181,12 +135,6 @@ public:
     inline t_accel getAccel() { return accel; }
 
 private:
-    int model;  // 3D object here, but will be replaced by more complete Objects
-    float size; // Size of the object
-    t_position pos; // X,Y,Z coordinates of the position of the object
-    t_rotation rot; // X,Y,Z coordinates of the angle of the object
-    t_velocity vel; // X,Y,Z coordinates of the velocity vector
-    t_accel accel; // X,Y,Z coordinates of the acceleration vector
     ifstream * f; // Pointer to a trajectory file (may be NULL if an object doesn't need to have a complex trajectory)
     t_key_state * state; // Pointer to the read informations about changes in the trajectory (may be NULL if an object doesn't need to have a complex trajectory)
 	float timeElapsed;
