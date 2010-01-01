@@ -48,7 +48,7 @@
 #define CENTERZ_MAX 100 // le plus loins
  
 
-#define NB_KEYS 11
+#define NB_KEYS 12
 #define K_QUIT 0
 #define K_CTRL 1
 #define K_SHIFT 2
@@ -60,6 +60,7 @@
 #define K_TIR 8
 #define K_TIR_SECOND 9
 #define K_PAUSE 10
+#define K_FULLSCREEN 11
 
 #define QT_K_QUIT Key_Escape
 #define QT_K_CTRL Key_Control
@@ -72,6 +73,7 @@
 #define QT_K_TIR Key_W
 #define QT_K_TIR_SECOND Key_X
 #define QT_K_PAUSE Key_P
+#define QT_K_FULLSCREEN Key_F11
 
 
 

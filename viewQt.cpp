@@ -36,6 +36,13 @@ void ViewOpenGl::paintGL()
     
     if (game.close()) //FIXME il ya surement une place plus adaptée pour ça
         close();
+    
+    if (kb.getStateKeys()[K_FULLSCREEN]) {
+	if(isFullScreen())
+            setWindowState(Qt::WindowMaximized);
+        else
+            setWindowState(Qt::WindowFullScreen);
+    }
 }
 
 void ViewOpenGl::resizeGL(int width, int height)
