@@ -18,6 +18,7 @@ Keyboard::Keyboard() {
     }
 }
 
+
 void Keyboard::updateEvent(int key, bool state) {
     int i = 0;
     // Grace au code de la touche et au tableau de correspondance, on recupere son etat
