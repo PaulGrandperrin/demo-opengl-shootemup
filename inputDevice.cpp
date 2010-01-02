@@ -10,7 +10,7 @@ using namespace std;
 Keyboard::Keyboard() {
     // On definit les touches par defaut
     
-    int connectionKeyTab[NB_KEYS] = {Qt::QT_K_QUIT, Qt::QT_K_CTRL, Qt::QT_K_SHIFT, Qt::QT_K_ALT, Qt::QT_K_UP, Qt::QT_K_DOWN, Qt::QT_K_LEFT, Qt::QT_K_RIGHT, Qt::QT_K_TIR, Qt::QT_K_TIR_SECOND, Qt::QT_K_PAUSE, Qt::QT_K_FULLSCREEN, Qt::QT_K_QUIT_SECOND, Qt::QT_K_ESC};
+    int connectionKeyTab[NB_KEYS] = {Qt::QT_K_QUIT, Qt::QT_K_CTRL, Qt::QT_K_SHIFT, Qt::QT_K_ALT, Qt::QT_K_UP, Qt::QT_K_DOWN, Qt::QT_K_LEFT, Qt::QT_K_RIGHT, Qt::QT_K_TIR, Qt::QT_K_TIR_SECOND, Qt::QT_K_PAUSE, Qt::QT_K_FULLSCREEN, Qt::QT_K_FULLSCREEN_SECOND, Qt::QT_K_QUIT_SECOND, Qt::QT_K_ESC};
     // Initialisation des attributs
     for (int i = 0; i<NB_KEYS; i++) {
         stateKeys[i] = 0;
