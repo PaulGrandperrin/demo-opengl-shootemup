@@ -10,7 +10,6 @@ ViewOpenGl::ViewOpenGl( QWidget *parent) : QGLWidget(parent)
     grabKeyboard();
     grabMouse();
     setMouseTracking(true);
-    changeModeScreen = false;
     connect(&thread, SIGNAL(updateGame()), this, SLOT(update()));
 
     thread.start();
