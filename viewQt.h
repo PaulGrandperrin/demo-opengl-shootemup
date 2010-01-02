@@ -55,7 +55,6 @@ private:
     Game game;
     QTime time;
     int width,height;
-    bool changeModeScreen;
 };
 
 #endif
