@@ -38,17 +38,22 @@ void ViewOpenGl::paintGL()
     if (game.close()) //FIXME il ya surement une place plus adaptée pour ça
         close();
     
-    if (changeModeScreen && (!kb.getStateKeys()[K_FULLSCREEN])) {
-        changeModeScreen = false;
+    //if (changeModeScreen && (!kb.getStateKeys()[K_FULLSCREEN])) {
+        //changeModeScreen = false;
+      if (kb.getStateKeys()[K_ESC]) {
+	if(isFullScreen())
+	  setWindowState(Qt::WindowMaximized);
+      }
+      else if (kb.getStateKeys()[K_FULLSCREEN]) {
 	if(isFullScreen())
             setWindowState(Qt::WindowMaximized);
         else
             setWindowState(Qt::WindowFullScreen);
-    }
-    else if (!changeModeScreen && kb.getStateKeys()[K_FULLSCREEN]) {
+      }
+    //else if (!changeModeScreen && kb.getStateKeys()[K_FULLSCREEN]) {
 
-	changeModeScreen = true;
-    }
+	//changeModeScreen = true;
+    //}
 }
 
 void ViewOpenGl::resizeGL(int width, int height)

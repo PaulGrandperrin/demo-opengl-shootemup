@@ -12,7 +12,7 @@ private:
     bool stateKeys[NB_KEYS]; // every key has one state (push or not)
 public:
     Keyboard();
-    void updateEvent(int key, int state);  // change state of key : state of key = state. If invalid key, nothing
+    void updateEvent(int key, bool state);  // change state of key : state of key = state. If invalid key, nothing
     inline bool* getStateKeys() {
         return stateKeys;
     };

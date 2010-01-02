@@ -226,7 +226,7 @@ void Game::gameManager()
         passagePause = true;
     }
     //Si on appuie sur echap, on passe pas par la case menu, on quitte direct
-    if (stateKeys[K_QUIT])
+    if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND]))
         stop=true;
 }
 
