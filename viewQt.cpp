@@ -45,8 +45,7 @@ void ViewOpenGl::paintGL()
         else
             setWindowState(Qt::WindowFullScreen);
     }
-    
-    if (!changeModeScreen && kb.getStateKeys()[K_FULLSCREEN]) {
+    else if (!changeModeScreen && kb.getStateKeys()[K_FULLSCREEN]) {
 
 	changeModeScreen = true;
     }
