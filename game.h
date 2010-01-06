@@ -38,6 +38,7 @@ private:
     list<ActorPhysique> friendFires;
     list<ActorPhysique> enemiesFires;
     ActorPlayer player;
+    Actor cursorPause;
 
     int timerGenShoot;
     int timerGenShootGros;
@@ -46,7 +47,7 @@ private:
     //TODO metre a jour c'est valeur lorsque l'a fenetre est resizé
     //TODO Savoir exaxtement combien d'uniter il y a (hauteur et largeur)
 
-    int Mplayer,Mboulet;
+    int Mplayer,Mboulet,MCursorPause;
 
     graphicEngine GE;
     Camera camera;

@@ -20,10 +20,10 @@ void Camera::setLongitude(float f) {
 
 void Camera::setLatitude(float f) {
     latitude +=f;
-    if (latitude >3.1415/2) // bloque la vue a la vertical
-        latitude=3.1415/2;
-    if (latitude < -3.1415/2)
-        latitude=-3.1415/2;
+    if (latitude >3.14/*15*//2) // bloque la vue a la vertical
+        latitude=3.14/2;
+    if (latitude < -3.14/2)
+        latitude=-3.14/2;
 }
 
 void Camera::setCenterX(float f) {

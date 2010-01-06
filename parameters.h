@@ -81,9 +81,6 @@
 #define QT_K_QUIT_SECOND Key_C // NOTE Bof, robin tu as deja fermer une application graphic avec CTRL-C ?
 #define QT_K_ESC Key_Escape
 
-
-
-
 #define NB_BUTTON 9 // mouse
 #define B_LEFT 0
 #define B_MIDLE 1
