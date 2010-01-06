@@ -242,8 +242,10 @@ void Game::pauseManager() // TODO acceleration
 {
     if (resetCam) {
         camera.resetSmart();
-        if (camera.camOK())
+        if (camera.camOK()) {
             resetCam=false;
+	    cursorPause = Actor(MCursorPause, {0,0,0}, {0,0,0}, {1.0,1.0,1.0});
+	}
     }
     else if (stateKeys[K_CTRL]) {
         if (stateKeys[K_UP]) {
