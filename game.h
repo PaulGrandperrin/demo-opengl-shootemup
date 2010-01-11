@@ -9,6 +9,7 @@
 #include "graphicEngine.h"
 #include "parameters.h"
 #include "function.h"
+#include "text.h"
 
 #include <QPoint>
 
@@ -17,6 +18,7 @@ class Game
 public:
     ~Game();
     void init();
+    void chargerModels();
     void update(bool stateKeys[],  bool stateButtons[], QPoint deltaMouse, int deltaWheel,float time, int width, int height);
     void resize(int width,int heigth);
     inline bool close() {
@@ -39,6 +41,8 @@ private:
     list<ActorPhysique> enemiesFires;
     ActorPlayer player;
     Actor cursorPause;
+    Chiffre score;
+    Text leScore;
 
     int timerGenShoot;
     int timerGenShootGros;
@@ -48,7 +52,11 @@ private:
     //TODO Savoir exaxtement combien d'uniter il y a (hauteur et largeur)
 
     int Mplayer,Mboulet,MCursorPause;
-
+//     int M0,M1,M2,M3,M4,M5,M6,M7,M8,M9;
+    vector<int> MChiffres;
+    vector<int> MLettersa;
+    vector<int> MLettersA; // vide pour l'instant, Majuscules
+    
     graphicEngine GE;
     Camera camera;
 
@@ -63,6 +71,8 @@ private:
     bool pause;
     bool passagePause; //permet une bonne transition entre pause-!pause.
     bool resetCam; // savoir si on est en train de reinitialiser la camera ou pas.
+    
+    int scoreValeur;
     
 
 };

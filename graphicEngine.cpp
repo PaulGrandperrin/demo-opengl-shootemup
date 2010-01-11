@@ -202,7 +202,6 @@ unsigned int graphicEngine::loadModel(string pathModel,string pathTexture)
 	loadMeshe(id,pathModel.c_str());
 	loadTexture(id,pathTexture.c_str());
 	loadShaders(id,"shaders/vs.glsl","shaders/ps.glsl");
-
 	return id+1;
 }
 

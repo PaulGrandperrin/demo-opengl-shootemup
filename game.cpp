@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <ctime>
 #include <cstdlib>
+#include <sstream>
 
 /* le plan de jeu ce fait sur xz */
 
@@ -26,23 +27,35 @@ void Game::init()
     pause=false;
     passagePause = false;
     resetCam=false;
+    this->scoreValeur = 0;
 
     camera.init();
     GE.init();
 
     srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
 
+    chargerModels();
     //TODO charger le fichier de niveau et les trajectoire ici
 
-    Mplayer=GE.loadModel("meshes/player.obj","textures/player.png");
-    Mboulet=GE.loadModel("meshes/boulet.obj","textures/boulet.png");
-    MCursorPause=GE.loadModel("meshes/cursorPause.obj","textures/boulet.png");
-
     player = ActorPlayer(Mplayer, {0,0,0}, {0,-90,0}, {1,1,1}, 2, 10/3);
-    
+    score = Chiffre(scoreValeur, {-12,0,-10}, {0,0,0}, {1.2,1.2,.5}, 0.7, MChiffres); // test des chiffres
+    leScore = Text("ab c2z3dea", {-12,0,-11}, {0,0,0}, {1.2,1.2,.5}, 0.7, MChiffres,MLettersa); // test du text, pour l'instant "abcde"
+
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
     timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
+}
+
+void Game::chargerModels() {
+    Mplayer=GE.loadModel("meshes/player.obj","textures/player.png");
+    Mboulet=GE.loadModel("meshes/boulet.obj","textures/boulet.png");
+    MCursorPause=GE.loadModel("meshes/cursorPause.obj","textures/noir.png");
+    for (int i=0; i<=9; i++) {
+        MChiffres.push_back(GE.loadModel("meshes/chiffres/" + entierToString(i) + ".obj","textures/noir.png"));
+    }
+    for (char c = 'a'; c<='e'; c++) {
+      MLettersa.push_back(GE.loadModel("meshes/letters/" + charToString(c) + ".obj","textures/noir.png"));
+    }
 }
 
 void Game::resize(int width,int heigth)
@@ -65,7 +78,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int 
     //NOTE c'est pas forcément la forme définitive mais ca correspond plus a ce que l'on avais dit.
     //NOTE C'est le fond qui bougera pour donner l'impression d'avancer
     if (!pause)
-    { 
+    {
         playerManager();
         firesManager();
         enemiesManager();
@@ -88,7 +101,10 @@ void Game::update(bool stateKeys[], bool stateButtons[], QPoint deltaMouse, int 
 void Game::render()
 {
     vector<instance> instances;
+    vector<Actor> text;
+    vector<Actor>::iterator itA;
     list<ActorPhysique>::iterator itAP;
+
     instances.push_back(player.getInstance());
     for (itAP=enemies.begin(); itAP!= enemies.end(); itAP++) {
         instances.push_back(itAP->getInstance());
@@ -99,8 +115,16 @@ void Game::render()
     for (itAP=friendFires.begin(); itAP!= friendFires.end(); itAP++) {
         instances.push_back(itAP->getInstance());
     }
+    text = score.getText();
+    for (itA=text.begin(); itA!=text.end(); itA++) {
+	instances.push_back(itA->getInstance());
+    }
+    text = leScore.getText();
+    for (itA=text.begin(); itA!=text.end(); itA++) {
+	instances.push_back(itA->getInstance());
+    }
     if (pause) {
-	instances.push_back(cursorPause.getInstance());
+        instances.push_back(cursorPause.getInstance());
     }
     GE.render(instances, {(-sin(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom()) + camera.getCenterX(), (sin(camera.getLatitude())*camera.getZoom())/* + camera.getCenterZ()*/, cos(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom() + camera.getCenterZ(), camera.getCenterX(), 0 , camera.getCenterZ(),0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},dTime);
 }
@@ -125,7 +149,7 @@ void Game::playerManager()
 
     player.update(dTime);
     // TODO ameliorer definition des bords
-    
+
     if ((((stateKeys[K_TIR]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
         ActorPhysique fire;
@@ -135,30 +159,31 @@ void Game::playerManager()
         friendFires.push_back(fire);
 
         timerGenShoot=INTERVALE_TEMP_SHOOT;
+	scoreValeur++; // rien a faire la, mais c'est pour tester
     }
     if ((((stateKeys[K_TIR_SECOND]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
     {
-	ActorPhysique fire;
-	for (float f =-0.8;f<=0.8;f+=0.2)
-	{
-	  if (random(0,1) < 0.9) {
-	    fire=ActorPhysique(Mboulet, {player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.05,0.05,0.05});
-	    fire.setVelocity( {player.getVelocity().x/3+random(15,18),player.getVelocity().y/3,player.getVelocity().z/5+random(-0.5,0.5)});
-	    friendFires.push_back(fire);
-	  }
-	  if (random(0,1) < 0.9) {
-	    fire=ActorPhysique(Mboulet, {player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.05,0.05,0.05});
-	    fire.setVelocity( {player.getVelocity().x/3-random(15,18),player.getVelocity().y/3,player.getVelocity().z/5+random(-0.5,0.5)});
-	    friendFires.push_back(fire);
-	  }
-	}
+        ActorPhysique fire;
+        for (float f =-0.8;f<=0.8;f+=0.2)
+        {
+            if (random(0,1) < 0.9) {
+                fire=ActorPhysique(Mboulet, {player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.05,0.05,0.05});
+                fire.setVelocity( {player.getVelocity().x/3+random(15,18),player.getVelocity().y/3,player.getVelocity().z/5+random(-0.5,0.5)});
+                friendFires.push_back(fire);
+            }
+            if (random(0,1) < 0.9) {
+                fire=ActorPhysique(Mboulet, {player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.05,0.05,0.05});
+                fire.setVelocity( {player.getVelocity().x/3-random(15,18),player.getVelocity().y/3,player.getVelocity().z/5+random(-0.5,0.5)});
+                friendFires.push_back(fire);
+            }
+        }
         timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
     }
     else {
         timerGenShoot--;
         timerGenShootGros--;
     }
-
+    score.update(scoreValeur,.7, MChiffres);
 }
 
 void Game::firesManager()
@@ -185,8 +210,8 @@ void Game::collisionManager()
 {
     //pour l'instant ne sert a virer les objets sortant du cadre
     // si on rentre en collision avec la bordure exterieur on efface l'object
-    player.colisionBord(width,height); // donner une leger rotation au vaisseau 
-    
+    player.colisionBord(width,height); // donner une leger rotation au vaisseau
+
     list<ActorPhysique>::iterator itAP;
     for (itAP=enemies.begin(); itAP!=enemies.end() ; itAP++) {
         if (itAP-> sortieEcran(width+5,height+5))
@@ -221,10 +246,10 @@ void Game::gameManager()
     }
     // Si on est en transition et que la touche pause est relaché, alors fini transition
     if (passagePause && ((!stateKeys[K_PAUSE]) && (camera.camOK()))) {
-      if (!pause) cursorPause = Actor(MCursorPause, {0,0,0}, {0,0,0}, {1.0,1.0,1.0});
+        if (!pause) cursorPause = Actor(MCursorPause, {0,0,0}, {0,0,0}, {1.0,1.0,1.0});
         passagePause = false;
         pause= (!pause); // seulement une fois que la transition est fini, on change l'etat.
-       // TODO leger pause avant de reprendre le jeu (sleep ne marche pas ici ni ailleur dans game).
+        // TODO leger pause avant de reprendre le jeu (sleep ne marche pas ici ni ailleur dans game).
     }
     // Si on est pas en transition et que touche pause est appuyé, alors on passe en transition (et en pause ou !pause)
     if (!passagePause && stateKeys[K_PAUSE]) {
@@ -244,8 +269,8 @@ void Game::pauseManager() // TODO acceleration
         camera.resetSmart();
         if (camera.camOK()) {
             resetCam=false;
-	    cursorPause = Actor(MCursorPause, {0,0,0}, {0,0,0}, {1.0,1.0,1.0});
-	}
+            cursorPause = Actor(MCursorPause, {0,0,0}, {0,0,0}, {1.0,1.0,1.0});
+        }
     }
     else if (stateKeys[K_CTRL]) {
         if (stateKeys[K_UP]) {
@@ -265,30 +290,30 @@ void Game::pauseManager() // TODO acceleration
     else if (stateKeys[K_SHIFT]) {
         if (stateKeys[K_UP]) {
             camera.setCenterZ(-0.05); // axe Z ver le "bas"
-	    cursorPause.translate({0,0,-0.05});
+            cursorPause.translate( {0,0,-0.05});
         }
         else if  (stateKeys[K_DOWN]) {
             camera.setCenterZ(0.05);
-	    cursorPause.translate({0,0,0.05});
+            cursorPause.translate( {0,0,0.05});
         }
         if (stateKeys[K_LEFT]) {
             camera.setCenterX(-0.05);
-	    cursorPause.translate({-0.05,0,0});
+            cursorPause.translate( {-0.05,0,0});
         }
         else if (stateKeys[K_RIGHT]) {
             camera.setCenterX(0.05);
-	    cursorPause.translate({0.05,0,0});
+            cursorPause.translate( {0.05,0,0});
         }
         if ((deltaWheel != 0)) {
             camera.setZoom(-deltaWheel/(float)240);
         }
-	if ((stateButtons[B_LEFT]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
+        if ((stateButtons[B_LEFT]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
             camera.setCenterZ(deltaMouse.y()*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y);
-	    cursorPause.translate({0,0,(deltaMouse.y()*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y)});
+            cursorPause.translate( {0,0,(deltaMouse.y()*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y)});
         }
         if ((stateButtons[B_LEFT]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
             camera.setCenterX(deltaMouse.x()*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X);
-	    cursorPause.translate({(deltaMouse.x()*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X)});
+            cursorPause.translate( {(deltaMouse.x()*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X)});
         }
     }
 
@@ -296,11 +321,11 @@ void Game::pauseManager() // TODO acceleration
         //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
         if ((stateButtons[B_LEFT]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
             camera.setCenterZ(deltaMouse.y()*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y);
-	    cursorPause.translate({0,0,(deltaMouse.y()*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y)});
+            cursorPause.translate( {0,0,(deltaMouse.y()*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y)});
         }
         if ((stateButtons[B_LEFT]) && ((deltaMouse.x() >= 2 || deltaMouse.x() <= -2))) {
             camera.setCenterX(deltaMouse.x()*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X);
-	    cursorPause.translate({(deltaMouse.x()*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X)});
+            cursorPause.translate( {(deltaMouse.x()*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X)});
         }
         if ((stateButtons[B_MIDLE]) && ((deltaMouse.y() >= 2 || deltaMouse.y() <= -2))) {
             camera.setLatitude(0.01*deltaMouse.y());
