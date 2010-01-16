@@ -18,8 +18,10 @@ using namespace std;
 /* Classe general qui contient tout les caractere possible (0.9,A.z) */
 
 
-class Text 
+class Text : public QGLWidget
 {
+     Q_OBJECT
+
 public:
     Text() {};
     Text(string text, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres, vector<int> MLettersa);
@@ -44,6 +46,10 @@ public:
         rotation.y+=r.y;
         rotation.z+=r.z;
     }
+    QString st/*("le text")*/;
+    QFont serifFont/*("Times", 10, QFont::Bold)*/;
+    
+    void render() {  renderText (2,2,st,serifFont);}
 
 protected:
     vect position;
