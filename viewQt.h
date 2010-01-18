@@ -1,15 +1,20 @@
 #ifndef VIEWQT_H_
 #define VIEWQT_H_
 
-#include "parameters.h" // general settings
-#include "game.h" // general application, 
+#include "parameters.h"
+
+#include "game.h"
+
 #include "inputDevice.h"
 
 #include <QWidget>
 #include <QGLWidget>
 #include <QKeyEvent>
 #include <QThread>
-#include <QtGui> // for qDebug()
+#include <QtGui>
+// general application, 
+// general settings
+// for qDebug()
 
 using namespace std;
 

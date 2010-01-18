@@ -10,8 +10,6 @@
 #include "function.h"
 #include "text.h"
 
-#include <QPoint> // TODO a virer
-
 
 class GamePlay
 {

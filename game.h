@@ -16,9 +16,6 @@
 #include "text.h"
 
 
-#include <QPoint>
-
-
 class Game
 {
 public:

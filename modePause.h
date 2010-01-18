@@ -11,8 +11,6 @@
 #include "camera.h"
 #include "text.h"
 
-#include <QPoint>
-
 
 
 class ModePause
