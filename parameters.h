@@ -48,7 +48,7 @@
 #define CENTERZ_MAX 100 // le plus loins
  
 
-#define NB_KEYS 15
+#define NB_KEYS 16
 #define K_QUIT 0
 #define K_CTRL 1
 #define K_SHIFT 2
@@ -64,6 +64,7 @@
 #define K_FULLSCREEN_SECOND 12
 #define K_QUIT_SECOND 13
 #define K_ESC 14
+#define K_MENU 15
 
 #define QT_K_QUIT Key_Q
 #define QT_K_CTRL Key_Control
@@ -80,6 +81,7 @@
 #define QT_K_FULLSCREEN_SECOND Key_F
 #define QT_K_QUIT_SECOND Key_C // NOTE Bof, robin tu as deja fermer une application graphic avec CTRL-C ?
 #define QT_K_ESC Key_Escape
+#define QT_K_MENU Key_M
 
 #define NB_BUTTON 9 // mouse
 #define B_LEFT 0

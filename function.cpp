@@ -1,6 +1,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+// #include "function.h"
+
 using namespace std;
 
 float random(float min, float max)
@@ -26,4 +28,3 @@ string charToString(char ca )
     // renvoyer une string
     return oss.str();
 }
-

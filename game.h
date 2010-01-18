@@ -6,75 +6,53 @@
 
 #include "actor.h"
 #include "camera.h"
-#include "graphicEngine.h"
+//#include "graphicEngine.h" // Charge dans models.h
+#include "models.h"
+#include "menu.h"
+#include "gamePlay.h"
+#include "modePause.h"
 #include "parameters.h"
 #include "function.h"
 #include "text.h"
 
+
 #include <QPoint>
+
 
 class Game
 {
 public:
     ~Game();
     void init();
-    void chargerModels();
-    void update(bool stateKeys[],  bool stateButtons[], QPoint deltaMouse, int deltaWheel,float time, int width, int height);
+    void update(bool stateKeys[],  bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height);
     void resize(int width,int heigth);
     inline bool close() {
-        return stop;
+        return (etatGame==STOP);
     }
 
 private:
 
+    Etat etatGame; // Etat defini dans function;h -> a deplacer TODO
     void render();
-    void playerManager();
-    void firesManager();
-    void enemiesManager();
-    void collisionManager();
     void gameManager();
-    void pauseManager();
 
+    // les differents modes du jeu!
+    GamePlay gamePlay;
+    Menu menu;
+    ModePause pause;
 
-    list<ActorPhysique> enemies; //TODO remplacer en ActorKeyFrame
-    list<ActorPhysique> friendFires;
-    list<ActorPhysique> enemiesFires;
-    ActorPlayer player;
-    Actor cursorPause;
-    Chiffre score;
-    Text leScore;
+    // tout les models qu'il peut exister
+    Models models;
 
-    int timerGenShoot;
-    int timerGenShootGros;
-    int timerGenEnemy;
-    float width, height; // correspond au nombre d'uniter "opengl" sur la larger et la hauteur
-    //TODO metre a jour c'est valeur lorsque l'a fenetre est resizé
-    //TODO Savoir exaxtement combien d'uniter il y a (hauteur et largeur)
-
-    int Mplayer,Mboulet,MCursorPause;
-//     int M0,M1,M2,M3,M4,M5,M6,M7,M8,M9;
-    vector<int> MChiffres;
-    vector<int> MLettersa;
-    vector<int> MLettersA; // vide pour l'instant, Majuscules
-    
     graphicEngine GE;
     Camera camera;
 
-    bool* stateKeys;
-    bool* stateButtons;
-    QPoint deltaMouse;
-    int deltaWheel;
-    float dTime;
-    bool stop;
-    int widthView,heightView;
-
-    bool pause;
+    float dTime; // interval de temps pour les trajectoires ...
+    bool passageMenu; //permet une bonne transition entre pause-!pause.
     bool passagePause; //permet une bonne transition entre pause-!pause.
-    bool resetCam; // savoir si on est en train de reinitialiser la camera ou pas.
-    
-    int scoreValeur;
-    
+
 
 };
+
 
 #endif

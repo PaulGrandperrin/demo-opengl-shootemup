@@ -2,7 +2,7 @@
 #define KEYBOARD_H_
 
 #include "parameters.h"
-
+#include "function.h"
 #include <QKeyEvent>
 #include <QMouseEvent>
 
@@ -22,7 +22,7 @@ class Mouse {
 private:
     int connectionButton[NB_BUTTON];  // connection between keycode of Qt, and our keycode
     bool stateButtons[NB_BUTTON]; // every key has one state (push or not)
-    QPoint pMouse, lastPMouse;
+    Point pMouse, lastPMouse;
     int dWheel;
 public:
     Mouse();
@@ -32,10 +32,10 @@ public:
     inline bool* getStateButtons() {
         return stateButtons;
     };
-    inline QPoint getDeltaMouse() {
-        QPoint pt;
-        pt.setX(pMouse.x()-lastPMouse.x());
-        pt.setY(pMouse.y()-lastPMouse.y());
+    inline Point getDeltaMouse() {
+        Point pt;
+        pt.x = (pMouse.x-lastPMouse.x);
+        pt.y = (pMouse.y-lastPMouse.y);
         return pt; // return un couple du delta de la souris
     };
     inline int getDeltaWheel() { //TODO terminer gestion molette
