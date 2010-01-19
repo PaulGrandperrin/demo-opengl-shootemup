@@ -1,4 +1,4 @@
-#include "gamePlay.h"
+#include "modeGame.h"
 #include <stdio.h>
 #include <ctime>
 #include <cstdlib>
@@ -19,17 +19,15 @@ using namespace std;
 
 
 
-GamePlay::~GamePlay()
+ModeGame::~ModeGame()
 {
     cout << endl; //a cause du compteur de missile, avant de quitter, il faut un seut de ligne
 }
 
-void GamePlay::init(Models* models, Etat* etatGame)
+void ModeGame::init(Models* models, Etat* etatGame)
 {
-
-    this->etatGame = etatGame;
+    Mode::init(models, etatGame);
     this->scoreValeur = 0;
-    this->models = models;
 
 
     player = ActorPlayer(models->getMplayer(), {0,0,0}, {0,-90,0}, {1,1,1}, 2, 10/3);
@@ -42,17 +40,9 @@ void GamePlay::init(Models* models, Etat* etatGame)
 }
 
 
-void GamePlay::gameManager(bool stateKeys[], bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
+void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
-    this->stateKeys=stateKeys;
-    this->stateButtons=stateButtons;
-    this->deltaMouse=deltaMouse;
-    this->deltaWheel=deltaWheel;
-    this->dTime=time;
-    this->widthView=width;
-    this->heightView=height;
-    this->width=NB_UNITY_WIDTH;
-    this->height=NB_UNITY_HEIGHT;
+    Mode::Manager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
 
     playerManager();
     firesManager();
@@ -68,7 +58,7 @@ void GamePlay::gameManager(bool stateKeys[], bool stateButtons[], Point deltaMou
 }
 
 
-void GamePlay::getRender(vector<instance>* instances) {
+void ModeGame::getRender(vector<instance>* instances) {
 
     // on recupere toute les instances a afficher
     vector<Actor> text;
@@ -86,13 +76,16 @@ void GamePlay::getRender(vector<instance>* instances) {
         instances->push_back(itAP->getInstance());
     }
 
-    text = score.getText();
-    for (itA=text.begin(); itA!=text.end(); itA++) {
-        instances->push_back(itA->getInstance());
-    }
-    text = leScore.getText();
-    for (itA=text.begin(); itA!=text.end(); itA++) {
-        instances->push_back(itA->getInstance());
+    if (*etatGame == GAME) {
+        // on affiche le score ..., et autre info
+        text = score.getText();
+        for (itA=text.begin(); itA!=text.end(); itA++) {
+            instances->push_back(itA->getInstance());
+        }
+        text = leScore.getText();
+        for (itA=text.begin(); itA!=text.end(); itA++) {
+            instances->push_back(itA->getInstance());
+        }
     }
 }
 /*
@@ -101,7 +94,7 @@ void GamePlay::getRender(vector<instance>* instances) {
 * dans les jeux. Cependant, je trouve le concept interressant, ça oblige le joueur à mieux anticiper ses
 * trajectoires.
 */
-void GamePlay::playerManager()
+void ModeGame::playerManager()
 {
     player.setAcceleration( {0,0,0});
     if (stateKeys[K_LEFT]) // -x
@@ -119,7 +112,7 @@ void GamePlay::playerManager()
     if ((((stateKeys[K_TIR]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
         ActorPhysique fire;
-        fire=ActorPhysique(models->getMboulet(), {player.getPosition().x,player.getPosition().y,player.getPosition().z}, {0,0,0}, {0.05,0.05,0.05});
+        fire=ActorPhysique(models->getMboulet(), {player.getPosition().x,player.getPosition().y,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
         fire.setVelocity( {player.getVelocity().x/3+random(-0.5,0.5),player.getVelocity().y/3,player.getVelocity().z/3-random(15,18)});
         fire.setAcceleration( {0,0,0});
         friendFires.push_back(fire);
@@ -133,12 +126,12 @@ void GamePlay::playerManager()
         for (float f =-0.8;f<=0.8;f+=0.2)
         {
             if (random(0,1) < 0.9) {
-                fire=ActorPhysique(models->getMboulet(), {player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.05,0.05,0.05});
+                fire=ActorPhysique(models->getMboulet(), {player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
                 fire.setVelocity( {player.getVelocity().x/3+random(15,18),player.getVelocity().y/3,player.getVelocity().z/5+random(-0.5,0.5)});
                 friendFires.push_back(fire);
             }
             if (random(0,1) < 0.9) {
-                fire=ActorPhysique(models->getMboulet(), {player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.05,0.05,0.05});
+                fire=ActorPhysique(models->getMboulet(), {player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
                 fire.setVelocity( {player.getVelocity().x/3-random(15,18),player.getVelocity().y/3,player.getVelocity().z/5+random(-0.5,0.5)});
                 friendFires.push_back(fire);
             }
@@ -152,7 +145,7 @@ void GamePlay::playerManager()
     score.update(scoreValeur,.7, models->MChiffres);
 }
 
-void GamePlay::firesManager()
+void ModeGame::firesManager()
 {
     list<ActorPhysique>::iterator it;
 
@@ -164,7 +157,7 @@ void GamePlay::firesManager()
     }
 }
 
-void GamePlay::enemiesManager()
+void ModeGame::enemiesManager()
 {
     list<ActorPhysique>::iterator it;
     for (it=enemies.begin(); it!=enemies.end(); it++) {
@@ -172,7 +165,7 @@ void GamePlay::enemiesManager()
     }
 }
 
-void GamePlay::collisionManager()
+void ModeGame::collisionManager()
 {
     //pour l'instant ne sert a virer les objets sortant du cadre
     // si on rentre en collision avec la bordure exterieur on efface l'object

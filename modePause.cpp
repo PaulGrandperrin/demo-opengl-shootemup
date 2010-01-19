@@ -16,9 +16,6 @@
 #include <iostream>
 using namespace std;
 
-
-
-
 ModePause::~ModePause()
 {
 }
@@ -26,9 +23,8 @@ ModePause::~ModePause()
 void ModePause::init(Models* models, Camera* camera,Etat* etatGame)
 {
     resetCam=false;
-    this->models = models;
     this->camera = camera;
-    this->etatGame = etatGame;
+    Mode::init(models, etatGame);
 
     cursorPause = Actor(models->getMCursorPause(), {0,0,0}, {0,-90,0}, {1,1,1});
 
@@ -37,16 +33,7 @@ void ModePause::init(Models* models, Camera* camera,Etat* etatGame)
 
 void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
-    this->stateKeys=stateKeys;
-    this->stateButtons=stateButtons;
-    this->deltaMouse=deltaMouse;
-    this->deltaWheel=deltaWheel;
-    this->dTime=time;
-    this->widthView=width;
-    this->heightView=height;
-    this->width=NB_UNITY_WIDTH;
-    this->height=NB_UNITY_HEIGHT;
-    
+    Mode::Manager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
 
     if (resetCam) {
         camera->resetSmart();

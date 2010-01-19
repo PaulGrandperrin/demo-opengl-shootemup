@@ -17,7 +17,7 @@ string charToString(char ca );
 
 enum Etat
 {
-    STOP, GAME, MENU, PAUSE, PASSAGEPAUSE, PASSAGEMENU
+    STOP, GAME, MENU, PAUSE/*, PASSAGEPAUSE, PASSAGEMENU*/
 };
 
 struct Point

@@ -4,16 +4,16 @@
 #include <list>
 #include <math.h>
 
-#include "actor.h"
+// #include "actor.h"
 #include "camera.h"
 //#include "graphicEngine.h" // Charge dans models.h
 #include "models.h"
-#include "menu.h"
-#include "gamePlay.h"
 #include "modePause.h"
-#include "parameters.h"
-#include "function.h"
-#include "text.h"
+#include "modeMenu.h"
+#include "modeGame.h"
+// #include "parameters.h"
+// #include "function.h"
+// #include "text.h"
 
 
 class Game
@@ -34,8 +34,8 @@ private:
     void gameManager();
 
     // les differents modes du jeu!
-    GamePlay gamePlay;
-    Menu menu;
+    ModeGame gamePlay;
+    ModeMenu menu;
     ModePause pause;
 
     // tout les models qu'il peut exister

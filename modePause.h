@@ -4,16 +4,11 @@
 #include <list>
 #include <math.h>
 
-#include "actor.h"
-#include "models.h"
-#include "parameters.h"
-#include "function.h"
-#include "camera.h"
-#include "text.h"
+#include "mode.h"
 
 
 
-class ModePause
+class ModePause : public Mode
 {
 public:
     ~ModePause();
@@ -24,21 +19,9 @@ public:
 
 private:
 
-    Etat* etatGame;
-    Models* models;
     Camera* camera;
 
     Actor cursorPause; // facilite la navigation !
-
-
-    bool* stateKeys;
-    bool* stateButtons;
-    Point deltaMouse;
-    int deltaWheel;
-
-    float dTime;
-    int widthView,heightView; // nombre de pixel
-    float width, height; // correspond au nombre d'uniter "opengl" sur la larger et la hauteur
 
     bool resetCam; // savoir si on est en train de reinitialiser la camera ou pas.
 

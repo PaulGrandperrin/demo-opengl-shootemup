@@ -21,9 +21,10 @@ HEADERS += function.h \
 	   actor.h \
 	   camera.h \
 	   models.h \
-	   gamePlay.h \
+	   mode.h \
+	   modeGame.h \
 	   modePause.h \
-	   menu.h \
+	   modeMenu.h \
            game.h \
            graphicEngine.h \
            inputDevice.h \
@@ -34,9 +35,10 @@ SOURCES += function.cpp \
 	   actor.cpp \
 	   camera.cpp \
 	   models.cpp \
-	   gamePlay.cpp \
+	   mode.cpp \
+	   modeGame.cpp \
 	   modePause.cpp \
-	   menu.cpp \
+	   modeMenu.cpp \
            game.cpp \
            graphicEngine.cpp \
            inputDevice.cpp \
