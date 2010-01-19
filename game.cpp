@@ -53,7 +53,6 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
       // de modeGame, on peut aller au menu ou en pause
       // de modePause, on ne peut retourner que au game
       // et du menu, on passe en mode game
-  
     this->dTime=time;
     if (etatGame==MENU) {
         if (!passageMenu && stateKeys[K_MENU]) {

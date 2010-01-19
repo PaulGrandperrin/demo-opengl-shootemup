@@ -17,10 +17,11 @@ public:
     void getRender(vector<instance>* instances);
 
 private:
-
-    Text textMenu; // "aaaaaaa"
-    Text shump; // "aaaaaaa"<
-
+    int itemSelected;
+    Text textPlay; // "aaaaaaa"
+    Text textQuit; // "aaaaaaa"
+    vect pPlay,rPlay,sPlay;//vecteur de play
+    vect pQuit,rQuit,sQuit;//vecteur de quitter
 };
 
 #endif

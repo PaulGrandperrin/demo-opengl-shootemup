@@ -26,7 +26,6 @@ public:
     inline bool close() {
         return (etatGame==STOP);
     }
-
 private:
 
     Etat etatGame; // Etat defini dans function;h -> a deplacer TODO
