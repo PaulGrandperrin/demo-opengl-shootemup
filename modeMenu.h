@@ -19,6 +19,7 @@ public:
 private:
 
     Text textMenu; // "aaaaaaa"
+    Text shump; // "aaaaaaa"<
 
 };
 

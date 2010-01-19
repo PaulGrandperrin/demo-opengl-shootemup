@@ -8,6 +8,7 @@ using namespace std;
 #include "parameters.h"
 #include "instance.h"
 #include "actor.h"
+#include "function.h"
 #include <vector>
 
 #include <QGLWidget>
@@ -22,7 +23,7 @@ class Text
 {
 public:
     Text() {};
-    Text(string text, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres, vector<int> MLettersa);
+    Text(string text, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres, vector<int> MLettersa, TextStyle style);
 
     void update(string, vector<int>) {}
 
@@ -52,12 +53,15 @@ protected:
     vector<Actor> caract;
 };
 
-class Chiffre : public Text
+class Number : public Text
 {
   public :
-    Chiffre() {};
-    Chiffre(int nombre, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres);
+    Number() {};
+    Number(int nombre, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres, TextStyle style);
     void update(int nombre, float esp, vector<int> MChiffres);
+    
+  private:
+    int number;
 };
 
 #endif

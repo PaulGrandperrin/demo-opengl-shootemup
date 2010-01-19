@@ -17,18 +17,16 @@ public:
     void getRender(vector<instance>* instances);
 
 private:
-//     Etat* etatGame;
     void playerManager();
     void firesManager();
     void enemiesManager();
     void collisionManager();
-//     Models* models;
 
     list<ActorPhysique> enemies; //TODO remplacer en ActorKeyFrame
     list<ActorPhysique> friendFires;
     list<ActorPhysique> enemiesFires;
     ActorPlayer player;
-    Chiffre score; // TODO faire une classe score Chiffre
+    Number score; // TODO faire une classe score Chiffre
     Text leScore;
 
     int scoreValeur;

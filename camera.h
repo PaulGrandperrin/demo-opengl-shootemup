@@ -9,16 +9,16 @@ class Camera
 public:
   
     inline void init() {
-        longitude=0;
-        latitude=LATITUDE_DEFAULT; //3.14158/2
-        zoom=ZOOM_DEFAULT;
+        longitude=LONGITUDE_GAME;
+        latitude=LATITUDE_GAME; //3.14158/2
+        zoom=ZOOM_GAME;
         centerX = 0;
         centerZ = 0;
 	resetCamS = true;
 	nbfoisResetCamSmart = 0;
     }
     inline bool camOK() {
-      return ((longitude==0) && (latitude==LATITUDE_DEFAULT) && (zoom==ZOOM_DEFAULT) && (centerX == 0) && (centerZ == 0));
+      return ((longitude==LONGITUDE_GAME) && (latitude==LATITUDE_GAME) && (zoom==ZOOM_GAME) && (centerX == 0) && (centerZ == 0));
       //return true;
     }
     

@@ -47,21 +47,21 @@ void Camera::resetSmart()
 {
     if (resetCamS) {
 	nbfoisResetCamSmart = TEMP_RESETCAM_SMART_PAUSE;
-	stepLong = -longitude / TEMP_RESETCAM_SMART_PAUSE;
-	stepLat = -(latitude-LATITUDE_DEFAULT) / TEMP_RESETCAM_SMART_PAUSE;
-	stepZoom = -(zoom - ZOOM_DEFAULT) / TEMP_RESETCAM_SMART_PAUSE;
+	stepLong = -(longitude-LONGITUDE_GAME) / TEMP_RESETCAM_SMART_PAUSE;
+	stepLat = -(latitude-LATITUDE_GAME) / TEMP_RESETCAM_SMART_PAUSE;
+	stepZoom = -(zoom - ZOOM_GAME) / TEMP_RESETCAM_SMART_PAUSE;
 	stepCentreX = -centerX / TEMP_RESETCAM_SMART_PAUSE;
 	stepCentreZ = -centerZ / TEMP_RESETCAM_SMART_PAUSE;
 	resetCamS = false;
     }
 
-    if (longitude != 0) {
+    if (longitude != LONGITUDE_GAME) {
         longitude += stepLong;
     }
-    if (latitude != LATITUDE_DEFAULT) {
+    if (latitude != LATITUDE_GAME) {
         latitude += stepLat;
     }
-    if (zoom != ZOOM_DEFAULT) {
+    if (zoom != ZOOM_GAME) {
         zoom += stepZoom;
     }
     if (centerX != 0) {
@@ -74,9 +74,9 @@ void Camera::resetSmart()
     nbfoisResetCamSmart--; // on approche du {0,0,ZOOM_DEFAULT,0,0}
     
     if (nbfoisResetCamSmart == 0) { // on est tres proche donc on peut le faire
-        longitude=0;
-        latitude=LATITUDE_DEFAULT;
-        zoom=ZOOM_DEFAULT;
+        longitude=LONGITUDE_GAME;
+        latitude=LATITUDE_GAME;
+        zoom=ZOOM_GAME;
         centerX = 0;
         centerZ = 0;
     }

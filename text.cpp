@@ -11,7 +11,7 @@ using namespace std;
 // Text
 //---------------------------------------------------------------
 
-Text::Text(string text, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres, vector<int> MLettersa)
+Text::Text(string text, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres, vector<int> MLettersa, TextStyle style)
 {
     this->position=position;
     this->rotation=rotation;
@@ -21,6 +21,13 @@ Text::Text(string text, vect position,vect rotation,vect scale, float esp, vecto
 
     Actor car;
     float espace =0.0; // espace entre les caracteres
+    
+    if (style == CENTER) {
+      position.x = position.x-((text.size()*esp)/(float)2);
+    }
+    else if (style == RIGHT) {
+      position.x = position.x-(text.size()*esp);
+    }
 
     for (unsigned int i=0;i<text.size();i++) {
         espace+=esp;
@@ -42,10 +49,10 @@ Text::Text(string text, vect position,vect rotation,vect scale, float esp, vecto
 
 
 //---------------------------------------------------------------
-// Chiffre
+// Number
 //---------------------------------------------------------------
 
-Chiffre::Chiffre(int nombre, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres)
+Number::Number(int nombre, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres, TextStyle style)
 {
     this->position=position;
     this->rotation=rotation;
@@ -72,7 +79,7 @@ Chiffre::Chiffre(int nombre, vect position,vect rotation,vect scale, float esp, 
 }
 
 
-void Chiffre::update(int nombre, float esp, vector<int> MChiffres)
+void Number::update(int nombre, float esp, vector<int> MChiffres)
 {
   // TODO a revoir, surment optimisation a faire !
     string text = entierToString(nombre);

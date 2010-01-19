@@ -20,6 +20,11 @@ enum Etat
     STOP, GAME, MENU, PAUSE/*, PASSAGEPAUSE, PASSAGEMENU*/
 };
 
+enum TextStyle
+{
+    CENTER, LEFT, RIGHT
+};
+
 struct Point
 {
 	float x,y;
