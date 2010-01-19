@@ -27,7 +27,7 @@ void Game::init()
     etatGame = MENU;
     passagePause = false;
     passageMenu = false;
-    
+
     cam.init();
     GE.init();
 
@@ -48,11 +48,11 @@ void Game::resize(int width,int heigth)
 
 void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
-  // les modes fonctionnent de la meme maniere, on passe les commandes et il gere, pour le rendu c'est Game qui recupere chaque objet du ou des mode a afficher
-  //En ce qui concerne la commutation des modes:
-      // de modeGame, on peut aller au menu ou en pause
-      // de modePause, on ne peut retourner que au game
-      // et du menu, on passe en mode game
+    // les modes fonctionnent de la meme maniere, on passe les commandes et il gere, pour le rendu c'est Game qui recupere chaque objet du ou des mode a afficher
+    //En ce qui concerne la commutation des modes:
+    // de modeGame, on peut aller au menu ou en pause
+    // de modePause, on ne peut retourner que au game
+    // et du menu, on passe en mode game
     this->dTime=time;
     if (etatGame==MENU) {
         if (!passageMenu && stateKeys[K_MENU]) {
@@ -60,11 +60,11 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
         }
         else if (passageMenu && !stateKeys[K_MENU]) {
             passageMenu = false;
-	    etatGame = GAME; // seulement une fois que la transition est fini, on change l'etat.
+            etatGame = GAME; // seulement une fois que la transition est fini, on change l'etat.
         }
         else {
-	    menu.menuManager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
-	}
+            menu.menuManager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
+        }
     }
 
     else if (etatGame==GAME) {
@@ -83,8 +83,8 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
             passagePause = true;
         }
         else {
-	    gamePlay.gameManager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
-	}
+            gamePlay.gameManager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
+        }
     }
 
     else if (etatGame==PAUSE) {
@@ -99,8 +99,8 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
             passagePause = true;
         }
         else {
-	    pause.pauseManager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
-	}
+            pause.pauseManager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
+        }
     }
 
     if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND])) {
@@ -114,13 +114,13 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
 
 void Game::render()
 {
-  // on recolte toute les instances afficher!
+    // on recolte toute les instances afficher!
     vector<instance> instances;
 
 
     if (etatGame==MENU) {
         menu.getRender(&instances);
-//         gamePlay.getRender(&instances); // pour Paul
+        gamePlay.getRender(&instances); // pour Paul
     }
     else if (etatGame==GAME) {
         gamePlay.getRender(&instances);

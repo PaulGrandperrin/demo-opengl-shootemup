@@ -17,11 +17,21 @@ public:
     void getRender(vector<instance>* instances);
 
 private:
+
+
+    Text textMenu; // "aaaaaaa"
+    Text shump; // "aaaaaaa"<
+    Text truc; // "aaaaaaa"<
+
     int itemSelected;
     Text textPlay; // "aaaaaaa"
     Text textQuit; // "aaaaaaa"
+    // Peut etre pas besoin -> j'ai mis la declaration des vecteur dans init, ce qui permet de supprimer les warnings.
+    // vect truc;
+    // truc = {0,0,0} n'est pas permi avec l'ancienne norme !
     vect pPlay,rPlay,sPlay;//vecteur de play
     vect pQuit,rQuit,sQuit;//vecteur de quitter
+    
 };
 
 #endif

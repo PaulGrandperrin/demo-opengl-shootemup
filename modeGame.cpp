@@ -33,10 +33,10 @@ void ModeGame::init(Models* models, Etat* etatGame)
     player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer);
     
     vect pScore={-12,0,-10}, rScore= {0,0,0}, sScore={1.2,1.2,.5};
-    score = Number(scoreValeur, pScore, rScore, sScore, 0.7, models->getMChiffres(), LEFT); // test des chiffres
+    score = Number(models->getMChiffres(), scoreValeur, pScore, rScore, sScore, 0.7, LEFT); // test des chiffres
     
     vect pText={-12,0,-11}, rText= {0,0,0}, sText={1.2,1.2,.5};
-    leScore = Text("abc23dea", pText, rText, sText, 0.7, models->getMChiffres(),models->getMLettersa(), LEFT); // test du text, pour l'instant "abcde"
+    leScore = Text(models->getMChiffres(),models->getMLettersa(), "abc23dea", pText, rText, sText, 0.7, LEFT); // test du text, pour l'instant "abcde"
 
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;

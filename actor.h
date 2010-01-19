@@ -41,7 +41,23 @@ public:
         rotation.y+=r.y;
         rotation.z+=r.z;
     }
-
+    
+    inline void setTranslation(vect t) {
+        position.x=t.x;
+        position.y=t.y;
+        position.z=t.z;
+    }
+    inline void setRotation(vect r) {
+        rotation.x=r.x;
+        rotation.y=r.y;
+        rotation.z=r.z;
+    }
+    inline void setScale(vect s) {
+        scale.x=s.x;
+        scale.y=s.y;
+        scale.z=s.z;
+    }
+    
 protected:
     vect position;
     vect rotation;

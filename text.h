@@ -23,7 +23,7 @@ class Text
 {
 public:
     Text() {};
-    Text(string text, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres, vector<int> MLettersa, TextStyle style);
+    Text( vector<int> MChiffres, vector<int> MLettersa, string text, vect position,vect rotation,vect scale, float esp, TextStyle style);
 
     void update(string, vector<int>) {}
 
@@ -35,29 +35,25 @@ public:
     inline vect getPosition() {
         return position;
     }
-    inline void translate(vect t) {
-        position.x+=t.x;
-        position.y+=t.y;
-        position.z+=t.z;
-    }
-    inline void rotate(vect r) {
-        rotation.x+=r.x;
-        rotation.y+=r.y;
-        rotation.z+=r.z;
-    }
+    void translate(vect t);
+    void rotate(vect r);
+    void scal(vect s);
 
 protected:
     vect position;
     vect rotation;
     vect scale;
     vector<Actor> caract;
+    string text;
+    TextStyle style;
+    float espace;
 };
 
 class Number : public Text
 {
   public :
     Number() {};
-    Number(int nombre, vect position,vect rotation,vect scale, float esp, vector<int> MChiffres, TextStyle style);
+    Number(vector<int> MChiffres, int nombre, vect position,vect rotation,vect scale, float esp, TextStyle style);
     void update(int nombre, float esp, vector<int> MChiffres);
     
   private:
