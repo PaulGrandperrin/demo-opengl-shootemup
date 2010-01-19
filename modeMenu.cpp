@@ -28,8 +28,8 @@ void ModeMenu::init(Models* models, Etat* etatGame)
     vect pText={0,2,0}, rText= {0,0,0}, sText={2,2,.5};
     textMenu = Text("aaabaaa", pText, rText, sText, 1, models->getMChiffres(),models->getMLettersa(), CENTER); // test du text, pour l'instant "aaaaaaa"
     
-    pText={12,0,-11}; rText={0,0,0}; sText={1.2,1.2,.5};
-    shump = Text("bbbbbb", pText, rText, sText, 0.7, models->getMChiffres(),models->getMLettersa(), RIGHT); // test du text, pour l'instant "abcde"
+    vect pShmup={12,0,-11}, rShmup={0,0,0}, sShmup={1.2,1.2,0.5};
+    shump = Text("bbbbbb", pShmup, rShmup, sShmup, 0.7, models->getMChiffres(),models->getMLettersa(), RIGHT); // test du text, pour l'instant "abcde"
 }
 
 

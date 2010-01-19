@@ -37,24 +37,8 @@ Le sens de la texture n'est pas le même que celui de Blender, il faut donc fair
 using namespace std;
 
 #include "instance.h"
+#include "function.h"
 
-struct camera
-{
-  float eyex,eyey,eyez;
-  float centerx,centery,centerz;
-  float upx,upy,upz;
-};
-
-struct color
-{
-	float r,g,b,a;
-};
-
-struct lightVec
-{
-	float x,y,z;
-	color al,dl,sl;
-};
 
 class graphicEngine
 {

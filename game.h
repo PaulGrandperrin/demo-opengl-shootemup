@@ -42,7 +42,7 @@ private:
     Models models;
 
     graphicEngine GE;
-    Camera camera;
+    Camera cam;
 
     float dTime; // interval de temps pour les trajectoires ...
     bool passageMenu; //permet une bonne transition entre pause-!pause.

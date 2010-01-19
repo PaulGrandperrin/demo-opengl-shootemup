@@ -20,11 +20,12 @@ public:
     Actor() {};
     Actor(int idModel, vect position,vect rotation,vect scale);
 
-    void update(float time) {} //NOTE ca bouge pas donc ya rien a faire
+    void update(float) {} //NOTE ca bouge pas donc ya rien a faire
 
     //renvoie les donnees directement exploitable par le moteur 3D
     inline instance getInstance() {
-        return {position.x,position.y,position.z,rotation.x,rotation.y,rotation.z,scale.x,scale.y,scale.z,idModel};
+	instance i={position.x,position.y,position.z,rotation.x,rotation.y,rotation.z,scale.x,scale.y,scale.z,idModel};
+        return i;
     }
 
     inline vect getPosition() {

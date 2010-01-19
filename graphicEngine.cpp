@@ -126,7 +126,7 @@ void graphicEngine::resize(int width,int height)
   this->height=height;
 }
 
-void graphicEngine::render(vector<instance> instances,camera cam,lightVec lv,float time) //TODO bien tt desactiver
+void graphicEngine::render(vector<instance> instances,camera cam,lightVec lv,float /*time*/) //TODO bien tt desactiver
 {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -167,7 +167,7 @@ void graphicEngine::render(vector<instance> instances,camera cam,lightVec lv,flo
 		
 		for(unsigned int j=0;j<instances.size();j++)
 		{
-			if(instances[j].idModel==i+1) //TODO optimiser ça
+			if((unsigned int)instances[j].idModel==i+1) //TODO optimiser ça
 			{
 				glPushMatrix();
 				glTranslatef(instances[j].x,instances[j].y,instances[j].z);
@@ -205,7 +205,7 @@ unsigned int graphicEngine::loadModel(string pathModel,string pathTexture)
 	return id+1;
 }
 
-void graphicEngine::unLoadModel(unsigned int id)
+void graphicEngine::unLoadModel(unsigned int/* id*/)
 {
       //TODO à implémenter
 }

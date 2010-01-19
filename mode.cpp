@@ -40,7 +40,7 @@ void Mode::Manager(bool stateKeys[], bool stateButtons[], Point deltaMouse, int 
 }
 
 
-void Mode::getRender(vector<instance>* instances) {
+void Mode::getRender(vector<instance>*) {
 
     // on recupere toute les instances a afficher
 

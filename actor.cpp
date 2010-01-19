@@ -22,8 +22,13 @@ Actor::Actor(int idModel, vect position,vect rotation,vect scale)
 
 ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale) : Actor(idModel,position,rotation,scale)
 {
-    this->velocity={0,0,0};
-    this->acceleration={0,0,0};
+    this->velocity.x=0;
+    this->velocity.y=0;
+    this->velocity.z=0;
+    
+    this->acceleration.x=0;
+    this->acceleration.y=0;
+    this->acceleration.z=0;
 }
 
 void ActorPhysique::update(float time) // pas de deleration, gestion simple;
@@ -57,25 +62,21 @@ void ActorPlayer::colisionBord(float width, float height)
 {
     //verification des bords verticaux ensuite des bords horizontaux. (evite de sortir sur les coins.)
     if (position.x<-width) {
-        velocity = {-velocity.x*0.2,velocity.y,velocity.z};
-//         acceleration = {-acceleration.x*0.2,0,0};
-        position = {-width,position.y,position.z};
+      velocity.x=-velocity.x*0.2;
+      position.x=-width;
     }
     else if (position.x>width) {
-        velocity = {-velocity.x*0.2,velocity.y,velocity.z};
-//         acceleration = {-acceleration.x*0.2,0,0};
-        position = {width,position.y,position.z};
+      velocity.x=-velocity.x*0.2;
+      position.x=width;
     }
 
     if (position.z<-height) {
-        velocity = {velocity.x,velocity.y,-velocity.z*0.2};
-//         acceleration = {0,0,-acceleration.z*0.2};
-        position = {position.x,position.y,-height};
+      velocity.z=-velocity.z*0.2;
+      position.z=-height;
     }
     else if (position.z>height) {
-        velocity = {velocity.x,velocity.y,-velocity.z*0.2};
-//         acceleration = {0,0,-acceleration.z*0.2};
-        position = {position.x,position.y,height};
+      velocity.z=-velocity.z*0.2;
+      position.z=height;
     }
 }
 

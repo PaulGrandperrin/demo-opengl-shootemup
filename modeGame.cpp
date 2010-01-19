@@ -29,14 +29,14 @@ void ModeGame::init(Models* models, Etat* etatGame)
     Mode::init(models, etatGame);
     this->scoreValeur = 0;
 
-    vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
-    player = ActorPlayer(models->getMplayer(), p, r, s);
+    vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
+    player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer);
     
-    p={-12,0,-10}; r= {0,0,0}; s={1.2,1.2,.5};
-    score = Number(scoreValeur, p, r, s, 0.7, models->getMChiffres(), LEFT); // test des chiffres
+    vect pScore={-12,0,-10}, rScore= {0,0,0}, sScore={1.2,1.2,.5};
+    score = Number(scoreValeur, pScore, rScore, sScore, 0.7, models->getMChiffres(), LEFT); // test des chiffres
     
-    p={-12,0,-11}; r= {0,0,0}; s={1.2,1.2,.5};
-    leScore = Text("abc23dea", p, r, s, 0.7, models->getMChiffres(),models->getMLettersa(), LEFT); // test du text, pour l'instant "abcde"
+    vect pText={-12,0,-11}, rText= {0,0,0}, sText={1.2,1.2,.5};
+    leScore = Text("abc23dea", pText, rText, sText, 0.7, models->getMChiffres(),models->getMLettersa(), LEFT); // test du text, pour l'instant "abcde"
 
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
@@ -100,25 +100,36 @@ void ModeGame::getRender(vector<instance>* instances) {
 */
 void ModeGame::playerManager()
 {
-    player.setAcceleration( {0,0,0});
+//     player.setAcceleration( {0,0,0});
+    vect accl={0,0,0};
     if (stateKeys[K_LEFT]) // -x
-        player.setAcceleration( {player.getAcceleration().x-10,player.getAcceleration().y,player.getAcceleration().z});
+	accl.x-=10;
+        player.setAcceleration( accl );
     if (stateKeys[K_RIGHT]) // +x
-        player.setAcceleration( {player.getAcceleration().x+10,player.getAcceleration().y,player.getAcceleration().z});
+	accl.x+=10;
+        player.setAcceleration( accl);
     if (stateKeys[K_UP]) // +y
-        player.setAcceleration( {player.getAcceleration().x,player.getAcceleration().y,player.getAcceleration().z-20});
+	accl.z-=20;
+        player.setAcceleration( accl);
     if (stateKeys[K_DOWN]) // -y
-        player.setAcceleration( {player.getAcceleration().x,player.getAcceleration().y,player.getAcceleration().z+20});
+      	accl.z+=20;
+        player.setAcceleration( accl);
 
     player.update(dTime);
     // TODO ameliorer definition des bords
 
+    vect p={player.getPosition().x,player.getPosition().y,player.getPosition().z}, r={0,0,0}, s={0.1,0.1,0.1};
+    vect pLeft={player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z};
+    vect pRight={player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z};
+    vect vel={player.getVelocity().x/3,player.getVelocity().y/3,player.getVelocity().z/3};
+    
     if ((((stateKeys[K_TIR]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
         ActorPhysique fire;
-        fire=ActorPhysique(models->getMboulet(), {player.getPosition().x,player.getPosition().y,player.getPosition().z}, {0,0,0}, {0.1,0.1,0.1});
-        fire.setVelocity( {player.getVelocity().x/3+random(-0.5,0.5),player.getVelocity().y/3,player.getVelocity().z/3-random(15,18)});
-        fire.setAcceleration( {0,0,0});
+	vel.x += random(-0.5,0.5);
+	vel.z -= random(15,18);
+        fire=ActorPhysique(models->getMboulet(), p, r, s);
+        fire.setVelocity( vel );
         friendFires.push_back(fire);
 
         timerGenShoot=INTERVALE_TEMP_SHOOT;
@@ -130,13 +141,23 @@ void ModeGame::playerManager()
         for (float f =-0.8;f<=0.8;f+=0.2)
         {
             if (random(0,1) < 0.9) {
-                fire=ActorPhysique(models->getMboulet(), {player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
-                fire.setVelocity( {player.getVelocity().x/3+random(15,18),player.getVelocity().y/3,player.getVelocity().z/5+random(-0.5,0.5)});
+		vel.x = 0; vel.z = 0;
+// 	        pRight.x=player.getPosition().x+0.3;
+		pRight.z=player.getPosition().z+f;
+		vel.x += random(15,18);
+		vel.z += random(-0.5,0.5);
+                fire=ActorPhysique(models->getMboulet(), pRight, r, s);
+                fire.setVelocity( vel);
                 friendFires.push_back(fire);
             }
             if (random(0,1) < 0.9) {
-                fire=ActorPhysique(models->getMboulet(), {player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z+f}, {0,0,0}, {0.1,0.1,0.1});
-                fire.setVelocity( {player.getVelocity().x/3-random(15,18),player.getVelocity().y/3,player.getVelocity().z/5+random(-0.5,0.5)});
+		vel.x = 0; vel.z = 0;
+// 	        pLeft.x=player.getPosition().x+0.3;
+		pLeft.z=player.getPosition().z+f;
+		vel.x -= random(15,18);
+		vel.z += random(-0.5,0.5);
+                fire=ActorPhysique(models->getMboulet(),pLeft, r, s);
+                fire.setVelocity( vel);
                 friendFires.push_back(fire);
             }
         }

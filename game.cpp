@@ -1,4 +1,5 @@
 #include "game.h"
+#include "function.h"
 #include <stdio.h>
 #include <ctime>
 #include <cstdlib>
@@ -27,7 +28,7 @@ void Game::init()
     passagePause = false;
     passageMenu = false;
     
-    camera.init();
+    cam.init();
     GE.init();
 
     models.chargerModels(&GE);
@@ -35,7 +36,7 @@ void Game::init()
     // on initialise les different mode (etat) du jeu
     menu.init(&models,&etatGame);
     gamePlay.init(&models,&etatGame);
-    pause.init(&models, &camera,&etatGame);
+    pause.init(&models, &cam,&etatGame);
 
     srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
 }
@@ -75,7 +76,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
         else if (!passageMenu && stateKeys[K_MENU]) {
             passageMenu = true;
         }
-        else if (passagePause && ((!stateKeys[K_PAUSE]) && (camera.camOK()))) {
+        else if (passagePause && ((!stateKeys[K_PAUSE]) && (cam.camOK()))) {
             passagePause = false;
             etatGame = PAUSE; // seulement une fois que la transition est fini, on change l'etat.
         }
@@ -88,10 +89,10 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
     }
 
     else if (etatGame==PAUSE) {
-        if (passagePause && (!camera.camOK())) {
-            camera.resetSmart();
+        if (passagePause && (!cam.camOK())) {
+            cam.resetSmart();
         }
-        else if (passagePause && ((!stateKeys[K_PAUSE]) && (camera.camOK()))) {
+        else if (passagePause && ((!stateKeys[K_PAUSE]) && (cam.camOK()))) {
             passagePause =false;
             etatGame = GAME;
         }
@@ -120,7 +121,7 @@ void Game::render()
 
     if (etatGame==MENU) {
         menu.getRender(&instances);
-        gamePlay.getRender(&instances); // pour Paul
+//         gamePlay.getRender(&instances); // pour Paul
     }
     else if (etatGame==GAME) {
         gamePlay.getRender(&instances);
@@ -129,5 +130,7 @@ void Game::render()
         gamePlay.getRender(&instances);
         pause.getRender(&instances);
     }
-    GE.render(instances, {(-sin(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom()) + camera.getCenterX(), (sin(camera.getLatitude())*camera.getZoom())/* + camera.getCenterZ()*/, cos(camera.getLongitude())*cos(camera.getLatitude())*camera.getZoom() + camera.getCenterZ(), camera.getCenterX(), 0 , camera.getCenterZ(),0,1,0} , {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}},dTime);
+    camera came = {(-sin(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom()) + cam.getCenterX(), (sin(cam.getLatitude())*cam.getZoom())/* + camera.getCenterZ()*/, cos(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom() + cam.getCenterZ(), cam.getCenterX(), 0 , cam.getCenterZ(),0,1,0};
+    lightVec light = {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}};
+    GE.render(instances, came , light ,dTime);
 }

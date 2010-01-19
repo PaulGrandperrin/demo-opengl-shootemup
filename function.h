@@ -31,5 +31,23 @@ struct Point
 };
 
 
+struct camera
+{
+  float eyex,eyey,eyez;
+  float centerx,centery,centerz;
+  float upx,upy,upz;
+};
+
+struct color
+{
+	float r,g,b,a;
+};
+
+struct lightVec
+{
+	float x,y,z;
+	color al,dl,sl;
+};
+
 
 #endif
