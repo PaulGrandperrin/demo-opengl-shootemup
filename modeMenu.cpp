@@ -84,3 +84,8 @@ void ModeMenu::getRender(vector<instance>* instances) {
     }
 }
 
+//comment supprimer les warning
+//comment faire pour que sa ne change pas 2000 mille fois quand on appuye une fois
+//comment resize le text ?? si on pouvait me donner plus d'explication sur le render
+
+//++creer un tableau ou un truc comme sa pour gérer les K_UP...
