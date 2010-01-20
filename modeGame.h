@@ -12,7 +12,7 @@ class ModeGame : public Mode
 public:
     ~ModeGame();
     void init(Models* models,Etat* etatGame);
-    void gameManager(bool stateKeys[],  bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height);
+    void gameManager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
 
     void getRender(vector<instance>* instances);
 

@@ -16,7 +16,7 @@ class Mode
 {
 public:
     virtual void init(Models* models,Etat* etatGame);
-    virtual void Manager(bool stateKeys[],  bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height);
+    virtual void Manager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
     virtual void getRender(vector<instance>* instances);
 
 protected:
@@ -26,7 +26,7 @@ protected:
 
     bool* stateKeys;
     bool* stateButtons;
-    Point deltaMouse;
+    Point coordMouse;
     int deltaWheel;
 
     float dTime;

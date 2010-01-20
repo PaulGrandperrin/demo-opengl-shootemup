@@ -58,9 +58,9 @@ void ModeGame::init(Models* models, Etat* etatGame)
 }
 
 
-void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
+void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
-    Mode::Manager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
+    Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
 
     playerManager();
     firesManager();

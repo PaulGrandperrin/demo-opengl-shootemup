@@ -32,11 +32,11 @@ public:
     inline bool* getStateButtons() {
         return stateButtons;
     };
-    inline Point getDeltaMouse() {
+    inline Point getCoordMouse() {
         Point pt;
-        pt.x = (pMouse.x-lastPMouse.x);
-        pt.y = (pMouse.y-lastPMouse.y);
-        return pt; // return un couple du delta de la souris
+        pt.x = pMouse.x;
+        pt.y = pMouse.y;
+        return pt; // return un couple de la souris
     };
     inline int getDeltaWheel() { //TODO terminer gestion molette
         return (dWheel); // - lastDWheel

@@ -39,6 +39,9 @@ void Game::init()
     pause.init(&models, &cam,&etatGame);
 
     srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
+    
+    //oldMouse.x=0.0;
+    //oldMouse.y=0.0;
 }
 
 void Game::resize(int width,int heigth)
@@ -46,7 +49,7 @@ void Game::resize(int width,int heigth)
     GE.resize(width,heigth);
 }
 
-void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
+void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
     // les modes fonctionnent de la meme maniere, on passe les commandes et il gere, pour le rendu c'est Game qui recupere chaque objet du ou des mode a afficher
     //En ce qui concerne la commutation des modes:
@@ -54,6 +57,8 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
     // de modePause, on ne peut retourner que au game
     // et du menu, on passe en mode game
     this->dTime=time;
+    
+    
     if (etatGame==MENU) {
         if (!passageMenu && stateKeys[K_MENU]) {
             passageMenu = true;
@@ -63,7 +68,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
             etatGame = GAME; // seulement une fois que la transition est fini, on change l'etat.
         }
         else {
-            menu.menuManager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
+            menu.menuManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
         }
     }
 
@@ -83,7 +88,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
             passagePause = true;
         }
         else {
-            gamePlay.gameManager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
+            gamePlay.gameManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
         }
     }
 
@@ -99,7 +104,8 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
             passagePause = true;
         }
         else {
-            pause.pauseManager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
+	  //le menu est la seule exception au lieu d'envoyer les coordonnées de la souris on envoie un delta
+            pause.pauseManager(stateKeys, stateButtons, {coordMouse.x-oldMouse.x,coordMouse.y-oldMouse.y}, deltaWheel, time, width, height);
         }
     }
 
@@ -107,6 +113,9 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
         etatGame=STOP;
     }
     render(); // a la fin on affiche tout
+    //a la fin les coordonnée de la souris devienne les ancienne coordonnées
+    oldMouse.x=coordMouse.x;
+    oldMouse.y=coordMouse.y;
 }
 
 // fin de l'interface, debut des méthodes privés

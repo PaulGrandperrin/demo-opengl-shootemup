@@ -32,9 +32,9 @@ void ModePause::init(Models* models, Camera* camera,Etat* etatGame)
 }
 
 
-void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
-{
-    Mode::Manager(stateKeys, stateButtons, deltaMouse, deltaWheel, time, width, height);
+void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
+{//NOTE:le coordMouse est l'ancien deltaMouse seul le nom change
+    Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
 
     if (resetCam) {
         camera->resetSmart();
@@ -83,42 +83,42 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point deltaM
         if ((deltaWheel != 0)) {
             camera->setZoom(-deltaWheel/(float)240);
         }
-        if ((stateButtons[B_LEFT]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
-            camera->setCenterZ(deltaMouse.y*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y);
+        if ((stateButtons[B_LEFT]) && ((coordMouse.y >= 2 || coordMouse.y <= -2))) {
+            camera->setCenterZ(coordMouse.y*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y);
 //             cursorPause.translate( {0,0,(deltaMouse.y*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y)});
-	    vect t={0,0,(deltaMouse.y*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y)};
+	    vect t={0,0,(coordMouse.y*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y)};
             cursorPause.translate( t);
         }
-        if ((stateButtons[B_LEFT]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
-            camera->setCenterX(deltaMouse.x*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X);
+        if ((stateButtons[B_LEFT]) && ((coordMouse.x >= 2 || coordMouse.x <= -2))) {
+            camera->setCenterX(coordMouse.x*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X);
 //             cursorPause.translate( {(deltaMouse.x*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X)});
 	    
-	    vect t={(deltaMouse.x*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X),0,0};
+	    vect t={(coordMouse.x*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X),0,0};
             cursorPause.translate( t);
         }
     }
 
     else {
         //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
-        if ((stateButtons[B_LEFT]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
-            camera->setCenterZ(deltaMouse.y*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y);
+        if ((stateButtons[B_LEFT]) && ((coordMouse.y >= 2 || coordMouse.y <= -2))) {
+            camera->setCenterZ(coordMouse.y*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y);
 //             cursorPause.translate( {0,0,(deltaMouse.y*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y)});
 	    
-	    vect t={0,0,(deltaMouse.y*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y)};
+	    vect t={0,0,(coordMouse.y*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y)};
             cursorPause.translate( t);
         }
-        if ((stateButtons[B_LEFT]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
-            camera->setCenterX(deltaMouse.x*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X);
+        if ((stateButtons[B_LEFT]) && ((coordMouse.x >= 2 || coordMouse.x <= -2))) {
+            camera->setCenterX(coordMouse.x*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X);
 //             cursorPause.translate( {(deltaMouse.x*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X)});
 	    
-	    vect t={(deltaMouse.x*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X),0,0};
+	    vect t={(coordMouse.x*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X),0,0};
             cursorPause.translate( t);
         }
-        if ((stateButtons[B_MIDLE]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
-            camera->setLatitude(0.01*deltaMouse.y);
+        if ((stateButtons[B_MIDLE]) && ((coordMouse.y >= 2 || coordMouse.y <= -2))) {
+            camera->setLatitude(0.01*coordMouse.y);
         }
-        if ((stateButtons[B_MIDLE]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
-            camera->setLongitude(0.01*deltaMouse.x);
+        if ((stateButtons[B_MIDLE]) && ((coordMouse.x >= 2 || coordMouse.x <= -2))) {
+            camera->setLongitude(0.01*coordMouse.x);
         }
         if ((deltaWheel != 0)) {
             camera->setZoom(-deltaWheel/(float)60);

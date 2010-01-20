@@ -12,7 +12,7 @@
 #include "modeMenu.h"
 #include "modeGame.h"
 // #include "parameters.h"
-// #include "function.h"
+ #include "function.h"
 // #include "text.h"
 
 
@@ -21,7 +21,7 @@ class Game
 public:
     ~Game();
     void init();
-    void update(bool stateKeys[],  bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height);
+    void update(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
     void resize(int width,int heigth);
     inline bool close() {
         return (etatGame==STOP);
@@ -39,7 +39,7 @@ private:
 
     // tout les models qu'il peut exister
     Models models;
-
+    Point oldMouse;
     graphicEngine GE;
     Camera cam;
 

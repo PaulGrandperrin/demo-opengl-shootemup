@@ -26,11 +26,11 @@ void Mode::init(Models* models, Etat* etatGame)
 }
 
 
-void Mode::Manager(bool stateKeys[], bool stateButtons[], Point deltaMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
+void Mode::Manager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
     this->stateKeys=stateKeys;
     this->stateButtons=stateButtons;
-    this->deltaMouse=deltaMouse;
+    this->coordMouse=coordMouse;
     this->deltaWheel=deltaWheel;
     this->dTime=time;
     this->widthView=width;
