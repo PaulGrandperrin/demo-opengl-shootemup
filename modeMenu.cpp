@@ -28,13 +28,13 @@ void ModeMenu::init(Models* models, Etat* etatGame)
     keyDown=false;
     keyUp=false;
     vect pPlay={0,2,-3}, rPlay={0,0,0}, sPlay={2.5,2.5,1};
-    textPlay = Text(models->getMChiffres(),models->getMLettersa(), "bbbbbb", pPlay, rPlay, sPlay, 1, CENTER); // test du text, pour l'instant "abcde"
+    textPlay = Text(models->getMChiffres(),models->getMLettersM(), "Play Game", pPlay, rPlay, sPlay, 0.6, CENTER); // test du text, pour l'instant "abcde"
 
-    vect pOption={0,2,0}, rOption={0,0,0}, sOption={2,2,0.5};
-    textOption = Text(models->getMChiffres(),models->getMLettersa(), "cccccccc", pOption, rOption, sOption, 1, CENTER);
+    vect pOption={0,2,0}, rOption={0,0,0}, sOption={2,2,1};
+    textOption = Text(models->getMChiffres(),models->getMLettersM(), "Rien", pOption, rOption, sOption, 0.6, CENTER);
     
-    vect pQuit={0,2,3}, rQuit={0,0,0}, sQuit={2,2,0.5};
-    textQuit = Text(models->getMChiffres(),models->getMLettersa(), "aaabaaa", pQuit, rQuit, sQuit, 1, CENTER); // test du text, pour l'instant "aaaaaaa"
+    vect pQuit={0,2,3}, rQuit={0,0,0}, sQuit={2,2,1};
+    textQuit = Text(models->getMChiffres(),models->getMLettersM(), "Quit Game", pQuit, rQuit, sQuit, 0.6, CENTER); // test du text, pour l'instant "aaaaaaa"
 
 }
 
@@ -116,6 +116,7 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point deltaMou
       else if(itemSelected==2)
 	  *etatGame=STOP;
     }
+
 }
 
 

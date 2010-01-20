@@ -23,7 +23,7 @@ class Text
 {
 public:
     Text() {};
-    Text( vector<int> MChiffres, vector<int> MLettersa, string text, vect position,vect rotation,vect scale, float esp, TextStyle style);
+    Text( vector<int> MChiffres, vector<int> MLettersM, string text, vect position,vect rotation,vect scale, float esp, TextStyle style);
 
     void update(string, vector<int>) {}
 
@@ -53,11 +53,20 @@ class Number : public Text
 {
   public :
     Number() {};
-    Number(vector<int> MChiffres, int nombre, vect position,vect rotation,vect scale, float esp, TextStyle style);
-    void update(int nombre, float esp, vector<int> MChiffres);
-    
-  private:
-    int number;
+    Number(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
+    void update(vector<int> MChiffres, int number);
 };
 
+class Score : public Number
+{
+  public :
+    Score() {};
+    Score(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
+    void setScore(vector<int> MChiffres, int number);
+    int getScore() { return score; }
+    
+  private:
+    int score;
+//     vector<int>* MChiffres;
+};
 #endif

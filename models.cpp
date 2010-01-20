@@ -12,8 +12,8 @@ void Models::chargerModels(graphicEngine* GE) {
     for (int i=0; i<=9; i++) {
         MChiffres.push_back(GE->loadModel("meshes/chiffres/" + entierToString(i) + ".obj","textures/noir.png"));
     }
-    for (char c = 'a'; c<='e'; c++) {
-      MLettersa.push_back(GE->loadModel("meshes/letters/" + charToString(c) + ".obj","textures/noir.png"));
+    for (char c = 'A'; c<='Z'; c++) {
+      MLettersM.push_back(GE->loadModel("meshes/letters/" + charToString(c) + ".obj","textures/noir.png"));
     }
 }
 

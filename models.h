@@ -26,18 +26,19 @@ public :
     vector<int> getMChiffres() {
         return MChiffres;
     }
-    vector<int> getMLettersa() {
-        return MLettersa;
+    vector<int> getMLettersM() {
+        return MLettersM;
     }
-    vector<int> getMLettersA() {
-        return MLettersA;
-    }
+    // obsolete pour le moment
+//     vector<int> getMLettersm() {
+//         return MLettersA;
+//     }
 
 //public : //TODO metre private probleme vector
     int Mplayer,Mboulet,MCursorPause;
     vector<int> MChiffres;
-    vector<int> MLettersa;
-    vector<int> MLettersA; // vide pour l'instant, Majuscules
+    vector<int> MLettersM;
+//     vector<int> MLettersm; // vide pour l'instant, Majuscules
 };
 
 #endif

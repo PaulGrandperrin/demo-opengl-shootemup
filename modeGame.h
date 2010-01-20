@@ -26,10 +26,9 @@ private:
     list<ActorPhysique> friendFires;
     list<ActorPhysique> enemiesFires;
     ActorPlayer player;
-    Number score; // TODO faire une classe score Chiffre
+    Score score; // TODO faire une classe score Chiffre
     Text leScore;
 
-    int scoreValeur;
     int timerGenShoot;
     int timerGenShootGros;
     int timerGenEnemy;

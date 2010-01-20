@@ -27,16 +27,15 @@ ModeGame::~ModeGame()
 void ModeGame::init(Models* models, Etat* etatGame)
 {
     Mode::init(models, etatGame);
-    this->scoreValeur = 0;
 
     vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
     player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer);
     
-    vect pScore={-12,0,-10}, rScore= {0,0,0}, sScore={1.2,1.2,.5};
-    score = Number(models->getMChiffres(), scoreValeur, pScore, rScore, sScore, 0.7, LEFT); // test des chiffres
+    vect pScore={-12.5,0,-11}, rScore= {0,0,0}, sScore={1,1,0.5};
+    score = Score(models->getMChiffres(), 0, pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
     
-    vect pText={-12,0,-11}, rText= {0,0,0}, sText={1.2,1.2,.5};
-    leScore = Text(models->getMChiffres(),models->getMLettersa(), "abc23dea", pText, rText, sText, 0.7, LEFT); // test du text, pour l'instant "abcde"
+    vect pText={-12.5,0,-12}, rText= {0,0,0}, sText={0.8,0.8,0.5};
+    leScore = Text(models->getMChiffres(),models->getMLettersM(), "Le Score du Player :", pText, rText, sText, 0.6, LEFT); // test du text, pour l'instant "abcde"
 
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
@@ -133,11 +132,12 @@ void ModeGame::playerManager()
         friendFires.push_back(fire);
 
         timerGenShoot=INTERVALE_TEMP_SHOOT;
-        scoreValeur++; // rien a faire la, mais c'est pour tester
+        score.setScore(models->getMChiffres(), 1); // rien a faire la, mais c'est pour tester
     }
     if ((((stateKeys[K_TIR_SECOND]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
     {
         ActorPhysique fire;
+	int iScore=0;
         for (float f =-0.8;f<=0.8;f+=0.2)
         {
             if (random(0,1) < 0.9) {
@@ -149,6 +149,7 @@ void ModeGame::playerManager()
                 fire=ActorPhysique(models->getMboulet(), pRight, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);
+		iScore++;
             }
             if (random(0,1) < 0.9) {
 		vel.x = 0; vel.z = 0;
@@ -159,15 +160,16 @@ void ModeGame::playerManager()
                 fire=ActorPhysique(models->getMboulet(),pLeft, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);
+		iScore++;
             }
         }
         timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
+	score.setScore(models->getMChiffres(), iScore); // rien a faire la, mais c'est pour tester
     }
     else {
         timerGenShoot--;
         timerGenShootGros--;
     }
-    score.update(scoreValeur,.7, models->MChiffres);
 }
 
 void ModeGame::firesManager()
