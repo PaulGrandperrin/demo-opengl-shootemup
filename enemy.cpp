@@ -53,11 +53,15 @@ void EnemyInfosFile::write(int i) {
 }
 
 void EnemyInfosFile::read(string & s) {
-	size_t l;
-	file.read((char*) &l, sizeof(l));
-	char readString[l + 1];
-	file.read(readString, l);
-	readString[l] = '\0';
+// 	size_t l;
+	int j; // fonctionne avec un entier car sizeof(int) = 4, et sizeof(size_t =8) sur PC seb et sizeof(size_t =4) sur PC romain
+	file.read((char*) &j, sizeof(int));
+// 	cout << " bonjour : " << l <<  "  si " << sizeof(j)  << endl;
+	char readString[j + 1];
+// 	cout << " bonjour : 2" << endl;
+	file.read(readString, j);
+// 	cout << " bonjour : 3" << endl;
+	readString[j] = '\0';
 	s = readString;
 }
 

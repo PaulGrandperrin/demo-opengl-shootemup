@@ -11,8 +11,8 @@ LIBS += -lGLEW  -lIL
 
 # CONFIG += debug
 
-QMAKE_CXXFLAGS_DEBUG += -ggdb -g -p -pg
-QMAKE_LFLAGS_DEBUG += -ggdb -g -p -pg
+QMAKE_CXXFLAGS_DEBUG += -ggdb -g -p -pg -Wall
+QMAKE_LFLAGS_DEBUG += -ggdb -g -p -pg -Wall
 
 
 # Input
