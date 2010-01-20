@@ -113,6 +113,8 @@ void graphicEngine::init()
   glClearColor ( 1,1,1,0 );
   glEnable (GL_TEXTURE_2D);
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_ALPHA_TEST);
+  glAlphaFunc(GL_EQUAL,255);
   cout << "openGL initialized"<<endl;
 }
 
