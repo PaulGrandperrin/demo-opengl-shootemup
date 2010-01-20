@@ -7,11 +7,7 @@ using namespace std;
 
 #include "parameters.h"
 #include "instance.h"
-
-struct vect
-{
-    float x,y,z;
-};
+#include "vect.h"
 
 
 class Actor
@@ -26,6 +22,18 @@ public:
     inline instance getInstance() {
 	instance i={position.x,position.y,position.z,rotation.x,rotation.y,rotation.z,scale.x,scale.y,scale.z,idModel};
         return i;
+    }
+    
+    inline int getIdModel() {
+      return idModel;
+    }
+    
+    inline vect getRotation() {
+      return rotation;
+    }
+    
+    inline vect getScale() {
+      return scale;
     }
 
     inline vect getPosition() {
@@ -104,5 +112,21 @@ public:
 
 protected:
     //vie
+};
+
+class Trajectory;
+
+class ActorEnemy : public ActorPhysique {
+  public:
+    ActorEnemy() {};
+    ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health);
+    void update(float time);
+    inline Trajectory * getTraj() { return traj; }
+    inline int getHealth() { return health; }
+  private:
+    Trajectory * traj;
+    float timeElapsed;
+    int nextKeyStateRank;
+    int health;
 };
 #endif

@@ -9,10 +9,10 @@ INCLUDEPATH += .
 QT += opengl
 LIBS += -lGLEW  -lIL
 
-#CONFIG += debug
+# CONFIG += debug
 
-QMAKE_CXXFLAGS_DEBUG += -ggdb -p -pg
-QMAKE_LFLAGS_DEBUG += -ggdb -p -pg
+QMAKE_CXXFLAGS_DEBUG += -ggdb -g -p -pg
+QMAKE_LFLAGS_DEBUG += -ggdb -g -p -pg
 
 
 # Input
@@ -20,6 +20,7 @@ HEADERS += function.h \
 	   text.h \
 	   actor.h \
 	   camera.h \
+	   enemy.h \
 	   models.h \
 	   mode.h \
 	   modeGame.h \
@@ -29,11 +30,14 @@ HEADERS += function.h \
            graphicEngine.h \
            inputDevice.h \
            parameters.h \
+	   trajectory.h \
+	   vect.h \
            viewQt.h
 SOURCES += function.cpp \
 	   text.cpp \
 	   actor.cpp \
 	   camera.cpp \
+	   enemy.cpp \
 	   models.cpp \
 	   mode.cpp \
 	   modeGame.cpp \
@@ -43,4 +47,5 @@ SOURCES += function.cpp \
            graphicEngine.cpp \
            inputDevice.cpp \
            main.cpp \
+	   trajectory.cpp \
            viewQt.cpp

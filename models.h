@@ -3,8 +3,11 @@
 
 
 #include "graphicEngine.h"
+#include "enemy.h"
+#include "trajectory.h"
 
 #include <vector>
+#include <list>
 #include <iostream>
 using namespace std;
 
@@ -14,16 +17,16 @@ class Models {
 public :
     Models() {};
     void chargerModels(graphicEngine* GE);
-    int getMplayer() {
+    inline int getMplayer() {
         return Mplayer;
     }
-    int getMboulet() {
+    inline int getMboulet() {
         return Mboulet;
     }
-    int getMCursorPause() {
+    inline int getMCursorPause() {
         return MCursorPause;
     }
-    vector<int> getMChiffres() {
+    inline vector<int> getMChiffres() {
         return MChiffres;
     }
     vector<int> getMLettersM() {
@@ -33,12 +36,16 @@ public :
 //     vector<int> getMLettersm() {
 //         return MLettersA;
 //     }
+    inline vector<EnemyInfo> getEnemiesInfos() {
+      return enemiesInfos;
+    }
 
 //public : //TODO metre private probleme vector
     int Mplayer,Mboulet,MCursorPause;
     vector<int> MChiffres;
     vector<int> MLettersM;
 //     vector<int> MLettersm; // vide pour l'instant, Majuscules
+    vector<EnemyInfo> enemiesInfos;
 };
 
 #endif

@@ -106,7 +106,6 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point deltaMouse, int d
     if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND])) {
         etatGame=STOP;
     }
-
     render(); // a la fin on affiche tout
 }
 

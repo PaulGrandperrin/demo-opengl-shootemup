@@ -40,6 +40,21 @@ void ModeGame::init(Models* models, Etat* etatGame)
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
     timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
+    timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
+    
+    // Chargement des trajectoires
+    TrajectoryFile tFile("levels/traj_lvl_default.data");
+    if(!tFile.isEnded()) {
+      tFile.read(trajectories); // On charge les trajectoires dans trajectories
+    } else {
+      cout << "Trajectory file not found !" << endl;
+      exit(0);
+    }
+      
+    // On initialise les timers de generation d'ennemi à TIMER_OFF pour dire qu'ils sont désactivés au début
+    int traj_list_size = trajectories.size();
+    for(int i=0; i<traj_list_size; i++)
+        timersGenEnemy.push_back(TIMER_OFF);
 }
 
 
@@ -49,6 +64,7 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point deltaMou
 
     playerManager();
     firesManager();
+    trajectoriesManager();
     enemiesManager();
     //bonusManager();
     //decorManager();
@@ -69,8 +85,16 @@ void ModeGame::getRender(vector<instance>* instances) {
     list<ActorPhysique>::iterator itAP;
 
     instances->push_back(player.getInstance());
-    for (itAP=enemies.begin(); itAP!= enemies.end(); itAP++) {
-        instances->push_back(itAP->getInstance());
+    list<Trajectory>::iterator it_traj;
+    //NOTE La boucle qui suit semble ne pas fonctionner !!!
+    for(it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
+    {
+      list<ActorEnemy>::iterator it_enn;
+      list<ActorEnemy> enemies = it_traj->getEnemies();
+      for(it_enn=enemies.begin(); it_enn != enemies.end(); it_enn++)
+      {
+	  instances->push_back(it_enn->getInstance());
+      }
     }
     for (itAP=enemiesFires.begin(); itAP!= enemiesFires.end(); itAP++) {
         instances->push_back(itAP->getInstance());
@@ -184,11 +208,65 @@ void ModeGame::firesManager()
     }
 }
 
+
+void ModeGame::trajectoriesManager() {
+  bool timerGenEnemyStarted = FALSE;
+  bool timerOffMet = FALSE; // Booleen pour savoir s'il est toujours utile de faire une decrementation du timer (s'il reste des sequences à demarrer)
+  list<Trajectory>::iterator it_traj = trajectories.begin();
+  list<int>::iterator it_gene = timersGenEnemy.begin();
+  // On parcourt les trajectoires pour supprimer celles qui n'ont plus d'ennemis, et pour démarrer la génération des ennemis de chaque trajectoire
+  // de facon ordonnée (ex : on démarre la première trajectoire, puis au prochain top, on en démarre une autre...)
+  while(it_traj != trajectories.end())
+  {
+    // Si tous les ennemis ont ete generes et qu'il n'en reste plus, alors on supprime la trajectoire et son timer
+    if(it_traj->getRecordNumbers().size() == 0 && it_traj->getEnemies().size() == 0) {
+      it_traj = trajectories.erase(it_traj);
+      it_gene = timersGenEnemy.erase(it_gene);
+      cout << "Trajectoire supprimee !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    }
+    else {
+      if(*it_gene == TIMER_OFF)
+      {
+	if(timerGenTrajectorySequence <= 0) {
+	  *it_gene = it_traj->getInterval(); // On demarre le timer d'ennemis de cette trajectoire en quelque sorte
+	  timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
+	  timerGenEnemyStarted = TRUE;
+	}
+	timerOffMet = TRUE;
+      }
+      it_traj++;
+      it_gene++;
+    }
+  }
+  if(timerOffMet && timerGenTrajectorySequence > 0 && !timerGenEnemyStarted)
+    timerGenTrajectorySequence--;
+}
+
 void ModeGame::enemiesManager()
 {
-    list<ActorPhysique>::iterator it;
-    for (it=enemies.begin(); it!=enemies.end(); it++) {
-        it->update(dTime);
+    list<Trajectory>::iterator it_traj = trajectories.begin();
+    list<int>::iterator it_gene = timersGenEnemy.begin();
+    for(int i = 0; i<timersGenEnemy.size(); i++)
+    {
+      // On met a jour la position de chacun des ennemis presents sur la trajectoire
+      list<ActorEnemy>::iterator it_enn;
+      list<ActorEnemy> enemies = it_traj->getEnemies();
+      for(it_enn = enemies.begin(); it_enn != enemies.end(); it_enn++) {
+	it_enn->update(dTime);
+      }
+      it_traj->setEnemies(enemies);
+      if(it_traj->getRecordNumbers().size() && *it_gene <=0)
+      {
+	int rec_num = *(it_traj->getRecordNumbers().begin());
+	ActorEnemy e(models->getEnemiesInfos()[rec_num].idModel,it_traj->getInitialPosition(),{0,0,0},{1,1,1},&(*it_traj),models->getEnemiesInfos()[rec_num].health);
+	it_traj->addEnemy(e);
+	it_traj->removeFirstRecordNumber(); // On enleve le numero d'enregistrement pour dire qu'on a bien cree l'ennemi
+	*it_gene = it_traj->getInterval();
+      }
+      else
+	*it_gene = *it_gene - 1;
+      it_traj++;
+      it_gene++;
     }
 }
 
@@ -198,28 +276,37 @@ void ModeGame::collisionManager()
     // si on rentre en collision avec la bordure exterieur on efface l'object
     player.colisionBord(width,height); // donner une leger rotation au vaisseau
 
+    list<Trajectory>::iterator it_traj;
+    for(it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
+    {
+      list<ActorEnemy> enemies = it_traj->getEnemies();
+      list<ActorEnemy>::iterator it_enn;
+      it_enn = enemies.begin();
+      while(it_enn != enemies.end())
+      {
+	if (it_enn->sortieEcran(width+5,height+5)) {
+	  it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
+	  cout << "Un ennemi tue !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+	} else
+	  it_enn++;
+      }
+      it_traj->setEnemies(enemies);
+    }
     list<ActorPhysique>::iterator itAP;
-    for (itAP=enemies.begin(); itAP!=enemies.end() ; itAP++) {
-        if (itAP-> sortieEcran(width+5,height+5))
-        {
-            enemies.erase(itAP);
-            break;
-        }
-    }
-    for (itAP=friendFires.begin(); itAP!=friendFires.end() ; itAP++)
+    itAP = friendFires.begin();
+    while(itAP!=friendFires.end())
     {
         if (itAP-> sortieEcran(width+5,height+5))
-        {
-            friendFires.erase(itAP);
-            break;
-        }
+          itAP = friendFires.erase(itAP);
+	else
+	  itAP++;
     }
-    for (itAP=enemiesFires.begin(); itAP!=enemiesFires.end() ; itAP++)
+    itAP=enemiesFires.begin();
+    while(itAP!=enemiesFires.end())
     {
         if (itAP-> sortieEcran(width+5,height+5))
-        {
-            enemiesFires.erase(itAP);
-            break;
-        }
+          itAP = enemiesFires.erase(itAP);
+        else
+	  itAP++;
     }
 }

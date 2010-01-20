@@ -1,4 +1,6 @@
 #include "actor.h"
+#include "trajectory.h"
+#include <stdlib.h>
 
 // for trace during test , to kept
 #include <iostream>
@@ -92,4 +94,47 @@ void ActorPlayer::update(float time)
     velocity.x*=0.97; // fortement plus grand car surface ++
     velocity.y*=0.98;
     velocity.z*=0.98;
+}
+
+////////////////////////////////////////
+// ActorEnemy
+////////////////////////////////////////
+
+ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health)
+: ActorPhysique(idModel,position,rotation,scale) {
+  if(traj != NULL)
+    this->traj = traj;
+  else {
+    cout << "Undefined trajectory !" << endl;
+    exit(0);
+  }
+  timeElapsed = 0;
+  nextKeyStateRank = 0;
+  this->health = health;
+}
+
+void ActorEnemy::update(float time) {
+  // TODO Faire fonctionner le shmilblick : copier les keystates dans un attribut propre a la classe ActorEnemy, puis en enlever un a chaque fois
+  // qu'on l'atteint. Une fois cette liste vide, l'actor se comporte comme un actor physique
+  timeElapsed += time;
+  cout << "Time : "<< time << endl;
+  cout << "Time elapsed : " << timeElapsed << endl;
+  vector<t_key_state> states = traj->getKeyStates();
+  vector<t_key_state>::iterator rit;
+  int rank = 0;
+  for(rit=states.begin(); rit!=states.end(); rit++)
+  {
+      if(timeElapsed > rit->t && rank == nextKeyStateRank)
+      {
+	  cout << "Key state a t = " << rit->t << endl;
+	  if(rit->vx != 0 || rit->vy != 0 || rit->vz != 0)
+	      setVelocity({rit->vx,rit->vy,rit->vz});
+	  else
+	      setAcceleration({rit->ax,rit->ay,rit->az});
+	  cout << "Ma nouvelle vitesse est : (" << getVelocity().x << "," << getVelocity().y << "," << getVelocity().z << ")" << endl;
+	  nextKeyStateRank++;
+      }
+      rank++;
+  }
+  ActorPhysique::update(time);
 }
