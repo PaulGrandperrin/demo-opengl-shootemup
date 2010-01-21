@@ -117,8 +117,6 @@ void ActorEnemy::update(float time) {
   // TODO Faire fonctionner le shmilblick : copier les keystates dans un attribut propre a la classe ActorEnemy, puis en enlever un a chaque fois
   // qu'on l'atteint. Une fois cette liste vide, l'actor se comporte comme un actor physique
   timeElapsed += time;
-  cout << "Time : "<< time << endl;
-  cout << "Time elapsed : " << timeElapsed << endl;
   vector<t_key_state> states = traj->getKeyStates();
   vector<t_key_state>::iterator rit;
   int rank = 0;
@@ -126,12 +124,10 @@ void ActorEnemy::update(float time) {
   {
       if(timeElapsed > rit->t && rank == nextKeyStateRank)
       {
-	  cout << "Key state a t = " << rit->t << endl;
 	  if(rit->vx != 0 || rit->vy != 0 || rit->vz != 0)
 	      setVelocity({rit->vx,rit->vy,rit->vz});
 	  else
 	      setAcceleration({rit->ax,rit->ay,rit->az});
-	  cout << "Ma nouvelle vitesse est : (" << getVelocity().x << "," << getVelocity().y << "," << getVelocity().z << ")" << endl;
 	  nextKeyStateRank++;
       }
       rank++;

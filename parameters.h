@@ -2,28 +2,69 @@
 #define PARAMETRE_H_
 
 // TODO faire le menage !
+#include <iostream>
+#include <fstream>
+#include <string>
 
-#define TAILLE_DEFAULT_X 600
-#define TAILLE_DEFAULT_Y 600
-#define TAILLE_MIN_X 100
-#define TAILLE_MIN_Y 150
+using namespace std;
 
-#define TYPE_DEFAULT_MESH 1
-#define TAILLE_DEFAULT_VAISSEAU 0.1
-#define POSX_DEFAULT_VAISSEAU 0
-#define POSY_DEFAULT_VAISSEAU 0
-#define POSZ_DEFAULT_VAISSEAU 0
-#define ANGLEX_DEFAULT_VAISSEAU 0
-#define ANGLEY_DEFAULT_VAISSEAU 0
-#define ANGLEZ_DEFAULT_VAISSEAU 0
-#define VELOCITYX_DEFAULT_VAISSEAU 0
-#define VELOCITYY_DEFAULT_VAISSEAU 0
-#define VELOCITYZ_DEFAULT_VAISSEAU 0
-#define ACCELERATIONX_DEFAULT_VAISSEAU 0
-#define ACCELERATIONY_DEFAULT_VAISSEAU 0
-#define ACCELERATIONZ_DEFAULT_VAISSEAU 0
-#define TRAJECTORY_DEFAULT_FILE_NAME ""
+class Parameters {
 
+  public :
+    Parameters() {
+     ifstream fichier("parameters.txt", ios::in); //ouverture du fichier
+     string j,k,l,m;
+     int a,b,c,d;
+	if (fichier) {
+
+	  fichier >> j >> a >> k >> b >> l>>c >> m >> d; // lit les variables et les noms des variables de parameters.txt
+	  fichier.close();
+	  cout << j <<a << endl<< k<< b << endl <<l << c << endl<< m << d<<endl;
+ 	}
+ 	else {
+	    cout << "Unable to open \"" << fichier << "\"" << endl;
+	}
+ 	this->TAILLE_DEFAULT_X = a; 
+	this->TAILLE_DEFAULT_Y = b;
+	this->TAILLE_MIN_X = c;
+	this->TAILLE_MIN_Y = d;
+    }
+    ~Parameters() {
+    }   
+    inline int getTailleDefaultX() {
+      return TAILLE_DEFAULT_X;
+    }
+    inline int getTailleDefaultY() {
+      return TAILLE_DEFAULT_Y;
+    }
+    inline int getTailleMinX() {
+      return TAILLE_MIN_X;
+    }
+    inline int getTailleMinY() {
+      return TAILLE_MIN_Y;
+    }
+    
+  private :
+    int TAILLE_DEFAULT_X;
+    int TAILLE_DEFAULT_Y;
+    int TAILLE_MIN_X;
+    int TAILLE_MIN_Y;
+};
+    #define TYPE_DEFAULT_MESH 1
+    #define TAILLE_DEFAULT_VAISSEAU 0.1
+    #define POSX_DEFAULT_VAISSEAU 0
+    #define POSY_DEFAULT_VAISSEAU 0
+    #define POSZ_DEFAULT_VAISSEAU 0
+    #define ANGLEX_DEFAULT_VAISSEAU 0
+    #define ANGLEY_DEFAULT_VAISSEAU 0
+    #define ANGLEZ_DEFAULT_VAISSEAU 0
+    #define VELOCITYX_DEFAULT_VAISSEAU 0
+    #define VELOCITYY_DEFAULT_VAISSEAU 0
+    #define VELOCITYZ_DEFAULT_VAISSEAU 0
+    #define ACCELERATIONX_DEFAULT_VAISSEAU 0
+    #define ACCELERATIONY_DEFAULT_VAISSEAU 0
+    #define ACCELERATIONZ_DEFAULT_VAISSEAU 0
+    #define TRAJECTORY_DEFAULT_FILE_NAME ""
 #define STRUCT_POSITION_DEF {0,0,0}
 #define STRUCT_ROTATION_DEF {0,0,0}
 #define STRUCT_VELOCITY_DEF {0,0,0}

@@ -84,16 +84,16 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordM
             camera->setZoom(-deltaWheel/(float)240);
         }
         if ((stateButtons[B_LEFT]) && ((coordMouse.y >= 2 || coordMouse.y <= -2))) {
-            camera->setCenterZ(coordMouse.y*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y);
+            camera->setCenterZ(coordMouse.y*NB_UNITY_HEIGHT/600.0);
 //             cursorPause.translate( {0,0,(deltaMouse.y*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y)});
-	    vect t={0,0,(coordMouse.y*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y)};
+	    vect t={0,0,(coordMouse.y*NB_UNITY_HEIGHT/600.0)};
             cursorPause.translate( t);
         }
         if ((stateButtons[B_LEFT]) && ((coordMouse.x >= 2 || coordMouse.x <= -2))) {
-            camera->setCenterX(coordMouse.x*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X);
+            camera->setCenterX(coordMouse.x*NB_UNITY_WIDTH/600.0);
 //             cursorPause.translate( {(deltaMouse.x*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X)});
 	    
-	    vect t={(coordMouse.x*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X),0,0};
+	    vect t={(coordMouse.x*NB_UNITY_WIDTH/(float)600.0),0,0};
             cursorPause.translate( t);
         }
     }
@@ -101,17 +101,17 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordM
     else {
         //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
         if ((stateButtons[B_LEFT]) && ((coordMouse.y >= 2 || coordMouse.y <= -2))) {
-            camera->setCenterZ(coordMouse.y*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y);
+            camera->setCenterZ(coordMouse.y*NB_UNITY_HEIGHT*5/600.0);
 //             cursorPause.translate( {0,0,(deltaMouse.y*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y)});
 	    
-	    vect t={0,0,(coordMouse.y*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y)};
+	    vect t={0,0,(coordMouse.y*NB_UNITY_HEIGHT*5/600.0)};
             cursorPause.translate( t);
         }
         if ((stateButtons[B_LEFT]) && ((coordMouse.x >= 2 || coordMouse.x <= -2))) {
-            camera->setCenterX(coordMouse.x*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X);
+            camera->setCenterX(coordMouse.x*NB_UNITY_WIDTH*5/600.0);
 //             cursorPause.translate( {(deltaMouse.x*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X)});
 	    
-	    vect t={(coordMouse.x*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X),0,0};
+	    vect t={(coordMouse.x*NB_UNITY_WIDTH*5/600.0),0,0};
             cursorPause.translate( t);
         }
         if ((stateButtons[B_MIDLE]) && ((coordMouse.y >= 2 || coordMouse.y <= -2))) {

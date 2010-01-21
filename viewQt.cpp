@@ -1,5 +1,5 @@
 #include "viewQt.h"
-
+extern Parameters *parametre;
 //-------------------------------------------------------------------------------
 //GLWidget
 //-------------------------------------------------------------------------------
@@ -104,10 +104,10 @@ void ViewOpenGl::wheelEvent(QWheelEvent * event)
 
 QSize ViewOpenGl::minimumSizeHint() const
 {
-    return QSize(TAILLE_MIN_X,TAILLE_MIN_Y); // minimal size of window
+    return QSize(parametre->getTailleMinX(),parametre->getTailleMinY()); // minimal size of window
 }
 
 QSize ViewOpenGl::sizeHint() const
 {
-    return QSize(TAILLE_DEFAULT_X,TAILLE_DEFAULT_Y); // size of window
+    return QSize(parametre->getTailleDefaultX(),parametre->getTailleDefaultY()); // size of window
 }

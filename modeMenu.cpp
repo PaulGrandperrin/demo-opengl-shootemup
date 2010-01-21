@@ -42,7 +42,7 @@ void ModeMenu::init(Models* models, Etat* etatGame)
 void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height)
 {
     Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
-    cout << "les coordonnées sont : x = " << coordMouse.x << " et y = " << coordMouse.y << endl;
+    //cout << "les coordonnées sont : x = " << coordMouse.x << " et y = " << coordMouse.y << endl;
     if(stateKeys[K_DOWN] && !keyDown) {
       //si on appuye sur down et qu'il est pas activé
       keyDown=true;//on l'active

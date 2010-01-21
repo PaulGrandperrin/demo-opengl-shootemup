@@ -1,8 +1,8 @@
 #ifndef VIEWQT_H_
 #define VIEWQT_H_
 
-#include "parameters.h"
 
+#include "function.h"
 #include "game.h"
 
 #include "inputDevice.h"

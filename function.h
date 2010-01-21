@@ -4,11 +4,11 @@
 
 #include <stdio.h>
 #include <string>
+
 // #include "graphicEngine.h"
 
 #include <iostream>
 using namespace std;
-
 
 float random(float min, float max);
 string entierToString(int nombre);
