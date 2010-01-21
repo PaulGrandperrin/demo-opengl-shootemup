@@ -27,8 +27,10 @@ private:
     list<ActorPhysique> friendFires;
     list<ActorPhysique> enemiesFires;
     ActorPlayer player;
-    Score score; // TODO faire une classe score Chiffre
-    Text leScore;
+    Score score;
+    Text tScore;
+    Health health;
+    Text tHealth;
 
     int timerGenTrajectorySequence; // Correspond à l'intervalle de temps qui sépare l'apparition de 2 ennemis situes sur une trajectoire differente
     list<int> timersGenEnemy; // chaque element de cette liste correspond au timer d'apparition d'un ennemi sur la trajectoire de meme rang que cet 

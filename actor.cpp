@@ -1,6 +1,7 @@
 #include "actor.h"
 #include "trajectory.h"
 #include <stdlib.h>
+#include <math.h>
 
 // for trace during test , to kept
 #include <iostream>
@@ -22,7 +23,7 @@ Actor::Actor(int idModel, vect position,vect rotation,vect scale)
 // ActorPhysiqye
 //---------------------------------------------------------------
 
-ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale) : Actor(idModel,position,rotation,scale)
+ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale, int health, float mask) : Actor(idModel,position,rotation,scale)
 {
     this->velocity.x=0;
     this->velocity.y=0;
@@ -31,6 +32,9 @@ ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale
     this->acceleration.x=0;
     this->acceleration.y=0;
     this->acceleration.z=0;
+    
+    this->mask=mask;
+    this->health = health;
 }
 
 void ActorPhysique::update(float time) // pas de deleration, gestion simple;
@@ -56,7 +60,7 @@ bool ActorPhysique::sortieEcran(float width, float height)
 //---------------------------------------------------------------
 
 
-ActorPlayer::ActorPlayer(int idModel, vect position,vect rotation,vect scale) : ActorPhysique(idModel,position,rotation,scale)
+ActorPlayer::ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask) : ActorPhysique(idModel,position,rotation,scale,health,mask)
 {
 }
 
@@ -101,7 +105,7 @@ void ActorPlayer::update(float time)
 ////////////////////////////////////////
 
 ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health)
-: ActorPhysique(idModel,position,rotation,scale) {
+: ActorPhysique(idModel,position,rotation,scale,health) {
   if(traj != NULL)
     this->traj = traj;
   else {
@@ -110,7 +114,6 @@ ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Traje
   }
   timeElapsed = 0;
   nextKeyStateRank = 0;
-  this->health = health;
 }
 
 void ActorEnemy::update(float time) {
@@ -133,4 +136,35 @@ void ActorEnemy::update(float time) {
       rank++;
   }
   ActorPhysique::update(time);
+}
+
+bool ActorEnemy::colisionPlayer(ActorPlayer* player) {
+  float dist = 0;
+  float distX,distZ;
+  distX = getPosition().x - player->getPosition().x;
+  distZ = getPosition().z - player->getPosition().z;
+  dist = sqrt(distX*distX + distZ*distZ);
+  if (player->getMask() + getMask() > dist) {
+      player->setHealth(-10);
+  }
+}
+
+bool ActorEnemy::colisionFires(list<ActorPhysique>* fires) {
+    float dist = 0;
+    float distX,distZ;
+    list<ActorPhysique>::iterator itAP;
+    itAP = fires->begin();
+    while(itAP!=fires->end())
+    {
+	distX = getPosition().x - itAP->getPosition().x;
+	distZ = getPosition().z - itAP->getPosition().z;
+	dist = sqrt(distX*distX + distZ*distZ);
+	if (itAP->getMask() + getMask() > dist) {
+	  itAP = fires->erase(itAP);
+	  setHealth(-100);
+	}
+	else {
+	  itAP++;
+	}
+    }
 }

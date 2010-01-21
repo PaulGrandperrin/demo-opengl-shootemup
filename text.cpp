@@ -31,7 +31,7 @@ Text::Text(vector<int> MChiffres, vector<int> MLettersM, string text, vect posit
         rayon = -((text.size()*(esp * scale.x))/(float)2) - (esp * scale.x)/(float)2;
     }
     else if (style == RIGHT) {
-        rayon = -(text.size()*esp*scale.x);
+        rayon = -(text.size()*esp*scale.x)-(esp * scale.x);
     }
 
 // pour chaque caract de la chaine, on ajuste son rayon, calcule la rotation du text avec et creer le caracter avec une petite diference de taille si c'est une Maj ou Min
@@ -70,7 +70,7 @@ void Text::rotate(vect rot) {
         rayon = -((text.size()*espace*scale.x)/(float)2) - espace*scale.x/(float)2;
     }
     else if (style == RIGHT) {
-        rayon = -(text.size()*espace*scale.x);
+        rayon = -(text.size()*espace*scale.x)-(espace * scale.x);
     }
 
     for (itA=caract.begin(); itA!=caract.end(); itA++) {
@@ -114,7 +114,7 @@ void Text::scal(vect sca) {
         rayon = -((text.size()*espace*scale.x)/(float)2) - espace*scale.x/(float)2;
     }
     else if (style == RIGHT) {
-        rayon = -(text.size()*espace*scale.x);
+        rayon = -(text.size()*espace*scale.x)-(espace * scale.x);
     }
 
     int i = 0;
@@ -158,7 +158,7 @@ void Text::translate(vect tr) {
         rayon = -((text.size()*espace*scale.x)/(float)2) - espace*scale.x/(float)2;
     }
     else if (style == RIGHT) {
-        rayon = -(text.size()*espace*scale.x);
+        rayon = -(text.size()*espace*scale.x)-(espace * scale.x);
     }
 
     for (itA=caract.begin(); itA!=caract.end(); itA++) {
@@ -189,7 +189,7 @@ Number::Number(vector<int> MChiffres, int number, vect position, vect rotation, 
         rayon = -((text.size()*(esp * scale.x))/(float)2) - (esp * scale.x)/(float)2;
     }
     else if (style == RIGHT) {
-        rayon = -(text.size()*esp*scale.x);
+        rayon = -(text.size()*esp*scale.x)-(esp * scale.x);
     }
 
 
@@ -223,7 +223,7 @@ void Number::update(vector<int> MChiffres, int number)
         rayon = -((text.size()*(espace * scale.x))/(float)2) - (espace * scale.x)/(float)2;
     }
     else if (style == RIGHT) {
-        rayon = -(text.size()*espace*scale.x);
+        rayon = -(text.size()*espace*scale.x)-(espace * scale.x);
     }
     this->caract.clear();
 
@@ -251,4 +251,15 @@ Score::Score(vector<int> MChiffres, int number, vect position, vect rotation, ve
 void Score::setScore(vector<int> MChiffres, int number) {
   score += number;
   Number::update(MChiffres,score);
+}
+
+Health::Health(vector<int> MChiffres, int number, vect position, vect rotation, vect scale, float esp, TextStyle style) : Number(MChiffres, number, position, rotation, scale, esp, style)
+{
+  this->health = number;
+//   this->MChiffres=&MChiffres;
+}
+
+void Health::setHealth(vector<int> MChiffres, int number) {
+  health = number;
+  Number::update(MChiffres,health);
 }

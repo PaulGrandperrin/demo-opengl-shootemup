@@ -27,16 +27,22 @@ ModeGame::~ModeGame()
 void ModeGame::init(Models* models, Etat* etatGame)
 {
     Mode::init(models, etatGame);
-
+    int intHealth = HEALTH_PLAYER;
     vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
-    player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer);
+    player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer, intHealth ,0.4);
     
     vect pScore={-12.5,0,-11}, rScore= {0,0,0}, sScore={1,1,0.5};
     score = Score(models->getMChiffres(), 0, pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
     
-    vect pText={-12.5,0,-12}, rText= {0,0,0}, sText={0.8,0.8,0.5};
-    leScore = Text(models->getMChiffres(),models->getMLettersM(), "Le Score du Player :", pText, rText, sText, 0.6, LEFT); // test du text, pour l'instant "abcde"
+    vect pLeScore={-12.5,0,-12}, rLeScore= {0,0,0}, sLeScore={0.8,0.8,0.5};
+    tScore = Text(models->getMChiffres(),models->getMLettersM(), "Score", pLeScore, rLeScore, sLeScore, 0.6, LEFT); // test du text, pour l'instant "abcde"
 
+    vect pVie={12.5,0,-11}, rVie= {0,0,0}, sVie={1,1,0.5};
+    health = Health(models->getMChiffres(), intHealth , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
+    
+    vect pLaVie={12.5,0,-12}, rLaVie= {0,0,0}, sLaVie={0.8,0.8,0.5};
+    tHealth = Text(models->getMChiffres(),models->getMLettersM(), "Health", pLaVie, rLaVie, sLaVie, 0.6, RIGHT); // test du text, pour l'instant "abcde"
+    
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
     timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
@@ -109,7 +115,15 @@ void ModeGame::getRender(vector<instance>* instances) {
         for (itA=text.begin(); itA!=text.end(); itA++) {
             instances->push_back(itA->getInstance());
         }
-        text = leScore.getText();
+        text = tScore.getText();
+        for (itA=text.begin(); itA!=text.end(); itA++) {
+            instances->push_back(itA->getInstance());
+        }
+	text = health.getText();
+        for (itA=text.begin(); itA!=text.end(); itA++) {
+            instances->push_back(itA->getInstance());
+        }
+        text = tHealth.getText();
         for (itA=text.begin(); itA!=text.end(); itA++) {
             instances->push_back(itA->getInstance());
         }
@@ -156,12 +170,10 @@ void ModeGame::playerManager()
         friendFires.push_back(fire);
 
         timerGenShoot=INTERVALE_TEMP_SHOOT;
-        score.setScore(models->getMChiffres(), 1); // rien a faire la, mais c'est pour tester
     }
     if ((((stateKeys[K_TIR_SECOND]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
     {
         ActorPhysique fire;
-	int iScore=0;
         for (float f =-0.8;f<=0.8;f+=0.2)
         {
             if (random(0,1) < 0.9) {
@@ -173,7 +185,6 @@ void ModeGame::playerManager()
                 fire=ActorPhysique(models->getMboulet(), pRight, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);
-		iScore++;
             }
             if (random(0,1) < 0.9) {
 		vel.x = 0; vel.z = 0;
@@ -184,11 +195,9 @@ void ModeGame::playerManager()
                 fire=ActorPhysique(models->getMboulet(),pLeft, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);
-		iScore++;
             }
         }
         timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
-	score.setScore(models->getMChiffres(), iScore); // rien a faire la, mais c'est pour tester
     }
     else {
         timerGenShoot--;
@@ -222,7 +231,6 @@ void ModeGame::trajectoriesManager() {
     if(it_traj->getRecordNumbers().size() == 0 && it_traj->getEnemies().size() == 0) {
       it_traj = trajectories.erase(it_traj);
       it_gene = timersGenEnemy.erase(it_gene);
-      cout << "Trajectoire supprimee !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
     }
     else {
       if(*it_gene == TIMER_OFF)
@@ -246,7 +254,7 @@ void ModeGame::enemiesManager()
 {
     list<Trajectory>::iterator it_traj = trajectories.begin();
     list<int>::iterator it_gene = timersGenEnemy.begin();
-    for(int i = 0; i<timersGenEnemy.size(); i++)
+    for(int i = 0; i<(int)timersGenEnemy.size(); i++)
     {
       // On met a jour la position de chacun des ennemis presents sur la trajectoire
       list<ActorEnemy>::iterator it_enn;
@@ -268,6 +276,10 @@ void ModeGame::enemiesManager()
       it_traj++;
       it_gene++;
     }
+    if (timersGenEnemy.empty()) {
+	cout << " Fini " << endl;
+	*etatGame = MENU;
+    }
 }
 
 void ModeGame::collisionManager()
@@ -286,9 +298,16 @@ void ModeGame::collisionManager()
       {
 	if (it_enn->sortieEcran(width+5,height+5)) {
 	  it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
-	  cout << "Un ennemi tue !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-	} else
-	  it_enn++;
+	}else {
+	  it_enn->colisionPlayer(&player);
+	  it_enn->colisionFires(&friendFires);
+	  if (it_enn->isMort()) {
+	    it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
+	    score.setScore(models->getMChiffres(),10);
+	  }
+	  else
+	    it_enn++;
+	}
       }
       it_traj->setEnemies(enemies);
     }
@@ -309,4 +328,10 @@ void ModeGame::collisionManager()
         else
 	  itAP++;
     }
+    
+    if (player.isMort()) {
+	cout << " Player  Mort " << endl;
+	*etatGame = MENU;
+    }
+    health.setHealth(models->getMChiffres(), player.getHealth());
 }

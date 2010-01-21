@@ -69,4 +69,17 @@ class Score : public Number
     int score;
 //     vector<int>* MChiffres;
 };
+
+class Health : public Number
+{
+  public :
+    Health() {};
+    Health(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
+    void setHealth(vector<int> MChiffres, int number);
+    int getHealth() { return health; }
+    
+  private:
+    int health;
+//     vector<int>* MChiffres;
+};
 #endif

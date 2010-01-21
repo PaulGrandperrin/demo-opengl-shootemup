@@ -8,7 +8,7 @@ using namespace std;
 #include "parameters.h"
 #include "instance.h"
 #include "vect.h"
-
+#include <list>
 
 class Actor
 {
@@ -78,8 +78,9 @@ class ActorPhysique: public Actor
 {
 public:
     ActorPhysique() {}
-    ActorPhysique(int idModel, vect position,vect rotation,vect scale);
+    ActorPhysique(int idModel, vect position,vect rotation,vect scale, int health = 1, float mask = 0.3);
     void update(float time);
+    inline bool isMort() { return health <= 0; }
     bool sortieEcran(float width, float height);
 
     inline void setVelocity(vect v) {
@@ -94,11 +95,17 @@ public:
     inline vect getAcceleration() {
         return acceleration;
     }
-
+    inline float getMask() {
+        return mask;
+    }
+    inline int getHealth() { return health; }
+    inline void setHealth(int hel) { health +=hel ; }
+    
 protected:
     vect velocity;
     vect acceleration;
-    //masque
+    float mask;
+    int health;
 
 };
 
@@ -106,12 +113,9 @@ class ActorPlayer: public ActorPhysique
 {
 public:
     ActorPlayer() {}
-    ActorPlayer(int idModel, vect position,vect rotation,vect scale);
+    ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask);
     void update(float time);
     void colisionBord(float width, float height);
-
-protected:
-    //vie
 };
 
 class Trajectory;
@@ -122,11 +126,12 @@ class ActorEnemy : public ActorPhysique {
     ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health);
     void update(float time);
     inline Trajectory * getTraj() { return traj; }
-    inline int getHealth() { return health; }
+    bool colisionPlayer(ActorPlayer* player);
+    bool colisionFires(list<ActorPhysique>* fires);
+    
   private:
     Trajectory * traj;
     float timeElapsed;
     int nextKeyStateRank;
-    int health;
 };
 #endif
