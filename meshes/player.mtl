@@ -1,0 +1,13 @@
+# Blender3D MTL File: player.blend
+# Material Count: 1
+newmtl Material.001_player_oclu.png
+Ns 25.490196
+Ka 0.000000 0.000000 0.000000
+Kd 0.476647 0.476647 0.476647
+Ks 0.144354 0.144354 0.144354
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd player_oclu.png
+
+
