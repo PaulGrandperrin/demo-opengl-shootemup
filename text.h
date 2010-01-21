@@ -63,11 +63,11 @@ class Score : public Number
     Score() {};
     Score(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
     void setScore(vector<int> MChiffres, int number);
+    void initScore(vector<int> MChiffres, int number);
     int getScore() { return score; }
     
   private:
     int score;
-//     vector<int>* MChiffres;
 };
 
 class Health : public Number
@@ -80,6 +80,5 @@ class Health : public Number
     
   private:
     int health;
-//     vector<int>* MChiffres;
 };
 #endif

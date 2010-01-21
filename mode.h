@@ -15,14 +15,15 @@
 class Mode
 {
 public:
-    virtual void init(Models* models,Etat* etatGame);
+    virtual void init(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
     virtual void Manager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
     virtual void getRender(vector<instance>* instances);
 
 protected:
     Etat* etatGame;
+    SwitchEtat* switchMode;
     Models* models;
-
+    Camera* camera;
 
     bool* stateKeys;
     bool* stateButtons;

@@ -245,7 +245,6 @@ void Number::update(vector<int> MChiffres, int number)
 Score::Score(vector<int> MChiffres, int number, vect position, vect rotation, vect scale, float esp, TextStyle style) : Number(MChiffres, number, position, rotation, scale, esp, style)
 {
   this->score = number;
-//   this->MChiffres=&MChiffres;
 }
 
 void Score::setScore(vector<int> MChiffres, int number) {
@@ -253,13 +252,17 @@ void Score::setScore(vector<int> MChiffres, int number) {
   Number::update(MChiffres,score);
 }
 
+void Score::initScore(vector<int> MChiffres, int number) {
+  score = number;
+  Number::update(MChiffres,score);
+}
+
 Health::Health(vector<int> MChiffres, int number, vect position, vect rotation, vect scale, float esp, TextStyle style) : Number(MChiffres, number, position, rotation, scale, esp, style)
 {
   this->health = number;
-//   this->MChiffres=&MChiffres;
 }
 
-void Health::setHealth(vector<int> MChiffres, int number) {
-  health = number;
+void Health::setHealth(vector<int> MChiffres, int number) { //TODO a modifier
+  this->health = number;
   Number::update(MChiffres,health);
 }

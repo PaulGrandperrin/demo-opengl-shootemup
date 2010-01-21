@@ -85,6 +85,9 @@ class Parameters {
 
 #define TEMP_RESETCAM_SMART_PAUSE 50
 
+#define ZOOM_MENU 30 // temps mis pour reset l'angle apres la pause
+#define LATITUDE_MENU 1.5 // temps mis pour reset l'angle apres la pause
+#define LONGITUDE_MENU 0.0 // temps mis pour reset l'angle apres la pause
 #define ZOOM_GAME 30 // temps mis pour reset l'angle apres la pause
 #define LATITUDE_GAME 1.5 // temps mis pour reset l'angle apres la pause
 #define LONGITUDE_GAME 0.0 // temps mis pour reset l'angle apres la pause

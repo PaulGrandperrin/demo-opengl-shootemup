@@ -6,6 +6,7 @@ extern Parameters *parametre;
 
 ViewOpenGl::ViewOpenGl( QWidget *parent) : QGLWidget(parent)
 {
+  passageScreen = false;
     setWindowTitle(tr("Shmup"));
     grabKeyboard();
     grabMouse();
@@ -37,11 +38,15 @@ void ViewOpenGl::paintGL()
     if (game.close()) //FIXME il ya surement une place plus adaptée pour ça
         close();
     
-      if (isFullScreen() && (kb.getStateKeys()[K_ESC])) {
-	  setWindowState(Qt::WindowMaximized);
-      }
-      else if (!isFullScreen() && (kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
+      if (passageScreen && !(kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
+	if (!isFullScreen())
             setWindowState(Qt::WindowFullScreen);
+	else
+	    setWindowState(Qt::WindowMaximized);
+	passageScreen = false;
+      }
+      else if (!passageScreen && (kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
+	passageScreen = true;
       }
 }
 

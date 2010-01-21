@@ -100,6 +100,7 @@ public:
     }
     inline int getHealth() { return health; }
     inline void setHealth(int hel) { health +=hel ; }
+    inline void initHealth(int hel) { health =hel ; }
     
 protected:
     vect velocity;
@@ -126,8 +127,8 @@ class ActorEnemy : public ActorPhysique {
     ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health);
     void update(float time);
     inline Trajectory * getTraj() { return traj; }
-    bool colisionPlayer(ActorPlayer* player);
-    bool colisionFires(list<ActorPhysique>* fires);
+    void colisionPlayer(ActorPlayer* player);
+    void colisionFires(list<ActorPhysique>* fires);
     
   private:
     Trajectory * traj;

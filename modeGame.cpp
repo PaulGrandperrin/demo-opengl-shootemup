@@ -24,9 +24,9 @@ ModeGame::~ModeGame()
     cout << endl; //a cause du compteur de missile, avant de quitter, il faut un seut de ligne
 }
 
-void ModeGame::init(Models* models, Etat* etatGame)
+void ModeGame::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode)
 {
-    Mode::init(models, etatGame);
+    Mode::init(models, camera, etatGame, switchMode);
     int intHealth = HEALTH_PLAYER;
     vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
     player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer, intHealth ,0.4);
@@ -63,19 +63,81 @@ void ModeGame::init(Models* models, Etat* etatGame)
         timersGenEnemy.push_back(TIMER_OFF);
 }
 
+void ModeGame::reinit()
+{
+  
+  // a la fin de la partie, on reinitialise pour la suivante
+  // le score et la sante
+    int intHealth = HEALTH_PLAYER; 
+    health.setHealth(models->getMChiffres(),intHealth);
+    score.initScore(models->getMChiffres(),0);
+    
+    // les actors
+    friendFires.clear();
+    enemiesFires.clear();
+    trajectories.clear();
+    
+    // et le player
+    vect p = {0,0,0};
+    player.setTranslation(p);
+    player.initHealth(intHealth);
+     
+    // les timers!
+    timerGenEnemy=INTERVALE_TEMP_ENEMY;
+    timerGenShoot=INTERVALE_TEMP_SHOOT;
+    timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
+    timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
+    
+    
+    // TODO charger qu'une fois les traj au debut, ici, on est senser les retrouvers
+    //Chargement des trajectoires
+    TrajectoryFile tFile("levels/traj_lvl_default.data");
+    if(!tFile.isEnded()) {
+      tFile.read(trajectories); // On charge les trajectoires dans trajectories
+    } else {
+      cout << "Trajectory file not found !" << endl;
+      exit(0);
+    }
+      
+    // On initialise les timers de generation d'ennemi à TIMER_OFF pour dire qu'ils sont désactivés au début
+    int traj_list_size = trajectories.size();
+    for(int i=0; i<traj_list_size; i++)
+        timersGenEnemy.push_back(TIMER_OFF);
+}
+
 
 void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
-{
-    Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
-
-    playerManager();
-    firesManager();
-    trajectoriesManager();
-    enemiesManager();
-    //bonusManager();
-    //decorManager();
-    collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
-
+  {
+    if (*switchMode == TOGAME && !camera->camOKGame()) {
+      camera->toModeGameSmart();
+    }
+    else if (*switchMode == TOGAME && camera->camOKGame()) {
+      *switchMode = NONE;
+    }
+    else if (*switchMode == TOMENU && (!camera->camOKMenu())) {
+	camera->toModeMenuSmart(); 
+    }
+    else if (*switchMode == TOMENU && (!stateKeys[K_ESC]) && (camera->camOKMenu())) {
+	*switchMode = NONE;
+	*etatGame = MENU; // seulement une fois que la transition est fini, on change l'etat.
+    }
+    else if (*switchMode == NONE && stateKeys[K_ESC]) {
+	*switchMode = TOMENU;
+    }
+    else {
+	Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
+	playerManager();
+	firesManager();
+	trajectoriesManager();
+	enemiesManager();
+	//bonusManager();
+	//decorManager();
+	collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
+	if ((timersGenEnemy.empty()) ||  (player.isMort())) {
+	    this->reinit();
+	    *etatGame = MENU;
+	}
+    }
 
     //Pour le fun
     cout << (char)0x0D << friendFires.size() +  enemiesFires.size()<<" missile(s) " << flush;
@@ -109,6 +171,7 @@ void ModeGame::getRender(vector<instance>* instances) {
         instances->push_back(itAP->getInstance());
     }
 
+// TODO vector de text!
     if (*etatGame == GAME) {
         // on affiche le score ..., et autre info
         text = score.getText();
@@ -276,10 +339,7 @@ void ModeGame::enemiesManager()
       it_traj++;
       it_gene++;
     }
-    if (timersGenEnemy.empty()) {
-	cout << " Fini " << endl;
-	*etatGame = MENU;
-    }
+
 }
 
 void ModeGame::collisionManager()
@@ -299,9 +359,9 @@ void ModeGame::collisionManager()
 	if (it_enn->sortieEcran(width+5,height+5)) {
 	  it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
 	}else {
-	  it_enn->colisionPlayer(&player);
-	  it_enn->colisionFires(&friendFires);
-	  if (it_enn->isMort()) {
+	  it_enn->colisionPlayer(&player); // on regarde si l'ennemi est en colision avec le playerManager
+	  it_enn->colisionFires(&friendFires); // idem avec les tir Player
+	  if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
 	    it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
 	    score.setScore(models->getMChiffres(),10);
 	  }
@@ -328,10 +388,5 @@ void ModeGame::collisionManager()
         else
 	  itAP++;
     }
-    
-    if (player.isMort()) {
-	cout << " Player  Mort " << endl;
-	*etatGame = MENU;
-    }
-    health.setHealth(models->getMChiffres(), player.getHealth());
+    health.setHealth(models->getMChiffres(), player.getHealth()); // al la fin, on met a jour l'objet graphi sante
 }

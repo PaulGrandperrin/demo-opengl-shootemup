@@ -43,25 +43,27 @@ void Camera::setCenterZ(float f) {
 }
 
 
-void Camera::resetSmart()
+
+
+void Camera::resetSmart(float longitudeAim, float latitudeAim, float zoomAim, SwitchEtat toEtat)
 {
     if (resetCamS) {
-	nbfoisResetCamSmart = TEMP_RESETCAM_SMART_PAUSE;
-	stepLong = -(longitude-LONGITUDE_GAME) / TEMP_RESETCAM_SMART_PAUSE;
-	stepLat = -(latitude-LATITUDE_GAME) / TEMP_RESETCAM_SMART_PAUSE;
-	stepZoom = -(zoom - ZOOM_GAME) / TEMP_RESETCAM_SMART_PAUSE;
-	stepCentreX = -centerX / TEMP_RESETCAM_SMART_PAUSE;
-	stepCentreZ = -centerZ / TEMP_RESETCAM_SMART_PAUSE;
+      	nbfoisResetCamSmart = TEMP_RESETCAM_SMART_PAUSE;
+	stepLong = -(longitude-longitudeAim) / nbfoisResetCamSmart;
+	stepLat = -(latitude-latitudeAim) / nbfoisResetCamSmart;
+	stepZoom = -(zoom - zoomAim) / nbfoisResetCamSmart;
+	stepCentreX = -centerX / nbfoisResetCamSmart;
+	stepCentreZ = -centerZ / nbfoisResetCamSmart;
 	resetCamS = false;
     }
 
-    if (longitude != LONGITUDE_GAME) {
+    if (longitude != longitudeAim) {
         longitude += stepLong;
     }
-    if (latitude != LATITUDE_GAME) {
+    if (latitude != latitudeAim) {
         latitude += stepLat;
     }
-    if (zoom != ZOOM_GAME) {
+    if (zoom != zoomAim) {
         zoom += stepZoom;
     }
     if (centerX != 0) {
@@ -74,13 +76,16 @@ void Camera::resetSmart()
     nbfoisResetCamSmart--; // on approche du {0,0,ZOOM_DEFAULT,0,0}
     
     if (nbfoisResetCamSmart == 0) { // on est tres proche donc on peut le faire
-        longitude=LONGITUDE_GAME;
-        latitude=LATITUDE_GAME;
-        zoom=ZOOM_GAME;
+        longitude=longitudeAim;
+        latitude=latitudeAim;
+        zoom=zoomAim;
         centerX = 0;
         centerZ = 0;
     }
-    if (camOK()) {
+    if ((toEtat == TOMENU) && (camOKMenu())) {
+      	resetCamS = true; // pour une qutre fois
+    }
+    if ((toEtat == TOGAME) && (camOKGame())) {
       	resetCamS = true; // pour une qutre fois
     }
 

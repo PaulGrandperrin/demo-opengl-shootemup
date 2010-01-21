@@ -60,6 +60,7 @@ private:
     Game game;
     QTime time;
     int width,height;
+    bool passageScreen;
 };
 
 #endif

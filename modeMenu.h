@@ -11,7 +11,7 @@ class ModeMenu : public Mode
 {
 public:
     ~ModeMenu();
-    void init(Models* models,Etat* etatGame);
+    void init(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
     void menuManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
 
     void getRender(vector<instance>* instances);
@@ -31,6 +31,7 @@ private:
     */
     int itemSelected;
     Text textPlay; // "aaaaaaa"
+    Text textPause;
     Text textOption;
     Text textQuit; // "aaaaaaa"
     bool keyDown, keyUp;

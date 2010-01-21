@@ -25,6 +25,7 @@ Game::~Game()
 void Game::init()
 {
     etatGame = MENU;
+    switchMode = NONE;
     passagePause = false;
     passageMenu = false;
 
@@ -34,9 +35,9 @@ void Game::init()
     models.chargerModels(&GE);
 
     // on initialise les different mode (etat) du jeu
-    menu.init(&models,&etatGame);
-    gamePlay.init(&models,&etatGame);
-    pause.init(&models, &cam,&etatGame);
+    menu.init(&models, &cam,&etatGame, &switchMode);
+    gamePlay.init(&models, &cam,&etatGame, &switchMode);
+    pause.init(&models, &cam,&etatGame, &switchMode);
 
     srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
     
@@ -60,53 +61,14 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
     
     
     if (etatGame==MENU) {
-        if (!passageMenu && stateKeys[K_MENU]) {
-            passageMenu = true;
-        }
-        else if (passageMenu && !stateKeys[K_MENU]) {
-            passageMenu = false;
-            etatGame = GAME; // seulement une fois que la transition est fini, on change l'etat.
-        }
-        else {
-            menu.menuManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
-        }
+	menu.menuManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
     }
-
     else if (etatGame==GAME) {
-        if (passageMenu && (!stateKeys[K_MENU])) {
-            passageMenu = false;
-            etatGame = MENU; // seulement une fois que la transition est fini, on change l'etat.
-        }
-        else if (!passageMenu && stateKeys[K_MENU]) {
-            passageMenu = true;
-        }
-        else if (passagePause && ((!stateKeys[K_PAUSE]) && (cam.camOK()))) {
-            passagePause = false;
-            etatGame = PAUSE; // seulement une fois que la transition est fini, on change l'etat.
-        }
-        else if (!passagePause && stateKeys[K_PAUSE]) {
-            passagePause = true;
-        }
-        else {
-            gamePlay.gameManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
-        }
+	gamePlay.gameManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
     }
-
     else if (etatGame==PAUSE) {
-        if (passagePause && (!cam.camOK())) {
-            cam.resetSmart();
-        }
-        else if (passagePause && ((!stateKeys[K_PAUSE]) && (cam.camOK()))) {
-            passagePause =false;
-            etatGame = GAME;
-        }
-        else if (!passagePause && stateKeys[K_PAUSE]) {
-            passagePause = true;
-        }
-        else {
-	  //le menu est la seule exception au lieu d'envoyer les coordonnées de la souris on envoie un delta
-            pause.pauseManager(stateKeys, stateButtons, {coordMouse.x-oldMouse.x,coordMouse.y-oldMouse.y}, deltaWheel, time, width, height);
-        }
+	Point coord={coordMouse.x-oldMouse.x,coordMouse.y-oldMouse.y};
+	pause.pauseManager(stateKeys, stateButtons, coord, deltaWheel, time, width, height);
     }
 
     if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND])) {

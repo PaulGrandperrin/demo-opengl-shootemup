@@ -138,7 +138,7 @@ void ActorEnemy::update(float time) {
   ActorPhysique::update(time);
 }
 
-bool ActorEnemy::colisionPlayer(ActorPlayer* player) {
+void ActorEnemy::colisionPlayer(ActorPlayer* player) {
   float dist = 0;
   float distX,distZ;
   distX = getPosition().x - player->getPosition().x;
@@ -149,7 +149,7 @@ bool ActorEnemy::colisionPlayer(ActorPlayer* player) {
   }
 }
 
-bool ActorEnemy::colisionFires(list<ActorPhysique>* fires) {
+void ActorEnemy::colisionFires(list<ActorPhysique>* fires) {
     float dist = 0;
     float distX,distZ;
     list<ActorPhysique>::iterator itAP;

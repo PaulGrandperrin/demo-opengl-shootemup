@@ -11,7 +11,8 @@ class ModeGame : public Mode
 {
 public:
     ~ModeGame();
-    void init(Models* models,Etat* etatGame);
+    void init(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
+    void reinit();
     void gameManager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
 
     void getRender(vector<instance>* instances);

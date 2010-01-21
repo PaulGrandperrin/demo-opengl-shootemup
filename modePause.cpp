@@ -20,11 +20,10 @@ ModePause::~ModePause()
 {
 }
 
-void ModePause::init(Models* models, Camera* camera,Etat* etatGame)
+void ModePause::init(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode)
 {
     resetCam=false;
-    this->camera = camera;
-    Mode::init(models, etatGame);
+    Mode::init(models, camera, etatGame, switchMode);
 
     vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
     cursorPause = Actor(models->getMCursorPause(), p, r, s);
@@ -33,12 +32,31 @@ void ModePause::init(Models* models, Camera* camera,Etat* etatGame)
 
 
 void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
-{//NOTE:le coordMouse est l'ancien deltaMouse seul le nom change
-    Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
+{
+	if (*switchMode == TOMENU && (!camera->camOKMenu())) {
+            camera->toModeMenuSmart();
+        }
+        else if (*switchMode == TOMENU && ((!stateKeys[K_ESC]) && (camera->camOKMenu()))) {
+            *switchMode = NONE;
+            *etatGame = MENU;
+        }
+        else if (*switchMode == NONE && stateKeys[K_ESC]) {
+            *switchMode = TOMENU;
+        }
+        else {
+	    //NOTE:le coordMouse est l'ancien deltaMouse seul le nom change
+	      Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
+	      moveCam();
+	}
 
-    if (resetCam) {
-        camera->resetSmart();
-        if (camera->camOK()) {
+
+
+}
+
+void ModePause::moveCam() {
+      if (resetCam) {
+        camera->toModeMenuSmart();
+        if (camera->camOKMenu()) {
             resetCam=false;
 	    vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
 	    cursorPause = Actor(models->getMCursorPause(), p, r, s);
@@ -53,8 +71,8 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordM
         }
         else if ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT])) {
             resetCam=true;
-            camera->resetSmart();
-            if (camera->camOK())
+            camera->toModeMenuSmart();
+            if (camera->camOKMenu())
                 resetCam=false;
         }
     }
@@ -132,7 +150,6 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordM
         if (stateKeys[K_RIGHT])
             camera->setLongitude(-0.02);
     }
-
 }
 
 

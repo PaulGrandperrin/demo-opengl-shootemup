@@ -29,6 +29,7 @@ public:
 private:
 
     Etat etatGame; // Etat defini dans function;h -> a deplacer TODO
+    SwitchEtat switchMode;
     void render();
     void gameManager();
 

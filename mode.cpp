@@ -18,11 +18,12 @@ using namespace std;
 
 
 
-void Mode::init(Models* models, Etat* etatGame)
+void Mode::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode)
 {
-
+    this->switchMode = switchMode;
     this->etatGame = etatGame;
     this->models = models;
+    this->camera = camera;
 }
 
 
