@@ -15,7 +15,7 @@ using namespace std;
 #include <QString>
 #include <QFont>
 #include <QGLWidget>
-
+#include <iostream>
 /* Classe general qui contient tout les caractere possible (0.9,A.z) */
 
 
@@ -38,7 +38,14 @@ public:
     void translate(vect t);
     void rotate(vect r);
     void scal(vect s);
-
+    
+    inline Point getXY() {
+	Point p;
+	p.x=((caract.size())*(espace * scale.x))/2;
+	p.y=scale.z/2;
+	return p;
+    }
+       
 protected:
     vect position;
     vect rotation;

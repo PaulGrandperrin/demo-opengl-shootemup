@@ -28,22 +28,27 @@ void ModeMenu::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* 
     keyDown=false;
     keyUp=false;
     vect pPlay={0,2,-6}, rPlay={0,0,0}, sPlay={2.5,2.5,1.5};
-    textPlay = Text(models->getMChiffres(),models->getMLettersM(), "Play Game", pPlay, rPlay, sPlay, 0.6, CENTER); // test du text, pour l'instant "abcde"
+    textPlay = Text(models->getMChiffres(),models->getMLettersM(), "Play Game", pPlay, rPlay, sPlay, 0.6, CENTER);
     
     vect pPause={0,2,-3}, rPause={0,0,0}, sPause={2,2,1};
     textPause = Text(models->getMChiffres(),models->getMLettersM(), "Stop Motion", pPause, rPause, sPause, 0.6, CENTER); // test du text, pour l'instant "abcde"
 
     vect pOption={0,2,0}, rOption={0,0,0}, sOption={2,2,1};
-    textOption = Text(models->getMChiffres(),models->getMLettersM(), "Rien", pOption, rOption, sOption, 0.6, CENTER);
+    textOption = Text(models->getMChiffres(),models->getMLettersM(), "Option", pOption, rOption, sOption, 0.6, CENTER);
     
     vect pQuit={0,2,3}, rQuit={0,0,0}, sQuit={2,2,1};
-    textQuit = Text(models->getMChiffres(),models->getMLettersM(), "Quit Game", pQuit, rQuit, sQuit, 0.6, CENTER); // test du text, pour l'instant "aaaaaaa"
+    textQuit = Text(models->getMChiffres(),models->getMLettersM(), "Quit Game", pQuit, rQuit, sQuit, 0.6, CENTER);
 
 }
 
 
 void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height)
 {
+    float halfWidth=width/2;
+    float halfHeight=height/2;
+    float curHeightScale=height/24;
+    float curWidthScale=width/24;
+    
       Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
       //cout << "les coordonnées sont : x = " << coordMouse.x << " et y = " << coordMouse.y << endl;
       if(stateKeys[K_DOWN] && !keyDown) {
@@ -133,7 +138,6 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
 	    *etatGame = GAME;
 	    *switchMode = TOGAME;
 	}
-  // 	  *etatGame=GAME;
 	else if(itemSelected==1)
 	    *etatGame=PAUSE;
 	else if(itemSelected==2)
@@ -141,6 +145,158 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
 	else if(itemSelected==3)
 	    *etatGame=STOP;
       }
+//---gestion de la souris--
+
+    //test pour play
+    /*cout << "Coordonnée de xmin de Play : " << halfWidth-textPlay.getXY().x*curWidthScale << endl;*/
+     if((coordMouse.x >= halfWidth-textPlay.getXY().x*curWidthScale) && (coordMouse.y <= halfHeight+(textPlay.getPosition().z+textPlay.getXY().y)*curHeightScale) &&
+       (coordMouse.x <= halfWidth+textPlay.getXY().x*curWidthScale) && (coordMouse.y >= halfHeight+(textPlay.getPosition().z-textPlay.getXY().y)*curHeightScale)) {
+	//on est sur play
+	/*cout << "on rentre dans play" <<endl;*/
+	vect s={-0.5,-0.5,-0.5};
+	switch(itemSelected) {
+	  case 0:
+	    //on fait rien play est deja en gros
+	    break;
+	  case 1:
+	    textPause.scal(s);// on réduit option
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textPlay.scal(s);//on agrandit play
+	    itemSelected=0;//on le déclare comme séléctionné
+	    break;
+	  case 2:
+	    textOption.scal(s);
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textPlay.scal(s);//on agrandit play
+	    itemSelected=0;//on le déclare comme séléctionné
+	    break;
+	  case 3:
+	    textQuit.scal(s);
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textPlay.scal(s);//on agrandit play
+	    itemSelected=0;//on le déclare comme séléctionné
+	    break;
+	}
+	//on test si l'on a cliqué auquel cas on active l'etat
+	if(stateButtons[B_LEFT]) {
+	  *etatGame=GAME;
+	  //break;//on break la boucle pour même pas évaluer la touche ENTER
+	  //NOTE: je sais pas si il est utile
+	}
+    }
+    
+    if((coordMouse.x >= halfWidth-textPause.getXY().x*curWidthScale) && (coordMouse.y <= halfHeight+(textPause.getPosition().z+textPause.getXY().y)*curHeightScale) &&
+       (coordMouse.x <= halfWidth+textPause.getXY().x*curWidthScale) && (coordMouse.y >= halfHeight+(textPause.getPosition().z-textPause.getXY().y)*curHeightScale)) {
+	//on est sur Pause
+	/*cout << "on rentre dans pause" <<endl;*/
+	vect s={-0.5,-0.5,-0.5};
+	switch(itemSelected) {
+	  case 0:
+	    textPlay.scal(s);// on réduit play
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textPause.scal(s);//on agrandit pause
+	    itemSelected=1;//on le déclare comme séléctionné
+	    break;
+	  case 1:
+	    //on fai rien
+	    break;
+	  case 2:
+	    textOption.scal(s);//on réduit quit
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textPause.scal(s);//on agrandit Pause
+	    itemSelected=1;//on le déclare comme séléctionné
+	    break;
+	  case 3:
+	    textQuit.scal(s);//on réduit quit
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textPause.scal(s);//on agrandit Pause
+	    itemSelected=1;//on le déclare comme séléctionn
+	    break;
+	}
+	//on test si l'on a cliqué auquel cas on active l'etat
+	if(stateButtons[B_LEFT]) {
+	  *etatGame=PAUSE;
+	}
+    }
+    
+    
+    
+    //test pour Option
+     /*cout << "Coordonnée de xmin de Option : " << halfWidth-textOption.getXY().x*curWidthScale << endl;*/
+     if((coordMouse.x >= halfWidth-textOption.getXY().x*curWidthScale) && (coordMouse.y <= halfHeight+(textOption.getPosition().z+textOption.getXY().y)*curHeightScale) &&
+       (coordMouse.x <= halfWidth+textOption.getXY().x*curWidthScale) && (coordMouse.y >= halfHeight+(textOption.getPosition().z-textOption.getXY().y)*curHeightScale)) {
+	//on est sur Option
+	/*cout << "on rentre dans option" <<endl;*/
+	vect s={-0.5,-0.5,-0.5};
+	switch(itemSelected) {
+	  case 0:
+	    textPlay.scal(s);// on réduit play
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textOption.scal(s);//on agrandit option
+	    itemSelected=2;//on le déclare comme séléctionné
+	    break;
+	  case 1:
+	    textPause.scal(s);
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textOption.scal(s);//on agrandit option
+	    itemSelected=2;//on le déclare comme séléctionné
+	    break;
+	  case 2:
+	    //on fait rien on est deja sur Pause
+	    break;
+	  case 3:
+	    textQuit.scal(s);//on réduit Quit
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textOption.scal(s);//on agrandit option
+	    itemSelected=2;//on le déclare comme séléctionné
+	    break;
+	}
+	//on test si l'on a cliqué auquel cas on active l'etat
+	if(stateButtons[B_LEFT]) {
+	  cout << "fonction non implémentée" << endl;
+	  //break;//on break la boucle pour même pas évaluer la touche ENTER
+	  //NOTE: je sais pas si il est utile
+	}
+    }
+    
+    //test pour Quit
+        /*cout << "Coordonnée de xmin de Quit : " << halfWidth-textQuit.getXY().x*curWidthScale << endl;*/
+     if((coordMouse.x >= halfWidth-textQuit.getXY().x*curWidthScale) && (coordMouse.y <= halfHeight+(textQuit.getPosition().z+textQuit.getXY().y)*curHeightScale) &&
+       (coordMouse.x <= halfWidth+textQuit.getXY().x*curWidthScale) && (coordMouse.y >= halfHeight+(textQuit.getPosition().z-textQuit.getXY().y)*curHeightScale)) {
+	//on est sur Quit
+	/*cout << "on rentre dans quit" <<endl;*/
+	vect s={-0.5,-0.5,-0.5};
+	switch(itemSelected) {
+	  case 0:
+	    textPlay.scal(s);// on réduit play
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textQuit.scal(s);//on agrandit option
+	    itemSelected=3;//on le déclare comme séléctionné
+	    break;
+	  case 1:
+	    textPause.scal(s);//on réduit Option
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textQuit.scal(s);//on agrandit Quit
+	    itemSelected=3;//on le déclare comme séléctionné
+	    break;
+	  case 2:
+	    textOption.scal(s);//on réduit Option
+	    s.x=0.5; s.y=0.5; s.z=0.5;
+	    textQuit.scal(s);//on agrandit Quit
+	    itemSelected=3;//on le déclare comme séléctionné
+	    break;
+	  case 3:
+	    //on fait rien on est deja sur Quit
+	    break;
+	}
+	//on test si l'on a cliqué auquel cas on active l'etat
+	if(stateButtons[B_LEFT]) {
+	  *etatGame=STOP;
+	  //break;//on break la boucle pour même pas évaluer la touche ENTER
+	  //NOTE: je sais pas si il est utile
+	}
+    }
+
 
 }
 
@@ -166,11 +322,3 @@ void ModeMenu::getRender(vector<instance>* instances) {
         instances->push_back(itA->getInstance());
     }
 }
-
-//comment faire pour que sa ne change pas 2000 mille fois quand on appuye une fois
-//comment resize le text ?? si on pouvait me donner plus d'explication sur le render
-  //Utilise un booleen "changement" qui tant que c'est appuiez reste a true et change le bouton une fois que la touche est relache
-  //tu peut metre que si la touche n'est pas relacher dans la 1/2 seconde on passe quand meme au bouton suivant , pour ensuite passer au suivant du suivant !
-  //C'est des proposition, il y a biensure 50 facon de la faire !
-
-//++creer un tableau ou un truc comme sa pour gérer les K_UP...
