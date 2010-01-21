@@ -180,6 +180,7 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
 	//on test si l'on a cliqué auquel cas on active l'etat
 	if(stateButtons[B_LEFT]) {
 	  *etatGame=GAME;
+	  *switchMode = TOGAME;
 	  //break;//on break la boucle pour même pas évaluer la touche ENTER
 	  //NOTE: je sais pas si il est utile
 	}

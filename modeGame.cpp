@@ -76,6 +76,7 @@ void ModeGame::reinit()
     friendFires.clear();
     enemiesFires.clear();
     trajectories.clear();
+    timersGenEnemy.clear();
     
     // et le player
     vect p = {0,0,0};
@@ -117,7 +118,7 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
     else if (*switchMode == TOMENU && (!camera->camOKMenu())) {
 	camera->toModeMenuSmart(); 
     }
-    else if (*switchMode == TOMENU && (!stateKeys[K_ESC]) && (camera->camOKMenu())) {
+    else if (*switchMode == TOMENU && (camera->camOKMenu())) {
 	*switchMode = NONE;
 	*etatGame = MENU; // seulement une fois que la transition est fini, on change l'etat.
     }
@@ -135,7 +136,7 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
 	collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
 	if ((timersGenEnemy.empty()) ||  (player.isMort())) {
 	    this->reinit();
-	    *etatGame = MENU;
+	    *switchMode = TOMENU;
 	}
     }
 

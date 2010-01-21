@@ -36,12 +36,14 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordM
 	if (*switchMode == TOMENU && (!camera->camOKMenu())) {
             camera->toModeMenuSmart();
         }
-        else if (*switchMode == TOMENU && ((!stateKeys[K_ESC]) && (camera->camOKMenu()))) {
+        else if (*switchMode == TOMENU && (camera->camOKMenu())) {
             *switchMode = NONE;
             *etatGame = MENU;
         }
         else if (*switchMode == NONE && stateKeys[K_ESC]) {
             *switchMode = TOMENU;
+	    vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
+	    cursorPause = Actor(models->getMCursorPause(), p, r, s);
         }
         else {
 	    //NOTE:le coordMouse est l'ancien deltaMouse seul le nom change
@@ -58,8 +60,6 @@ void ModePause::moveCam() {
         camera->toModeMenuSmart();
         if (camera->camOKMenu()) {
             resetCam=false;
-	    vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
-	    cursorPause = Actor(models->getMCursorPause(), p, r, s);
         }
     }
     else if (stateKeys[K_CTRL]) {
@@ -71,6 +71,8 @@ void ModePause::moveCam() {
         }
         else if ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT])) {
             resetCam=true;
+	    vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
+	    cursorPause = Actor(models->getMCursorPause(), p, r, s);
             camera->toModeMenuSmart();
             if (camera->camOKMenu())
                 resetCam=false;
