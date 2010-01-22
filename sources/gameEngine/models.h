@@ -33,10 +33,6 @@ public :
     vector<int> getMLettersM() {
         return MLettersM;
     }
-    // obsolete pour le moment
-//     vector<int> getMLettersm() {
-//         return MLettersA;
-//     }
     inline vector<EnemyInfo> getEnemiesInfos() {
       return enemiesInfos;
     }
@@ -45,7 +41,6 @@ public :
     int Mplayer,Mboulet,MCursorPause;
     vector<int> MChiffres;
     vector<int> MLettersM;
-//     vector<int> MLettersm; // vide pour l'instant, Majuscules
     vector<EnemyInfo> enemiesInfos;
 };
 

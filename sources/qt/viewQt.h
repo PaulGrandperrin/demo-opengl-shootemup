@@ -11,7 +11,6 @@
 #include <QKeyEvent>
 #include <QThread>
 #include <QTime>
-// // for qDebug()
 
 using namespace std;
 
