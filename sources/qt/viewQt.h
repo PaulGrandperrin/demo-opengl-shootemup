@@ -34,9 +34,11 @@ public:
     ViewOpenGl(QWidget *parent = 0);
     ~ViewOpenGl();
 
-    QSize minimumSizeHint() const;
+    // les parametres de la fenetre
+    QSize minimumSizeHint() const; // obsolete
     QSize sizeHint() const;
 
+    // les evement des entre (clavier, souris, molette)
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent * event);
     void mousePressEvent(QMouseEvent * event);

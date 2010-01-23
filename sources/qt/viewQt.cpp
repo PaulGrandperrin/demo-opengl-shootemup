@@ -7,7 +7,8 @@ extern Parameters *parametre;
 
 ViewOpenGl::ViewOpenGl( QWidget *parent) : QGLWidget(parent)
 {
-  passageScreen = false;
+    setMinimumSize(QSize(parametre->getTailleMinX(),parametre->getTailleMinY())); // le minimunSizeHint n'a pas d'effets, a voir. 
+    passageScreen = false;
     setWindowTitle(tr("Shmup"));
     grabKeyboard();
     grabMouse();

@@ -77,7 +77,7 @@ class ActorPhysique: public Actor
 {
 public:
     ActorPhysique() {}
-    ActorPhysique(int idModel, vect position,vect rotation,vect scale, int health = 1, float mask = 0.3);
+    ActorPhysique(int idModel, vect position,vect rotation,vect scale, int health = 1, int damage = 50, float mask = 0.3);
     void update(float time);
     inline bool isMort() { return health <= 0; }
     bool sortieEcran(float width, float height);
@@ -98,6 +98,7 @@ public:
         return mask;
     }
     inline int getHealth() { return health; }
+    inline int getDamage() { return damage; }
     inline void setHealth(int hel) { health +=hel ; }
     inline void initHealth(int hel) { health =hel ; }
     
@@ -106,14 +107,14 @@ protected:
     vect acceleration;
     float mask;
     int health;
-
+    int damage;
 };
 
 class ActorPlayer: public ActorPhysique
 {
 public:
     ActorPlayer() {}
-    ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask);
+    ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask, int damage);
     void update(float time);
     void colisionBord(float width, float height);
 };
@@ -123,10 +124,10 @@ class Trajectory;
 class ActorEnemy : public ActorPhysique {
   public:
     ActorEnemy() {};
-    ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health);
+    ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health, int damage);
     void update(float time);
     inline Trajectory * getTraj() { return traj; }
-    void colisionPlayer(ActorPlayer* player);
+    bool colisionPlayer(ActorPlayer* player);
     void colisionFires(list<ActorPhysique>* fires);
     
   private:

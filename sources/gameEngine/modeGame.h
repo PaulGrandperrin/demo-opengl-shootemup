@@ -1,5 +1,5 @@
-#ifndef GAMEPLAY_H_
-#define GAMEPLAY_H_
+#ifndef MODEGAME_H_
+#define MODEGAME_H_
 
 #include <list>
 #include <math.h>
@@ -32,6 +32,10 @@ private:
     Text tScore;
     Health health;
     Text tHealth;
+    Text tEnd;
+    
+    bool end;
+    bool toEnd;
 
     int timerGenTrajectorySequence; // Correspond à l'intervalle de temps qui sépare l'apparition de 2 ennemis situes sur une trajectoire differente
     list<int> timersGenEnemy; // chaque element de cette liste correspond au timer d'apparition d'un ennemi sur la trajectoire de meme rang que cet 

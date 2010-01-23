@@ -97,7 +97,7 @@ void ModePause::moveCam() {
         }
         else if (stateKeys[K_RIGHT]) {
             camera->setCenterX(0.05);
-	    vect t={-0.05,0,0};
+	    vect t={0.05,0,0};
             cursorPause.translate( t);
         }
         if ((deltaWheel != 0)) {

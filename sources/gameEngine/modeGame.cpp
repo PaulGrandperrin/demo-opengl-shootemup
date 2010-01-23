@@ -26,10 +26,13 @@ ModeGame::~ModeGame()
 
 void ModeGame::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode)
 {
+    end = false;
+    toEnd = false;
     Mode::init(models, camera, etatGame, switchMode);
     int intHealth = HEALTH_PLAYER;
+    int intDamage = DAMAGE_PLAYER;
     vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
-    player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer, intHealth ,0.4);
+    player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer, intHealth, intDamage ,0.4);
     
     vect pScore={-12.5,0,-11}, rScore= {0,0,0}, sScore={1,1,0.5};
     score = Score(models->getMChiffres(), 0, pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
@@ -42,6 +45,9 @@ void ModeGame::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* 
     
     vect pLaVie={12.5,0,-12}, rLaVie= {0,0,0}, sLaVie={0.8,0.8,0.5};
     tHealth = Text(models->getMChiffres(),models->getMLettersM(), "Health", pLaVie, rLaVie, sLaVie, 0.6, RIGHT); // test du text, pour l'instant "abcde"
+    
+    vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={3,3,2};
+    tEnd = Text(models->getMChiffres(),models->getMLettersM(), "End", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
     
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
@@ -65,45 +71,17 @@ void ModeGame::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* 
 
 void ModeGame::reinit()
 {
-  
+    
   // a la fin de la partie, on reinitialise pour la suivante
   // le score et la sante
-    int intHealth = HEALTH_PLAYER; 
-    health.setHealth(models->getMChiffres(),intHealth);
-    score.initScore(models->getMChiffres(),0);
-    
-    // les actors
+ 
+    // on vide les lists
     friendFires.clear();
     enemiesFires.clear();
     trajectories.clear();
     timersGenEnemy.clear();
-    
-    // et le player
-    vect p = {0,0,0};
-    player.setTranslation(p);
-    player.initHealth(intHealth);
-     
-    // les timers!
-    timerGenEnemy=INTERVALE_TEMP_ENEMY;
-    timerGenShoot=INTERVALE_TEMP_SHOOT;
-    timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
-    timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
-    
-    
-    // TODO charger qu'une fois les traj au debut, ici, on est senser les retrouvers
-    //Chargement des trajectoires
-    TrajectoryFile tFile("levels/traj_lvl_default.data");
-    if(!tFile.isEnded()) {
-      tFile.read(trajectories); // On charge les trajectoires dans trajectories
-    } else {
-      cout << "Trajectory file not found !" << endl;
-      exit(0);
-    }
-      
-    // On initialise les timers de generation d'ennemi à TIMER_OFF pour dire qu'ils sont désactivés au début
-    int traj_list_size = trajectories.size();
-    for(int i=0; i<traj_list_size; i++)
-        timersGenEnemy.push_back(TIMER_OFF);
+ 
+    this->init(models,camera,etatGame,switchMode);
 }
 
 
@@ -119,6 +97,9 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
 	camera->toModeMenuSmart(); 
     }
     else if (*switchMode == TOMENU && (camera->camOKMenu())) {
+      if (end) { // si on retourne au menu et que c'est la fin, on reinitialise
+	  this->reinit();
+      }
 	*switchMode = NONE;
 	*etatGame = MENU; // seulement une fois que la transition est fini, on change l'etat.
     }
@@ -127,16 +108,26 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
     }
     else {
 	Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
-	playerManager();
-	firesManager();
-	trajectoriesManager();
-	enemiesManager();
-	//bonusManager();
-	//decorManager();
-	collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
-	if ((timersGenEnemy.empty()) ||  (player.isMort())) {
-	    this->reinit();
-	    *switchMode = TOMENU;
+	if (end) {
+	    if (toEnd && !(stateKeys[K_ENTER] && stateButtons[B_LEFT])) { // et on attend une action pour sortir
+//  		this->reinit();
+		*switchMode = TOMENU;
+	    }
+	    if (stateKeys[K_ENTER] || stateButtons[B_LEFT]) {
+		toEnd = true;     
+	    }
+	}
+	else {
+	    playerManager();
+	    firesManager();
+	    trajectoriesManager();
+	    enemiesManager();
+	    //bonusManager();
+	    //decorManager();
+	    collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
+	    if ((timersGenEnemy.empty()) ||  (player.isMort())) {
+		end = true; // c'est la fin, on bloque les fonctions du jeu.
+	    }
 	}
     }
 
@@ -173,7 +164,7 @@ void ModeGame::getRender(vector<instance>* instances) {
     }
 
 // TODO vector de text!
-    if (*etatGame == GAME) {
+    if (*etatGame == GAME && *switchMode == NONE) {
         // on affiche le score ..., et autre info
         text = score.getText();
         for (itA=text.begin(); itA!=text.end(); itA++) {
@@ -191,6 +182,12 @@ void ModeGame::getRender(vector<instance>* instances) {
         for (itA=text.begin(); itA!=text.end(); itA++) {
             instances->push_back(itA->getInstance());
         }
+        if (end) {
+	  text = tEnd.getText();
+	  for (itA=text.begin(); itA!=text.end(); itA++) {
+	      instances->push_back(itA->getInstance());
+	  }
+	}
     }
 }
 /*
@@ -330,7 +327,9 @@ void ModeGame::enemiesManager()
       if(it_traj->getRecordNumbers().size() && *it_gene <=0)
       {
 	int rec_num = *(it_traj->getRecordNumbers().begin());
-	ActorEnemy e(models->getEnemiesInfos()[rec_num].idModel,it_traj->getInitialPosition(),{0,0,0},{1,1,1},&(*it_traj),models->getEnemiesInfos()[rec_num].health);
+	vect r={0,0,0}, s={1,1,1};
+	int damage = ACTOR_DAMAGE;
+	ActorEnemy e(models->getEnemiesInfos()[rec_num].idModel,it_traj->getInitialPosition(),r,s,&(*it_traj),damage,models->getEnemiesInfos()[rec_num].health);
 	it_traj->addEnemy(e);
 	it_traj->removeFirstRecordNumber(); // On enleve le numero d'enregistrement pour dire qu'on a bien cree l'ennemi
 	*it_gene = it_traj->getInterval();
@@ -360,9 +359,12 @@ void ModeGame::collisionManager()
 	if (it_enn->sortieEcran(width+5,height+5)) {
 	  it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
 	}else {
-	  it_enn->colisionPlayer(&player); // on regarde si l'ennemi est en colision avec le playerManager
 	  it_enn->colisionFires(&friendFires); // idem avec les tir Player
-	  if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
+	  if (it_enn->colisionPlayer(&player)) { // on regarde si l'ennemi est en colision avec le playerManager
+	    it_enn = enemies.erase(it_enn);
+	    player.setHealth(-it_enn->getDamage());
+	  }
+	  else if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
 	    it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
 	    score.setScore(models->getMChiffres(),10);
 	  }

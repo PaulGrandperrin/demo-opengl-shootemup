@@ -51,6 +51,8 @@ class Parameters {
     int TAILLE_MIN_Y;
 };
 #define HEALTH_PLAYER 1000;
+#define DAMAGE_PLAYER 0;
+#define ACTOR_DAMAGE 100;
 
 #define TYPE_DEFAULT_MESH 1
 #define TAILLE_DEFAULT_VAISSEAU 0.1

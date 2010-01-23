@@ -23,7 +23,7 @@ Actor::Actor(int idModel, vect position,vect rotation,vect scale)
 // ActorPhysiqye
 //---------------------------------------------------------------
 
-ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale, int health, float mask) : Actor(idModel,position,rotation,scale)
+ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale, int health, int damage, float mask) : Actor(idModel,position,rotation,scale)
 {
     this->velocity.x=0;
     this->velocity.y=0;
@@ -35,6 +35,7 @@ ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale
     
     this->mask=mask;
     this->health = health;
+    this->damage = damage;
 }
 
 void ActorPhysique::update(float time) // pas de deleration, gestion simple;
@@ -60,7 +61,7 @@ bool ActorPhysique::sortieEcran(float width, float height)
 //---------------------------------------------------------------
 
 
-ActorPlayer::ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask) : ActorPhysique(idModel,position,rotation,scale,health,mask)
+ActorPlayer::ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask, int damage) : ActorPhysique(idModel,position,rotation,scale,health,damage,mask)
 {
 }
 
@@ -104,8 +105,8 @@ void ActorPlayer::update(float time)
 // ActorEnemy
 ////////////////////////////////////////
 
-ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health)
-: ActorPhysique(idModel,position,rotation,scale,health) {
+ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health, int damage)
+: ActorPhysique(idModel,position,rotation,scale,damage,health) {
   if(traj != NULL)
     this->traj = traj;
   else {
@@ -142,15 +143,13 @@ void ActorEnemy::update(float time) {
   ActorPhysique::update(time);
 }
 
-void ActorEnemy::colisionPlayer(ActorPlayer* player) {
+bool ActorEnemy::colisionPlayer(ActorPlayer* player) {
   float dist = 0;
   float distX,distZ;
   distX = getPosition().x - player->getPosition().x;
   distZ = getPosition().z - player->getPosition().z;
   dist = sqrt(distX*distX + distZ*distZ);
-  if (player->getMask() + getMask() > dist) {
-      player->setHealth(-10);
-  }
+  return (player->getMask() + getMask() > dist);
 }
 
 void ActorEnemy::colisionFires(list<ActorPhysique>* fires) {
@@ -165,7 +164,7 @@ void ActorEnemy::colisionFires(list<ActorPhysique>* fires) {
 	dist = sqrt(distX*distX + distZ*distZ);
 	if (itAP->getMask() + getMask() > dist) {
 	  itAP = fires->erase(itAP);
-	  setHealth(-100);
+	  setHealth(-itAP->getDamage());
 	}
 	else {
 	  itAP++;
