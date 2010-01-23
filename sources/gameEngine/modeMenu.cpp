@@ -19,7 +19,7 @@ using namespace std;
 ModeMenu::~ModeMenu()
 {
 }
-
+//problème du init
 void ModeMenu::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode)
 {
     Mode::init(models, camera, etatGame, switchMode);
