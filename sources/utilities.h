@@ -15,7 +15,7 @@ string charToString(char ca );
 
 enum Etat
 {
-    STOP, GAME, MENU, PAUSE
+    STOP, GAME, MENU, PAUSE, NO
 };
 
 enum SwitchEtat
