@@ -4,11 +4,12 @@
 #include <list>
 #include <math.h>
 
-#include "./objects/actor.h"
 #include "./models.h"
 #include "../parameters.h"
 #include "../utilities.h"
+#include "./objects/actor.h"
 #include "./objects/text.h"
+#include "./objects/fond.h"
 #include "./objects/camera.h"
 
 

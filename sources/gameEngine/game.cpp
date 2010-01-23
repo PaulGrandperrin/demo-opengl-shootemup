@@ -37,6 +37,7 @@ void Game::init()
     menu.init(&models, &cam,&etatGame, &switchMode);
     gamePlay.init(&models, &cam,&etatGame, &switchMode);
     pause.init(&models, &cam,&etatGame, &switchMode);
+    gamePlay.initFond();
 
     srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
     

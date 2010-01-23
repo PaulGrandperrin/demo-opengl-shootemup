@@ -54,6 +54,9 @@ class Parameters {
 #define DAMAGE_PLAYER 0;
 #define ACTOR_DAMAGE 100;
 
+#define NB_NUAGE 6 // le nombre de nuage sur la scene
+#define NB_SOL 20
+
 #define TYPE_DEFAULT_MESH 1
 #define TAILLE_DEFAULT_VAISSEAU 0.1
 #define POSX_DEFAULT_VAISSEAU 0

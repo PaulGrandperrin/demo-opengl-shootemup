@@ -69,6 +69,12 @@ void ModeGame::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* 
         timersGenEnemy.push_back(TIMER_OFF);
 }
 
+void ModeGame::initFond()
+{
+    vect pFond={0,-3,0}, rFond= {0,0,0}, sFond={2,2,2}, vFond={0,0,2};
+    fond = Fond(models->getMNuages(), models->getMSols(), pFond, rFond, sFond, vFond); // test du text, pour l'instant "abcde"
+}
+
 void ModeGame::reinit()
 {
     
@@ -125,6 +131,7 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
 	    //bonusManager();
 	    //decorManager();
 	    collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
+	    fond.update(dTime);
 	    if ((timersGenEnemy.empty()) ||  (player.isMort())) {
 		end = true; // c'est la fin, on bloque les fonctions du jeu.
 	    }
@@ -140,11 +147,23 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
 void ModeGame::getRender(vector<instance>* instances) {
 
     // on recupere toute les instances a afficher
-    vector<Actor> text;
+    vector<Actor> vActor;
     vector<Actor>::iterator itA;
     list<ActorPhysique>::iterator itAP;
-
+    
+    // le fond en premier pour la transparence.
+    vActor = fond.getSols();
+    for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+	instances->push_back(itA->getInstance());
+    }
+    vActor = fond.getNuages();
+    for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+	instances->push_back(itA->getInstance());
+    }
+    // le player 
     instances->push_back(player.getInstance());
+    
+    // le enemies
     list<Trajectory>::iterator it_traj;
     //NOTE La boucle qui suit semble ne pas fonctionner !!!
     for(it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
@@ -163,28 +182,28 @@ void ModeGame::getRender(vector<instance>* instances) {
         instances->push_back(itAP->getInstance());
     }
 
-// TODO vector de text!
+    // les text, score et health et End si c'est la fin
     if (*etatGame == GAME && *switchMode == NONE) {
         // on affiche le score ..., et autre info
-        text = score.getText();
-        for (itA=text.begin(); itA!=text.end(); itA++) {
+        vActor = score.getText();
+        for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
             instances->push_back(itA->getInstance());
         }
-        text = tScore.getText();
-        for (itA=text.begin(); itA!=text.end(); itA++) {
+        vActor = tScore.getText();
+        for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
             instances->push_back(itA->getInstance());
         }
-	text = health.getText();
-        for (itA=text.begin(); itA!=text.end(); itA++) {
+	vActor = health.getText();
+        for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
             instances->push_back(itA->getInstance());
         }
-        text = tHealth.getText();
-        for (itA=text.begin(); itA!=text.end(); itA++) {
+        vActor = tHealth.getText();
+        for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
             instances->push_back(itA->getInstance());
         }
         if (end) {
-	  text = tEnd.getText();
-	  for (itA=text.begin(); itA!=text.end(); itA++) {
+	  vActor = tEnd.getText();
+	  for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
 	      instances->push_back(itA->getInstance());
 	  }
 	}

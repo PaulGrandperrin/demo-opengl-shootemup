@@ -30,8 +30,14 @@ public :
     inline vector<int> getMChiffres() {
         return MChiffres;
     }
-    vector<int> getMLettersM() {
+    inline vector<int> getMLettersM() {
         return MLettersM;
+    }
+    inline vector<int> getMNuages() {
+        return MNuages;
+    }
+    inline vector<int> getMSols() {
+        return MSols;
     }
     inline vector<EnemyInfo> getEnemiesInfos() {
       return enemiesInfos;
@@ -41,6 +47,8 @@ public :
     int Mplayer,Mboulet,MCursorPause;
     vector<int> MChiffres;
     vector<int> MLettersM;
+    vector<int> MNuages;
+    vector<int> MSols;
     vector<EnemyInfo> enemiesInfos;
 };
 

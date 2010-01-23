@@ -14,7 +14,13 @@ void Models::chargerModels(graphicEngine* GE) {
         MChiffres.push_back(GE->loadModel("meshes/chiffres/" + entierToString(i) + ".obj","textures/noir.png"));
     }
     for (char c = 'A'; c<='Z'; c++) {
-      MLettersM.push_back(GE->loadModel("meshes/letters/" + charToString(c) + ".obj","textures/noir.png"));
+	MLettersM.push_back(GE->loadModel("meshes/letters/" + charToString(c) + ".obj","textures/noir.png"));
+    }
+    for (int i=1; i<=2;i++) {
+	MNuages.push_back(GE->loadModel("meshes/plan.obj","textures/nuage" + entierToString(i) + ".png"));
+    }
+    for (int i=1; i<=2;i++) {
+	MSols.push_back(GE->loadModel("meshes/plan.obj","textures/sol" + entierToString(i) + ".png"));
     }
     
     // Chargement des infos des ennemis
