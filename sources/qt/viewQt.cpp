@@ -58,7 +58,6 @@ void ViewOpenGl::paintGL()
 	QPixmap originalPixmap = QPixmap::grabWindow(winId());
 	QString format = "png";
 	QString dateTime = QDateTime::currentDateTime().toString();
-
 	QDir dir;
 	dir = dir.current();
 	if(!(dir.exists("screenshots"))) {
