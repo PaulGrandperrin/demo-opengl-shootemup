@@ -23,26 +23,24 @@ Game::~Game()
 {
 }
 
-void Game::init()
+Game::Game() // construction des camera, du GE et des autre objets tell que les Mode, mais il seront reconstruit apres de toute maniere
 {
     etatGame = MENU;
     switchMode = NONE;
 
-    cam.init();
-    GE.init();
-
-    models.chargerModels(&GE);
+    // on abesoin du GE pour construire les models
+    models = Models(&GE);
 
     // on initialise les different mode (etat) du jeu
-    menu.init(&models, &cam,&etatGame, &switchMode);
-    gamePlay.init(&models, &cam,&etatGame, &switchMode);
-    pause.init(&models, &cam,&etatGame, &switchMode);
-    gamePlay.initFond();
+    mMenu = ModeMenu(&models, &cam,&etatGame, &switchMode);
+    mGame = ModeGame(&models, &cam,&etatGame, &switchMode);
+    mPause = ModePause(&models, &cam,&etatGame, &switchMode);
+
+    vect pFond={0,-3,0}, rFond= {0,0,0}, sFond={2,2,2}, vFond={0,0,2};
+    fond = Fond(models.getMNuages(), models.getMSols(), pFond, rFond, sFond, vFond);
 
     srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
-    
-    //oldMouse.x=0.0;
-    //oldMouse.y=0.0;
+
 }
 
 void Game::resize(int width,int heigth)
@@ -61,14 +59,22 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
     
     
     if (etatGame==MENU) {
-	menu.menuManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
+	if (mGame.isEnd()) { // si on retourne au menu et que c'est la fin, on reinitialise
+	   mGame = ModeGame(&models, &cam,&etatGame, &switchMode);
+	}
+	mMenu.menuManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
     }
     else if (etatGame==GAME) {
-	gamePlay.gameManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
+	fond.update(dTime);
+	mGame.gameManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
     }
     else if (etatGame==PAUSE) {
 	Point coord={coordMouse.x-oldMouse.x,coordMouse.y-oldMouse.y};
-	pause.pauseManager(stateKeys, stateButtons, coord, deltaWheel, time, width, height);
+	mPause.pauseManager(stateKeys, stateButtons, coord, deltaWheel, time, width, height);
+    }
+    else if (etatGame==OPTION) {
+	cout << "XXXXXXXXX" << endl;
+	etatGame = MENU;
     }
 
     if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND])) {
@@ -86,18 +92,31 @@ void Game::render()
 {
     // on recolte toute les instances afficher!
     vector<instance> instances;
-
+    vector<Actor> vActor;
+    vector<Actor>::iterator itA;
+    
+    if (etatGame != PAUSE) { // pour l'instant on fait ça, mais peut etre l'afficher quand meme est metre une contraint a la camera !!
+	// le fond en premier pour la transparence.
+	vActor = fond.getSols();
+	for (itA=vActor.begin(); itA!=vActor.end(); itA++) { // sol en premier car c'est le premier niveau
+	    instances.push_back(itA->getInstance());
+	}
+	vActor = fond.getNuages();
+	for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+	    instances.push_back(itA->getInstance());
+	}
+    }
 
     if (etatGame==MENU) {
-        menu.getRender(&instances);
-        gamePlay.getRender(&instances); // pour Paul
+        mMenu.getRender(&instances);
+        mGame.getRender(&instances); // pour Paul
     }
     else if (etatGame==GAME) {
-        gamePlay.getRender(&instances);
+        mGame.getRender(&instances);
     }
     else if (etatGame==PAUSE) {
-        gamePlay.getRender(&instances);
-        pause.getRender(&instances);
+        mGame.getRender(&instances);
+        mPause.getRender(&instances);
     }
     camera came = {(-sin(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom()) + cam.getCenterX(), (sin(cam.getLatitude())*cam.getZoom())/* + camera.getCenterZ()*/, cos(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom() + cam.getCenterZ(), cam.getCenterX(), 0 , cam.getCenterZ(),0,1,0};
     lightVec light = {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}};

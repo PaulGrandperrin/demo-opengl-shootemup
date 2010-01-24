@@ -11,12 +11,12 @@ class ModeGame : public Mode
 {
 public:
     ~ModeGame();
-    void init(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
-    void reinit();
-    void initFond(); // on  init le fond qu'une saul fois au debut du jeu.
+    ModeGame() {}
+    ModeGame(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
     void gameManager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
 
     void getRender(vector<instance>* instances);
+    bool isEnd() { return end; }
 
 private:
     void playerManager();
@@ -34,8 +34,6 @@ private:
     Health health;
     Text tHealth;
     Text tEnd;
-    
-    Fond fond;
     
     bool end;
     bool toEnd;

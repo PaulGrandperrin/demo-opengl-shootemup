@@ -20,10 +20,9 @@ ModePause::~ModePause()
 {
 }
 
-void ModePause::init(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode)
+ModePause::ModePause(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode) : Mode(models, camera, etatGame, switchMode)
 {
     resetCam=false;
-    Mode::init(models, camera, etatGame, switchMode);
 
     vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
     cursorPause = Actor(models->getMCursorPause(), p, r, s);
@@ -56,6 +55,7 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordM
 }
 
 void ModePause::moveCam() {
+  
       if (resetCam) {
         camera->toModeMenuSmart();
         if (camera->camOKMenu()) {
@@ -152,6 +152,14 @@ void ModePause::moveCam() {
         if (stateKeys[K_RIGHT])
             camera->setLongitude(-0.02);
     }
+    
+    // pour ne pas passer sous le fond
+//     int y = sin(camera->getLatitude()) * camera->getZoom();
+//     if (y < -2) {
+//       camera->setLatitude(0.01);
+//       camera->setZoom(0.01);
+//       cout << "dehors " << endl;
+//     }
 }
 
 

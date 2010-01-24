@@ -98,15 +98,6 @@ bool vertexfLess ( const vertexf &a, const vertexf &b ) //c'est jolie hein, ca f
 
 graphicEngine::graphicEngine()
 {  
-}
-
-graphicEngine::~graphicEngine()
-{
-      //TODO
-}
-
-void graphicEngine::init()
-{
   glewInit(); 	//chargement des adresses des pointeurs de fonction des extentions d'openGL
   ilInit();  	//initialisation de devIL
   
@@ -117,6 +108,24 @@ void graphicEngine::init()
   glAlphaFunc(GL_EQUAL,255);
   cout << "openGL initialized"<<endl;
 }
+
+graphicEngine::~graphicEngine()
+{
+      //TODO
+}
+
+// void graphicEngine::init()
+// {
+//   glewInit(); 	//chargement des adresses des pointeurs de fonction des extentions d'openGL
+//   ilInit();  	//initialisation de devIL
+//   
+//   glClearColor ( 1,1,1,0 );
+//   glEnable (GL_TEXTURE_2D);
+//   glEnable(GL_DEPTH_TEST);
+//   glEnable(GL_ALPHA_TEST);
+//   glAlphaFunc(GL_EQUAL,255);
+//   cout << "openGL initialized"<<endl;
+// }
 
 void graphicEngine::resize(int width,int height)
 {

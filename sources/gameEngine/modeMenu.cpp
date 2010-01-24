@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <sstream>
+#include <typeinfo>
 
 /* le plan de jeu ce fait sur xz */
 
@@ -16,16 +17,28 @@
 #include <iostream>
 using namespace std;
 
-void ModeMenu::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode)
+ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode) : Mode(models, camera, etatGame, switchMode)
 {
-    Mode::init(models, camera, etatGame, switchMode);
     itemSelected=&itemPlay;
     keyDown=false;
     keyUp=false;
-    MenuItem itemPlay(models->getMChiffres(),models->getMLettersM(), "Play Game", {0,2,-6}, {0,0,0}, {2.5,2.5,1.5}, 0.6, CENTER,true,GAME,TOGAME);
-    MenuItem itemPause(models->getMChiffres(),models->getMLettersM(), "Stop Motion", {0,2,-3}, {0,0,0},{2,2,1}, 0.6, CENTER,false,PAUSE,TOPAUSE);
-    MenuItem itemOption(models->getMChiffres(),models->getMLettersM(), "Option",{0,2,0},{0,0,0}, {2,2,1}, 0.6, CENTER,false,NO,NONE);
-    MenuItem itemQuit(models->getMChiffres(),models->getMLettersM(), "Quit Game", {0,2,3}, {0,0,0}, {2,2,1}, 0.6, CENTER,false,STOP,NONE);
+    select = 0;
+    selectMouse = 0;
+    
+    // on reconstruit les objet du menu
+    vect pPlay={0,2,-6}, rPlay={0,0,0}, sPlay={2.5,2.5,1.5};
+    MenuItem itemPlay(models->getMChiffres(),models->getMLettersM(), "Play Game",pPlay, rPlay, sPlay, 0.6, CENTER,true,GAME,TOGAME);
+    
+    vect pPause={0,2,-3}, rPause={0,0,0}, sPause={2,2,1};
+    MenuItem itemPause(models->getMChiffres(),models->getMLettersM(), "Stop Motion", pPause, rPause,sPause, 0.6, CENTER,false,PAUSE,NONE);
+    
+    vect pOption={0,2,0}, rOption={0,0,0}, sOption={2,2,1};
+    MenuItem itemOption(models->getMChiffres(),models->getMLettersM(), "Option",pOption, rOption, sOption, 0.6, CENTER,false,OPTION,NONE);
+    
+    vect pQuit={0,2,3}, rQuit={0,0,0}, sQuit={2,2,1};
+    MenuItem itemQuit(models->getMChiffres(),models->getMLettersM(), "Quit Game", pQuit, rQuit, sQuit, 0.6, CENTER,false,STOP,NONE);
+
+    
     this->vectorItems.push_back(itemPlay);
     this->vectorItems.push_back(itemPause);
     this->vectorItems.push_back(itemOption);
@@ -44,27 +57,19 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
       if(stateKeys[K_DOWN] && !keyDown) {
 	//si on appuye sur down et qu'il est pas activé
 	keyDown=true;//on l'active
+	vect s={-0.5,-0.5,-0.5}; // on diminue la taille du courant
+	vectorItems[select].changeScale(s);
 	
-	/*vector<MenuItem>::iterator it;
-	for (it=vectorItems.begin(); it!=vectorItems.end(); it++) {
-	      //utiliser la methode sans iterateur
-	      vect s={0.5,0.5,0.5};
-	      if(it==vectorItems.end() {//si on est sur le dernier*/
-	for(unsigned int i=0; i<vectorItems.size();i++) {
-	  vect s={0.5,0.5,0.5};
-	  if(&vectorItems[i]==itemSelected) {//si on est sur l'item selectionné
-	      if(i==vectorItems.size()) {//si on est sur le dernier*/
-		  vectorItems[0].changeScale(s);//on agrandit le premier!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		  *itemSelected=vectorItems[0];//l'item selectionné devient le premier
-	      }
-	      else {
-		  vectorItems[i+1].changeScale(s);//on agrandit le suivant!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		  itemSelected=&vectorItems[i+1];
-	      }
-	      s.x=-0.5; s.y=-0.5; s.z=-0.5;
-	      vectorItems[i].changeScale(s);//dans tout les cas on réduit le courant!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	  }
+	s.x=0.5; s.y=0.5; s.z=0.5; // on selectionne le suivant et on augement sa taille
+	if (select == (int)vectorItems.size()-1) { // dernier -> suivant = 0
+	  vectorItems[0].changeScale(s);
+	  select = 0;
 	}
+	else {
+	  vectorItems[select+1].changeScale(s);
+	  select +=1;
+	}
+	selectMouse = -1; // on annule la secection de la souris
       }
       else if(!stateKeys[K_DOWN] && keyDown) {
 	//si keyDown est actif mais qu'on a relaché K_DOWN
@@ -75,22 +80,19 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
       if(stateKeys[K_UP] && !keyUp) {
 	//si on appuye sur down et qu'il est pas activé
 	keyUp=true;//on l'active
+	vect s={-0.5,-0.5,-0.5};
+	vectorItems[select].changeScale(s);
 	
-	for(unsigned int i=0; i<vectorItems.size();i++) {
-	  vect s={0.5,0.5,0.5};
-	  if(&vectorItems[i]==itemSelected) {//si on est sur l'item selectionné
-	      if(i==0) {//si on est sur le premier
-		  vectorItems[vectorItems.size()].changeScale(s);//on agrandit le dernier!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		  *itemSelected=vectorItems[vectorItems.size()];//l'item selectionné devient le dernier
-	      }
-	      else {
-		  vectorItems[i+1].changeScale(s);//on agrandit le suivant!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		  *itemSelected=vectorItems[i+1];
-	      }
-	      s.x=-0.5; s.y=-0.5; s.z=-0.5;
-	      vectorItems[i].changeScale(s);//dans tout les cas on réduit le courant!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	  }
+	s.x=0.5; s.y=0.5; s.z=0.5;
+	if (select == 0) {
+	  vectorItems[vectorItems.size()-1].changeScale(s);
+	  select = vectorItems.size()-1;
 	}
+	else {
+	  vectorItems[select-1].changeScale(s);
+	  select -=1;
+	}
+	selectMouse = -1; // on annule la secection de la souris
       }
       else if(!stateKeys[K_UP] && keyUp) {
 	//si keyDown est actif mais qu'on a relaché K_DOWN
@@ -99,42 +101,44 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
       
       //gestion de la touche entrée en fonctione
       if(stateKeys[K_ENTER]) {
-	for(unsigned int i=0; i<vectorItems.size();i++) {
-	    if(&vectorItems[i]==itemSelected) {//si on est sur l'item selectionné
+	for(int i=0; i<(int)vectorItems.size();i++) {
+	    if(i==select) {//si on est sur l'item selectionné
 		*etatGame = vectorItems[i].getState();
 		*switchMode = vectorItems[i].getSwitchState();
 	    }
 	}
       }
 
-      //gestion de la souris
-	for(unsigned int i=0; i<vectorItems.size();i++) {
-		vect s={0.5,0.5,0.5};
-		if(vectorItems[i].mouseOver(coordMouse,halfWidth,halfHeight,curHeightScale,curWidthScale)) {//si la souris est sur l'item
-			if(itemSelected==&vectorItems[i]) {//si la souris est sur l'item selectionnée on ne fais rien
-			}
-			else {
-				vectorItems[i].changeScale(s);//on agrandit l'item!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				s.x=-0.5; s.y=-0.5; s.z=-0.5;
-				for(unsigned int j=0; j<vectorItems.size();j++)
-					if(&vectorItems[j]==itemSelected)
-						vectorItems[j].changeScale(s);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				//itemSelected.changeScale(s);//on reduit l'item selectionné
-				itemSelected=&vectorItems[i];//l'item selectionné devient celui sur lequel on est
-			}
-			
-			if(stateButtons[B_LEFT]) {//si le bouton de la souris est cliqué on change l'etat
-				*etatGame=vectorItems[i].getState();
-				*switchMode = vectorItems[i].getSwitchState();
-			}
-		break;//on sort de la boucle car la souris ne peut pas être a deux endroit en même temps
+      //gestion de la souris     
+	for (int i=0; i<(int)vectorItems.size();i++) {
+		vect s={-0.5,-0.5,-0.5};
+		if(!vectorItems[i].mouseOver(coordMouse,halfWidth,halfHeight,curHeightScale,curWidthScale) && selectMouse == i && select != i) {//si la souris n'est plus sur l'item precedement selectionne
+		    vectorItems[selectMouse].changeScale(s);
+		    selectMouse = select;
+		}
+		if(vectorItems[i].mouseOver(coordMouse,halfWidth,halfHeight,curHeightScale,curWidthScale) && selectMouse != i && i != select) {//si la souris est sur l'item
+			vectorItems[select].changeScale(s);
+			select = i;
+			s.x = 0.5; s.y=0.5; s.z=0.5;
+			vectorItems[i].changeScale(s);
+			selectMouse = i;
 		}
 	}
+		
+	
+	if(stateButtons[B_LEFT] && selectMouse != -1) {//si le bouton de la souris est cliqué on change l'etat
+	    *etatGame=vectorItems[selectMouse].getState();
+	    *switchMode = vectorItems[selectMouse].getSwitchState();
+	}
+		  
 
 }
 
 
 void ModeMenu::getRender(vector<instance>* instances) {
-    for(unsigned int i=0; i<vectorItems.size();i++)
-	vectorItems[i].getRender(instances);
+    vector<MenuItem>::iterator itA;
+    for (itA=vectorItems.begin(); itA!=vectorItems.end(); itA++) {
+	itA->getRender(instances);
+    }
+
 }

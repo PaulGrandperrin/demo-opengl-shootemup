@@ -27,17 +27,17 @@ ViewOpenGl::~ViewOpenGl()
 
 void ViewOpenGl::initializeGL()
 {
-    game.init();
+    game = new Game();
 }
 
 void ViewOpenGl::paintGL()
 {
     float t=time.elapsed(); // TODO Delta time
     time.restart();
-    game.update(kb.getStateKeys(),mouse.getStateButtons(),mouse.getCoordMouse(), mouse.getDeltaWheel(),t,width,height);
+    game->update(kb.getStateKeys(),mouse.getStateButtons(),mouse.getCoordMouse(), mouse.getDeltaWheel(),t,width,height);
     mouse.updateWheel(0); //naicessaire, sinon le delta (molette) n'est pas calculer
     
-    if (game.close()) //FIXME il ya surement une place plus adaptée pour ça
+    if (game->close()) //FIXME il ya surement une place plus adaptée pour ça
         close();
     
       if (passageScreen && !(kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
@@ -54,7 +54,7 @@ void ViewOpenGl::paintGL()
 
 void ViewOpenGl::resizeGL(int width, int height)
 {
-    game.resize(width,height);
+    game->resize(width,height);
     this->width=width;
     this->height=height;
 }

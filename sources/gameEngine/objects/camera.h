@@ -8,7 +8,7 @@ class Camera
 {
 public:
 
-    inline void init() {
+    Camera() {
         longitude=LONGITUDE_MENU;
         latitude=LATITUDE_MENU; //3.14158/2
         zoom=ZOOM_MENU;
@@ -19,11 +19,9 @@ public:
     }
     inline bool camOKMenu() {
         return ((longitude==LONGITUDE_MENU) && (latitude==LATITUDE_MENU) && (zoom==ZOOM_MENU) && (centerX == 0) && (centerZ == 0));
-        //return true;
     }
     inline bool camOKGame() {
         return ((longitude==LONGITUDE_GAME) && (latitude==LATITUDE_GAME) && (zoom==ZOOM_GAME) && (centerX == 0) && (centerZ == 0));
-        //return true;
     }
 
     void setZoom(float f);

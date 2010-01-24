@@ -44,7 +44,7 @@ class graphicEngine
   public:
     graphicEngine();
     ~graphicEngine();
-    void init();
+//     void init();
     
     void resize(int width,int height);
     

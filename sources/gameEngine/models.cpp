@@ -6,7 +6,8 @@
 
 
 
-void Models::chargerModels(graphicEngine* GE) {
+Models::Models(graphicEngine* GE) {
+  
     Mplayer=GE->loadModel("meshes/player.obj","textures/player.png");
     Mboulet=GE->loadModel("meshes/boulet.obj","textures/boulet.png");
     MCursorPause=GE->loadModel("meshes/cursorPause.obj","textures/noir.png");

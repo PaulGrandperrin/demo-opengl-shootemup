@@ -55,7 +55,7 @@ private:
     Keyboard kb;
     Mouse mouse;
     ThreadQt thread;
-    Game game;
+    Game * game;
     QTime time;
     int width,height;
     bool passageScreen;

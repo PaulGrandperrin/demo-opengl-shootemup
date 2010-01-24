@@ -18,7 +18,7 @@ using namespace std;
 
 
 
-void Mode::init(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode)
+Mode::Mode(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode)
 {
     this->switchMode = switchMode;
     this->etatGame = etatGame;
@@ -38,10 +38,4 @@ void Mode::Manager(bool stateKeys[], bool stateButtons[], Point coordMouse, int 
     this->heightView=height;
     this->width=NB_UNITY_WIDTH;
     this->height=NB_UNITY_HEIGHT;
-}
-
-
-void Mode::getRender(vector<instance>*) {
-
-    // on recupere toute les instances a afficher
 }

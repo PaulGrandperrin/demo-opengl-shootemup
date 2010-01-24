@@ -17,7 +17,7 @@ class Game
 {
 public:
     ~Game();
-    void init();
+    Game();
     void update(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
     void resize(int width,int heigth);
     inline bool close() {
@@ -31,9 +31,10 @@ private:
     void gameManager();
 
     // les differents modes du jeu!
-    ModeGame gamePlay;
-    ModeMenu menu;
-    ModePause pause;
+    ModeGame mGame;
+    ModeMenu mMenu;
+    ModePause mPause;
+    Fond fond;
 
     // tout les models qu'il peut exister
     Models models;

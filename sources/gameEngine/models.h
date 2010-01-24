@@ -16,8 +16,9 @@ using namespace std;
 
 class Models {
 public :
-    Models() {};
-    void chargerModels(graphicEngine* GE);
+    Models() {}
+    Models(graphicEngine* GE); // on charge tout les models 3D
+    
     inline int getMplayer() {
         return Mplayer;
     }

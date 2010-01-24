@@ -30,7 +30,7 @@ Fond::Fond(vector<int> MNuages, vector<int> MSols,vect position,vect rotation,ve
 	plan = Actor(MNuages[choix], p, r, s);
 	this->nuages.push_back(plan);
     }
-    p.y = -5; // on descend le sol par rapporgt aux nuages
+    p.y += -2; // on descend le sol par rapporgt aux nuages
     s.x += 1; // et on agrandit les plan pour recouvrir une plan grande surface
     s.y+= 1;
     s.z += 1;
