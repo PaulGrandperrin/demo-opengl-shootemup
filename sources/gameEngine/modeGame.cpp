@@ -126,7 +126,7 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
 }
 
 
-void ModeGame::getRender(vector<instance>* instances) {
+void ModeGame::getRender(vector<instance>* instances, vector<instance>* instances2D) {
 
     // on recupere toute les instances a afficher
     vector<Actor> vActor;
@@ -160,24 +160,24 @@ void ModeGame::getRender(vector<instance>* instances) {
         // on affiche le score ..., et autre info
         vActor = score.getText();
         for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-            instances->push_back(itA->getInstance());
+            instances2D->push_back(itA->getInstance());
         }
         vActor = tScore.getText();
         for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-            instances->push_back(itA->getInstance());
+            instances2D->push_back(itA->getInstance());
         }
         vActor = health.getText();
         for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-            instances->push_back(itA->getInstance());
+            instances2D->push_back(itA->getInstance());
         }
         vActor = tHealth.getText();
         for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-            instances->push_back(itA->getInstance());
+            instances2D->push_back(itA->getInstance());
         }
         if (end) {
             vActor = tEnd.getText();
             for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-                instances->push_back(itA->getInstance());
+                instances2D->push_back(itA->getInstance());
             }
         }
     }

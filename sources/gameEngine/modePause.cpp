@@ -167,18 +167,17 @@ void ModePause::moveCam() {
             camera->setLongitude(-0.02);
     }
 
-    // pour ne pas passer sous le fond
 }
 
 
-void ModePause::getRender(vector<instance>* instances) {
+void ModePause::getRender(vector<instance>* instances, vector<instance>* instances2D) {
     instances->push_back(cursorPause.getInstance());
     
     vector<Actor> vActor; // on affche le text du modePause //TODO camera
     vector<Actor>::iterator itA;
     vActor = tPause.getText();
     for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-	instances->push_back(itA->getInstance());
+	instances2D->push_back(itA->getInstance());
     }
 }
 

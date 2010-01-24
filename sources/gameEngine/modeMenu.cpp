@@ -28,16 +28,16 @@ ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     oldMouse.y = 0;
 
     // on reconstruit les objet du menu
-    vect pPlay={0,2,-6}, rPlay={0,0,0}, sPlay={2.5,2.5,1.5};
+    vect pPlay={0,0,-6}, rPlay={0,0,0}, sPlay={2.5,2.5,1.5};
     MenuItem itemPlay(models->getMChiffres(),models->getMLettersM(), "Play Game",pPlay, rPlay, sPlay, 0.6, CENTER,GAME,TOGAME);
 
-    vect pPause={0,2,-3}, rPause={0,0,0}, sPause={2,2,1};
+    vect pPause={0,0,-3}, rPause={0,0,0}, sPause={2,2,1};
     MenuItem itemPause(models->getMChiffres(),models->getMLettersM(), "Stop Motion", pPause, rPause,sPause, 0.6, CENTER,PAUSE,NONE);
 
-    vect pOption={0,2,0}, rOption={0,0,0}, sOption={2,2,1};
+    vect pOption={0,0,0}, rOption={0,0,0}, sOption={2,2,1};
     MenuItem itemOption(models->getMChiffres(),models->getMLettersM(), "Option",pOption, rOption, sOption, 0.6, CENTER,OPTION,NONE);
 
-    vect pQuit={0,2,3}, rQuit={0,0,0}, sQuit={2,2,1};
+    vect pQuit={0,0,3}, rQuit={0,0,0}, sQuit={2,2,1};
     MenuItem itemQuit(models->getMChiffres(),models->getMLettersM(), "Quit Game", pQuit, rQuit, sQuit, 0.6, CENTER,STOP,NONE);
 
     this->vectorItems.push_back(itemPlay);
@@ -149,10 +149,10 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
 }
 
 
-void ModeMenu::getRender(vector<instance>* instances) {
+void ModeMenu::getRender(vector<instance>* instances, vector<instance>* instances2D) {
     vector<MenuItem>::iterator itA;
     for (itA=vectorItems.begin(); itA!=vectorItems.end(); itA++) {
-        itA->getRender(instances);
+        itA->getRender(instances2D);
     }
 
 }

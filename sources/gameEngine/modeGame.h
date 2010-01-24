@@ -15,7 +15,7 @@ public:
     ModeGame(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
     void gameManager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
 
-    void getRender(vector<instance>* instances);
+    void getRender(vector<instance>* instances,vector<instance>* instances2D);
     bool isEnd() {
         return end;
     }

@@ -18,7 +18,7 @@ public:
     ModePause() {}
     ModePause(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
     void pauseManager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
-    void getRender(vector<instance>* instances);
+    void getRender(vector<instance>* instances,vector<instance>* instances2D);
 
 private:
     void moveCam();

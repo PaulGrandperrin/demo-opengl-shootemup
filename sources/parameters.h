@@ -54,6 +54,11 @@ private :
 #define DAMAGE_PLAYER 0;
 #define ACTOR_DAMAGE 100;
 
+
+#define POSTFX_NOTHING 0
+#define POSTFX_BLUR 1
+#define POSTFX_WATER 2
+
 #define NB_NUAGE 6 // le nombre de nuage sur la scene
 #define NB_SOL 20
 

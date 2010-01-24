@@ -15,7 +15,7 @@ public:
     ModeMenu(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
     void menuManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
 
-    void getRender(vector<instance>* instances);
+    void getRender(vector<instance>* instances,vector<instance>* instances2D);
 
 private:
     Point oldMouse;

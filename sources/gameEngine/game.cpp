@@ -26,9 +26,11 @@ Game::~Game()
 
 Game::Game() // construction des camera, du GE et des autre objets tell que les Mode, mais il seront reconstruit apres de toute maniere
 {
+
     etatGame = MENU;
     switchMode = NONE;
-
+    shad=POSTFX_NOTHING;
+    
     // on abesoin du GE pour construire les models
     models = Models(&GE);
 
@@ -88,6 +90,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
 void Game::render()
 {
     // on recolte toute les instances afficher!
+    vector<instance> instances2D;
     vector<instance> instances;
     vector<Actor> vActor;
     vector<Actor>::iterator itA;
@@ -103,17 +106,20 @@ void Game::render()
     }
 
     if (etatGame==MENU) {
-        mMenu.getRender(&instances);
-        mGame.getRender(&instances); // pour Paul
+        mMenu.getRender(&instances,&instances2D);
+        mGame.getRender(&instances,&instances2D); // pour Paul
     }
     else if (etatGame==GAME) {
-        mGame.getRender(&instances);
+        mGame.getRender(&instances,&instances2D);
     }
     else if (etatGame==PAUSE) {
-        mGame.getRender(&instances);
-        mPause.getRender(&instances);
+        mGame.getRender(&instances,&instances2D);
+        mPause.getRender(&instances,&instances2D);
     }
+    camera came2D={0,30,0,0,0,0,0,0,1};
     camera came = {(-sin(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom()) + cam.getCenterX(), (sin(cam.getLatitude())*cam.getZoom())/* + camera.getCenterZ()*/, cos(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom() + cam.getCenterZ(), cam.getCenterX(), 0 , cam.getCenterZ(),0,1,0};
+    
     lightVec light = {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}};
-    GE.render(instances, came , light ,dTime);
+    
+    GE.render(instances, came, instances2D, came2D , light, shad ,dTime);
 }

@@ -42,7 +42,7 @@ private:
     Camera cam;
 
     float dTime; // interval de temps pour les trajectoires ...
-
+    int shad;
 
 };
 

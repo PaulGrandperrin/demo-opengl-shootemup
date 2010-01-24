@@ -19,7 +19,7 @@ public:
     Mode() {}
     Mode(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
     virtual void Manager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
-    virtual void getRender(vector<instance>*) {}
+    virtual void getRender(vector<instance>*,vector<instance>*) {}
 
 protected:
     Etat* etatGame;
