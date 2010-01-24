@@ -11,7 +11,7 @@
 #include <QKeyEvent>
 #include <QThread>
 #include <QTime>
-
+ #include <QSound>
 using namespace std;
 
 class ThreadQt : public QThread

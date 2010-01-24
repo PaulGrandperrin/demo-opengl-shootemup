@@ -67,7 +67,7 @@ void ViewOpenGl::paintGL()
     }
     else if(!(kb.getStateKeys()[K_SCREENSHOT] && screenShot))
 	screenShot=false;
-      
+    
 }
 
 void ViewOpenGl::resizeGL(int width, int height)
