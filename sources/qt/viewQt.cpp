@@ -9,6 +9,7 @@ ViewOpenGl::ViewOpenGl( QWidget *parent) : QGLWidget(parent)
 {
     setMinimumSize(QSize(parametre->getTailleMinX(),parametre->getTailleMinY())); // le minimunSizeHint n'a pas d'effets, a voir.
     passageScreen = false;
+    screenShot=false;
     setWindowTitle(tr("Shmup"));
     grabKeyboard();
     grabMouse();
@@ -51,6 +52,23 @@ void ViewOpenGl::paintGL()
     else if (!passageScreen && (kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
         passageScreen = true;
     }
+      
+    if(kb.getStateKeys()[K_SCREENSHOT] && !(screenShot)) {  
+	screenShot=true;
+	QPixmap originalPixmap = QPixmap::grabWindow(winId());
+	QString format = "png";
+	QString dateTime = QDateTime::currentDateTime().toString();
+
+	QDir dir;
+	dir = dir.current();
+	if(!(dir.exists("screenshots"))) {
+		dir.mkdir("screenshots");
+	}
+	originalPixmap.save("screenshots/"+dateTime+".png",format.toAscii());//folder+dateTime+format, format.toAscii());
+    }
+    else if(!(kb.getStateKeys()[K_SCREENSHOT] && screenShot))
+	screenShot=false;
+      
 }
 
 void ViewOpenGl::resizeGL(int width, int height)

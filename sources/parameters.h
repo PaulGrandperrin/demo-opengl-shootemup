@@ -103,7 +103,7 @@ private :
 #define ZOOM_MIN 3 // le plus proche
 #define ZOOM_MAX 100 // le plus loins
 
-#define NB_KEYS 17
+#define NB_KEYS 18
 #define K_QUIT 0
 #define K_CTRL 1
 #define K_SHIFT 2
@@ -121,6 +121,7 @@ private :
 #define K_ESC 14
 #define K_MENU 15
 #define K_ENTER 16
+#define K_SCREENSHOT 17
 
 #define QT_K_QUIT Key_Q
 #define QT_K_CTRL Key_Control
@@ -139,6 +140,7 @@ private :
 #define QT_K_ESC Key_Escape
 #define QT_K_MENU Key_M
 #define QT_K_ENTER Key_Return
+#define QT_K_SCREENSHOT Key_F10
 
 #define NB_BUTTON 9 // mouse
 #define B_LEFT 0

@@ -5,7 +5,7 @@
 #include "../utilities.h"
 #include "../gameEngine/game.h"
 #include "./inputDevice.h"
-
+#include <QtGui>
 #include <QWidget>
 #include <QGLWidget>
 #include <QKeyEvent>
@@ -59,6 +59,7 @@ private:
     QTime time;
     int width,height;
     bool passageScreen;
+    bool screenShot;
 };
 
 #endif
