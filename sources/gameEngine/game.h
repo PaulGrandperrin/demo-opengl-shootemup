@@ -38,7 +38,6 @@ private:
 
     // tout les models qu'il peut exister
     Models models;
-    Point oldMouse;
     graphicEngine GE;
     Camera cam;
 

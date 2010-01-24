@@ -17,13 +17,13 @@ using namespace std;
 #include <iostream>
 
 
-class Fond 
+class Fond
 {
 public:
     Fond() {};
     Fond( vector<int> MPlans, vector<int> MSols, vect position,vect rotation,vect scale, vect vel);
 
-    
+
     inline vector<Actor> getNuages() {
         return nuages;
     }
@@ -34,14 +34,14 @@ public:
         return position;
     }
     void update(float time);
-    
+
     inline void setVelocity(vect v) {
         velocity=v;
     }
     inline vect getVelocity() {
         return velocity;
     }
- 
+
 protected:
     vect position;
     vect rotation;

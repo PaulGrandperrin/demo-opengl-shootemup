@@ -18,7 +18,7 @@ using namespace std;
 /* Classe general qui contient tout les caractere possible (0.9,A.z) */
 
 
-class Text 
+class Text
 {
 public:
     Text() {};
@@ -37,14 +37,14 @@ public:
     void translate(vect t);
     void rotate(vect r);
     void scal(vect s);
-    
+
     inline Point getXY() {
-	Point p;
-	p.x=((caract.size())*(espace * scale.x))/2;
-	p.y=scale.z/2;
-	return p;
+        Point p;
+        p.x=((caract.size())*(espace * scale.x))/2;
+        p.y=scale.z/2;
+        return p;
     }
-       
+
 protected:
     vect position;
     vect rotation;
@@ -57,7 +57,7 @@ protected:
 
 class Number : public Text
 {
-  public :
+public :
     Number() {};
     Number(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
     void update(vector<int> MChiffres, int number);
@@ -65,26 +65,30 @@ class Number : public Text
 
 class Score : public Number
 {
-  public :
+public :
     Score() {};
     Score(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
     void setScore(vector<int> MChiffres, int number);
     void initScore(vector<int> MChiffres, int number);
-    int getScore() { return score; }
-    
-  private:
+    int getScore() {
+        return score;
+    }
+
+private:
     int score;
 };
 
 class Health : public Number
 {
-  public :
+public :
     Health() {};
     Health(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
     void setHealth(vector<int> MChiffres, int number);
-    int getHealth() { return health; }
-    
-  private:
+    int getHealth() {
+        return health;
+    }
+
+private:
     int health;
 };
 #endif

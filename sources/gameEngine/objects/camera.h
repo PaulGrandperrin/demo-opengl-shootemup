@@ -51,7 +51,7 @@ public:
     }
 
     inline void toModeGameSmart() {
-	resetSmart(LONGITUDE_GAME,LATITUDE_GAME,ZOOM_GAME,TOGAME);
+        resetSmart(LONGITUDE_GAME,LATITUDE_GAME,ZOOM_GAME,TOGAME);
     }
 
 private:

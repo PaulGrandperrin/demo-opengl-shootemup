@@ -19,7 +19,8 @@ public:
     void getRender(vector<instance>* instances);
 
 private:
-
+    Point oldMouse;
+    Point deltaMouse;
     Actor cursorPause; // facilite la navigation !
 
     bool resetCam; // savoir si on est en train de reinitialiser la camera ou pas.

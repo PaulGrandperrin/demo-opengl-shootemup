@@ -8,12 +8,12 @@
 using namespace std;
 
 struct EnemyInfo {
-	int idModel;
-	int health;
+    int idModel;
+    int health;
 };
 
 class EnemyInfosFile {
-  public:
+public:
     EnemyInfosFile(string fileName = "levels/enem_lvl_default.data");
     ~EnemyInfosFile();
     void open(string fileName);
@@ -27,7 +27,7 @@ class EnemyInfosFile {
     void read(int & i);
     void enterInfos();
     void displayContent();
-  private:
+private:
     fstream file;
     string fileName;
 };

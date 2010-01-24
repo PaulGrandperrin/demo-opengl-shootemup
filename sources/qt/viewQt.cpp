@@ -7,7 +7,7 @@ extern Parameters *parametre;
 
 ViewOpenGl::ViewOpenGl( QWidget *parent) : QGLWidget(parent)
 {
-    setMinimumSize(QSize(parametre->getTailleMinX(),parametre->getTailleMinY())); // le minimunSizeHint n'a pas d'effets, a voir. 
+    setMinimumSize(QSize(parametre->getTailleMinX(),parametre->getTailleMinY())); // le minimunSizeHint n'a pas d'effets, a voir.
     passageScreen = false;
     setWindowTitle(tr("Shmup"));
     grabKeyboard();
@@ -23,6 +23,7 @@ ViewOpenGl::~ViewOpenGl()
     makeCurrent(); //Context openGl
     thread.stop(); //On demande au thread de se suicider (=! on tue le thread)
     thread.wait(); //et donc on attend qu'il soit bien mort (et enterré)
+    delete parametre; // on suprime les parametre (var global)
 }
 
 void ViewOpenGl::initializeGL()
@@ -36,20 +37,20 @@ void ViewOpenGl::paintGL()
     time.restart();
     game->update(kb.getStateKeys(),mouse.getStateButtons(),mouse.getCoordMouse(), mouse.getDeltaWheel(),t,width,height);
     mouse.updateWheel(0); //naicessaire, sinon le delta (molette) n'est pas calculer
-    
+
     if (game->close()) //FIXME il ya surement une place plus adaptée pour ça
         close();
-    
-      if (passageScreen && !(kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
-	if (!isFullScreen())
+
+    if (passageScreen && !(kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
+        if (!isFullScreen())
             setWindowState(Qt::WindowFullScreen);
-	else
-	    setWindowState(Qt::WindowMaximized);
-	passageScreen = false;
-      }
-      else if (!passageScreen && (kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
-	passageScreen = true;
-      }
+        else
+            setWindowState(Qt::WindowMaximized);
+        passageScreen = false;
+    }
+    else if (!passageScreen && (kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
+        passageScreen = true;
+    }
 }
 
 void ViewOpenGl::resizeGL(int width, int height)

@@ -10,41 +10,41 @@ using namespace std;
 
 class Parameters {
 
-  public :
+public :
     Parameters() {
-     ifstream fichier("parameters.txt", ios::in); //ouverture du fichier
-     string j,k,l,m;
-     int a,b,c,d;
-	if (fichier) {
+        ifstream fichier("parameters.txt", ios::in); //ouverture du fichier
+        string j,k,l,m;
+        int a,b,c,d;
+        if (fichier) {
 
-	  fichier >> j >> a >> k >> b >> l>>c >> m >> d; // lit les variables et les noms des variables de parameters.txt
-	  fichier.close();
-	  cout << j <<a << endl<< k<< b << endl <<l << c << endl<< m << d<<endl;
- 	}
- 	else {
-	    cout << "Unable to open \"" << fichier << "\"" << endl;
-	}
- 	this->TAILLE_DEFAULT_X = a; 
-	this->TAILLE_DEFAULT_Y = b;
-	this->TAILLE_MIN_X = c;
-	this->TAILLE_MIN_Y = d;
+            fichier >> j >> a >> k >> b >> l>>c >> m >> d; // lit les variables et les noms des variables de parameters.txt
+            fichier.close();
+            cout << j <<a << endl<< k<< b << endl <<l << c << endl<< m << d<<endl;
+        }
+        else {
+            cout << "Unable to open \"" << fichier << "\"" << endl;
+        }
+        this->TAILLE_DEFAULT_X = a;
+        this->TAILLE_DEFAULT_Y = b;
+        this->TAILLE_MIN_X = c;
+        this->TAILLE_MIN_Y = d;
     }
     ~Parameters() {
-    }   
+    }
     inline int getTailleDefaultX() {
-      return TAILLE_DEFAULT_X;
+        return TAILLE_DEFAULT_X;
     }
     inline int getTailleDefaultY() {
-      return TAILLE_DEFAULT_Y;
+        return TAILLE_DEFAULT_Y;
     }
     inline int getTailleMinX() {
-      return TAILLE_MIN_X;
+        return TAILLE_MIN_X;
     }
     inline int getTailleMinY() {
-      return TAILLE_MIN_Y;
+        return TAILLE_MIN_Y;
     }
-    
-  private :
+
+private :
     int TAILLE_DEFAULT_X;
     int TAILLE_DEFAULT_Y;
     int TAILLE_MIN_X;

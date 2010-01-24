@@ -10,7 +10,7 @@ using namespace std;
 
 Keyboard::Keyboard() {
     // On definit les touches par defaut
-    
+
     int connectionKeyTab[NB_KEYS] = {Qt::QT_K_QUIT, Qt::QT_K_CTRL, Qt::QT_K_SHIFT, Qt::QT_K_ALT, Qt::QT_K_UP, Qt::QT_K_DOWN, Qt::QT_K_LEFT, Qt::QT_K_RIGHT, Qt::QT_K_TIR, Qt::QT_K_TIR_SECOND, Qt::QT_K_PAUSE, Qt::QT_K_FULLSCREEN, Qt::QT_K_FULLSCREEN_SECOND, Qt::QT_K_QUIT_SECOND, Qt::QT_K_ESC, Qt::QT_K_MENU, Qt::QT_K_ENTER};
     // Initialisation des attributs
     for (int i = 0; i<NB_KEYS; i++) {
@@ -52,7 +52,7 @@ void Mouse::updateEvent(int button, int state) {
 }
 
 void Mouse::updateXY(QPoint pt) { // avec lastxy et xy on recupere le delta de la souris a l'instant d'avant.
-    lastPMouse = pMouse; //pMouse Point 
+    lastPMouse = pMouse; //pMouse Point
     pMouse.x = pt.x(); // pt QPoint
     pMouse.y = pt.y();
 }

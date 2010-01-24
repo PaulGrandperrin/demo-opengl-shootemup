@@ -56,34 +56,30 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
     // de modePause, on ne peut retourner que au game
     // et du menu, on passe en mode game
     this->dTime=time;
-    
-    
+
+
     if (etatGame==MENU) {
-	if (mGame.isEnd()) { // si on retourne au menu et que c'est la fin, on reinitialise
-	   mGame = ModeGame(&models, &cam,&etatGame, &switchMode);
-	}
-	mMenu.menuManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
+        if (mGame.isEnd()) { // si on retourne au menu et que c'est la fin, on reinitialise
+            mGame = ModeGame(&models, &cam,&etatGame, &switchMode);
+        }
+        mMenu.menuManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height); // gere le menu, les options graphiques, et les autres trucs
     }
     else if (etatGame==GAME) {
-	fond.update(dTime);
-	mGame.gameManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
+        fond.update(dTime);
+        mGame.gameManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
     }
     else if (etatGame==PAUSE) {
-	Point coord={coordMouse.x-oldMouse.x,coordMouse.y-oldMouse.y};
-	mPause.pauseManager(stateKeys, stateButtons, coord, deltaWheel, time, width, height);
+        mPause.pauseManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
     }
     else if (etatGame==OPTION) {
-	cout << "XXXXXXXXX" << endl;
-	etatGame = MENU;
+        cout << "XXXXXXXXX" << endl;
+        etatGame = MENU;
     }
 
     if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND])) {
         etatGame=STOP;
     }
     render(); // a la fin on affiche tout
-    //a la fin les coordonnée de la souris devienne les ancienne coordonnées
-    oldMouse.x=coordMouse.x;
-    oldMouse.y=coordMouse.y;
 }
 
 // fin de l'interface, debut des méthodes privés
@@ -94,18 +90,18 @@ void Game::render()
     vector<instance> instances;
     vector<Actor> vActor;
     vector<Actor>::iterator itA;
-    
-    if (etatGame != PAUSE) { // pour l'instant on fait ça, mais peut etre l'afficher quand meme est metre une contraint a la camera !!
-	// le fond en premier pour la transparence.
-	vActor = fond.getSols();
-	for (itA=vActor.begin(); itA!=vActor.end(); itA++) { // sol en premier car c'est le premier niveau
-	    instances.push_back(itA->getInstance());
-	}
-	vActor = fond.getNuages();
-	for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-	    instances.push_back(itA->getInstance());
-	}
+
+//     if (etatGame != PAUSE) { // pour l'instant on fait ça, mais peut etre l'afficher quand meme est metre une contraint a la camera !!
+    // le fond en premier pour la transparence.
+    vActor = fond.getSols();
+    for (itA=vActor.begin(); itA!=vActor.end(); itA++) { // sol en premier car c'est le premier niveau
+        instances.push_back(itA->getInstance());
     }
+    vActor = fond.getNuages();
+    for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+        instances.push_back(itA->getInstance());
+    }
+//     }
 
     if (etatGame==MENU) {
         mMenu.getRender(&instances);

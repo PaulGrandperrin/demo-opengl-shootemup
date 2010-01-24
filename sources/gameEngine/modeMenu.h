@@ -18,14 +18,13 @@ public:
     void getRender(vector<instance>* instances);
 
 private:
-
-    MenuItem *itemSelected;
+    Point oldMouse;
     MenuItem itemPlay, itemPause, itemOption, itemQuit;
-    bool keyDown, keyUp;
+    bool keyDown, keyUp, bMouse;
     vector<MenuItem> vectorItems;
     int select;
     int selectMouse;
-    
+
 };
 
 #endif

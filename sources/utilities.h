@@ -30,7 +30,7 @@ enum TextStyle
 
 struct Point
 {
-	float x,y;
+    float x,y;
 };
 
 struct vect
@@ -41,29 +41,29 @@ struct vect
 
 struct camera
 {
-  float eyex,eyey,eyez;
-  float centerx,centery,centerz;
-  float upx,upy,upz;
+    float eyex,eyey,eyez;
+    float centerx,centery,centerz;
+    float upx,upy,upz;
 };
 
 struct color
 {
-	float r,g,b,a;
+    float r,g,b,a;
 };
 
 struct lightVec
 {
-	float x,y,z;
-	color al,dl,sl;
+    float x,y,z;
+    color al,dl,sl;
 };
 
 struct instance
 {
-  float x,y,z;
-  float ax,ay,az;
-  float sx,sy,sz;
-  int idModel;
-  //TODO ajouter coefficient de transparence et d'autres attribus
+    float x,y,z;
+    float ax,ay,az;
+    float sx,sy,sz;
+    int idModel;
+    //TODO ajouter coefficient de transparence et d'autres attribus
 };
 
 #endif

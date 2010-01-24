@@ -16,38 +16,50 @@ using namespace std;
 // Structure to define changes on the trajectory
 struct t_key_state {
     float ax, ay, az; // new acceleration coordinates
-    float vx, vy, vz; // new velocity coordinates 
+    float vx, vy, vz; // new velocity coordinates
     float t; // (relative) time when the modification has to be applied
 };
 
 class ActorEnemy;
 
 class Trajectory {
-  public:
+public:
     Trajectory() {};
     Trajectory(vect initialPosition, int interval = 50);
-    inline vect getInitialPosition() { return initialPosition; }
-    inline int getInterval() { return interval; }
-    inline vector<t_key_state> getKeyStates() { return keyStates; }
-    inline list<int> getRecordNumbers() { return recordNumbers; }
-    inline list<ActorEnemy> getEnemies() { return enemies; }
-    inline void setEnemies(list<ActorEnemy> enemies) { this->enemies = enemies; }
+    inline vect getInitialPosition() {
+        return initialPosition;
+    }
+    inline int getInterval() {
+        return interval;
+    }
+    inline vector<t_key_state> getKeyStates() {
+        return keyStates;
+    }
+    inline list<int> getRecordNumbers() {
+        return recordNumbers;
+    }
+    inline list<ActorEnemy> getEnemies() {
+        return enemies;
+    }
+    inline void setEnemies(list<ActorEnemy> enemies) {
+        this->enemies = enemies;
+    }
     void addKeyState(t_key_state s);
     void addRecordNumber(int rec_num);
     void addEnemy(ActorEnemy e);
     void removeFirstRecordNumber();
-  private:
+private:
     vect initialPosition;
     int interval; // Intervalle de temps entre l'apparition de deux ennemis consecutifs (temp = X*20ms ex: 50*20 = 1s)
     vector<t_key_state> keyStates;
     list<int> recordNumbers; // NOTE : cet attribut permet de ne pas creer les instances d'ennemies des la creation de la trajectoire
-			       // C'est le "game" qui le fera en utilisant cette liste et son propre tableau d'infos ennemies
-			       // NOTE : ce tableau sera vidé une fois tous les ennemis créés
+    // C'est le "game" qui le fera en utilisant cette liste et son propre tableau d'infos ennemies
+    // NOTE : ce tableau sera vidé une fois tous les ennemis créés
     list<ActorEnemy> enemies;
 };
 
 class TrajectoryFile {
-  public:
+public:
     TrajectoryFile(string fileName = "levels/traj_lvl_default.data");
     ~TrajectoryFile();
     void open(string fileName);
@@ -61,7 +73,7 @@ class TrajectoryFile {
     void read(list<Trajectory> & l);
     void enterInfos(); // Permet de saisir une nouvelle trajectoire et de l'ajouter au fichier
     void displayContent(); // affiche le contenu du fichier
-  private:
+private:
     fstream file;
     string fileName;
 };

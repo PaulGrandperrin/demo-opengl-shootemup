@@ -18,7 +18,7 @@ class Models {
 public :
     Models() {}
     Models(graphicEngine* GE); // on charge tout les models 3D
-    
+
     inline int getMplayer() {
         return Mplayer;
     }
@@ -41,7 +41,7 @@ public :
         return MSols;
     }
     inline vector<EnemyInfo> getEnemiesInfos() {
-      return enemiesInfos;
+        return enemiesInfos;
     }
 
 //public : //TODO metre private probleme vector
