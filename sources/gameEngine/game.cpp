@@ -92,7 +92,6 @@ void Game::render()
     vector<Actor> vActor;
     vector<Actor>::iterator itA;
 
-//     if (etatGame != PAUSE) { // pour l'instant on fait ça, mais peut etre l'afficher quand meme est metre une contraint a la camera !!
     // le fond en premier pour la transparence.
     vActor = fond.getSols();
     for (itA=vActor.begin(); itA!=vActor.end(); itA++) { // sol en premier car c'est le premier niveau
@@ -102,7 +101,6 @@ void Game::render()
     for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
         instances.push_back(itA->getInstance());
     }
-//     }
 
     if (etatGame==MENU) {
         mMenu.getRender(&instances);

@@ -29,6 +29,9 @@ ModePause::ModePause(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* 
     deltaMouse.y = 0;
     vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
     cursorPause = Actor(models->getMCursorPause(), p, r, s);
+    
+    vect pTPause={-12.5,0,-12}, rTPause= {0,0,0}, sTPause={0.8,0.8,0.5};
+    tPause = Text(models->getMChiffres(),models->getMLettersM(), "Stop Motion", pTPause, rTPause, sTPause, 0.6, LEFT); // test du text, pour l'instant "abcde"
 
 }
 
@@ -72,10 +75,12 @@ void ModePause::moveCam() {
     }
     else if (stateKeys[K_CTRL]) {
         if (stateKeys[K_UP]) {
-            camera->setZoom(-0.05);
+	  if (vContrainteFond(ZOOM,-0.2))
+            camera->setZoom(-0.2);
         }
         else if (stateKeys[K_DOWN]) {
-            camera->setZoom(0.05);
+	  if (vContrainteFond(ZOOM,0.2))
+            camera->setZoom(0.2);
         }
         else if ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT])) {
             resetCam=true;
@@ -109,6 +114,7 @@ void ModePause::moveCam() {
             cursorPause.translate( t);
         }
         if ((deltaWheel != 0)) {
+	  if (vContrainteFond(ZOOM,-deltaWheel/(float)240))
             camera->setZoom(-deltaWheel/(float)240);
         }
         if ((stateButtons[B_LEFT]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
@@ -130,30 +136,30 @@ void ModePause::moveCam() {
         //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
         if ((stateButtons[B_LEFT]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
             camera->setCenterZ(deltaMouse.y*NB_UNITY_HEIGHT*5/600.0);
-//             cursorPause.translate( {0,0,(deltaMouse.y*NB_UNITY_HEIGHT*5/(float)TAILLE_DEFAULT_Y)});
-
             vect t={0,0,(deltaMouse.y*NB_UNITY_HEIGHT*5/600.0)};
             cursorPause.translate( t);
         }
         if ((stateButtons[B_LEFT]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
             camera->setCenterX(deltaMouse.x*NB_UNITY_WIDTH*5/600.0);
-//             cursorPause.translate( {(deltaMouse.x*NB_UNITY_WIDTH*5/(float)TAILLE_DEFAULT_X)});
-
             vect t={(deltaMouse.x*NB_UNITY_WIDTH*5/600.0),0,0};
-            cursorPause.translate( t);
+            cursorPause.translate(t);
         }
         if ((stateButtons[B_MIDLE]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
+	  if (vContrainteFond(LAT,0.01*deltaMouse.y))
             camera->setLatitude(0.01*deltaMouse.y);
         }
         if ((stateButtons[B_MIDLE]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
             camera->setLongitude(0.01*deltaMouse.x);
         }
         if ((deltaWheel != 0)) {
-            camera->setZoom(-deltaWheel/(float)60);
+	    if (vContrainteFond(ZOOM,-deltaWheel/(float)60))
+	      camera->setZoom(-deltaWheel/(float)60);
         }
         if (stateKeys[K_UP])
+	  if (vContrainteFond(LAT,0.02))
             camera->setLatitude(0.02);
         if (stateKeys[K_DOWN])
+	  if (vContrainteFond(LAT,-0.02))
             camera->setLatitude(-0.02);
         if (stateKeys[K_LEFT])
             camera->setLongitude(0.02);
@@ -162,17 +168,28 @@ void ModePause::moveCam() {
     }
 
     // pour ne pas passer sous le fond
-//     int y = sin(camera->getLatitude()) * camera->getZoom();
-//     if (y < -2) {
-//       camera->setLatitude(0.01);
-//       camera->setZoom(0.01);
-//       cout << "dehors " << endl;
-//     }
 }
 
 
 void ModePause::getRender(vector<instance>* instances) {
     instances->push_back(cursorPause.getInstance());
+    
+    vector<Actor> vActor; // on affche le text du modePause //TODO camera
+    vector<Actor>::iterator itA;
+    vActor = tPause.getText();
+    for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+	instances->push_back(itA->getInstance());
+    }
+}
 
+bool ModePause::vContrainteFond(VarMove var, float val) {
+  float y = 0;
+  if (var == ZOOM) {
+    y = sin(camera->getLatitude()) * (camera->getZoom()+val);
+  }
+  if (var == LAT) {
+    y = sin(camera->getLatitude()+val) * (camera->getZoom());
+  }
+  return (y > -1.8);
 }
 
