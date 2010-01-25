@@ -15,6 +15,6 @@ void main(void)
 	vec4 dl= gl_LightSource[0].diffuse*max(dot(lightVec,normal),0.0);
 	vec4 sl= gl_LightSource[0].specular*pow(max(dot(-normalize(eyeVec),reflect(lightVec,normal)),0.0),16)*2;
 
-    gl_FragColor=color*(al+dl+sl)*4;
+    gl_FragColor=vec4(color.rgb*(al+dl+sl)*4,color.a);
 
 }
