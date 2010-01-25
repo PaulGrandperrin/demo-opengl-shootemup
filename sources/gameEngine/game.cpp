@@ -130,5 +130,5 @@ void Game::render()
 
     lightVec light = {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}};
 
-    GE.render(instances, came, instances2D, came2D , light, shad ,dTime);
+    GE.render(instances, came, instances2D, came , light, shad ,dTime);
 }

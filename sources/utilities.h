@@ -38,7 +38,7 @@ struct vect
     float x,y,z;
 };
 
-
+/*
 struct camera
 {
     float eyex,eyey,eyez;
@@ -56,6 +56,7 @@ struct lightVec
     float x,y,z;
     color al,dl,sl;
 };
+*/
 
 struct instance
 {

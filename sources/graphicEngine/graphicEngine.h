@@ -39,15 +39,38 @@ Le sens de la texture n'est pas le même que celui de Blender, il faut donc fair
 using namespace std;
 
 #include "../utilities.h"
-#include "../parameters.h"
 
+#define POSTFX_NOTHING 0
+#define POSTFX_BLUR 1
+#define POSTFX_WATER 2
+#define POSTFX_FAKEHDR 4
+#define POSTFX_BLACKWHITE 8
+#define POSTFX_CELLSHADING 16
+
+struct camera
+{
+	float eyex,eyey,eyez;
+	float centerx,centery,centerz;
+	float upx,upy,upz;
+};
+
+struct color
+{
+	float r,g,b,a;
+};
+
+struct lightVec
+{
+	float x,y,z;
+	color al,dl,sl;
+};
 
 class graphicEngine
 {
 public:
 	graphicEngine();
 	~graphicEngine();
-// 	void init();
+	void init();
 
 	void resize(int width,int height);
 
@@ -74,9 +97,11 @@ private:
 	vector<model> models;
 
 	unsigned int fbo,textFbo,rbo;
-	int width,height;
-	
+	int widthW,heightW,heightV, widthV;
+
 	unsigned int sceneShader,postFXBlur,postFXWater,postFXFakeHDR, postFXBlackWhite,postFXCellShading, postFXNothing;
 
+	unsigned int shadWaterParam;
+	
 	pthread_mutex_t mutex;
 };
