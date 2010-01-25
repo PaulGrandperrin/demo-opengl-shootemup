@@ -39,13 +39,8 @@ Le sens de la texture n'est pas le même que celui de Blender, il faut donc fair
 using namespace std;
 
 #include "../utilities.h"
+#include "../parameters.h"
 
-#define POSTFX_NOTHING 0
-#define POSTFX_BLUR 1
-#define POSTFX_WATER 2
-#define POSTFX_FAKEHDR 4
-#define POSTFX_BLACKWHITE 8
-#define POSTFX_CELLSHADING 16
 
 struct camera
 {

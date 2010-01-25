@@ -29,6 +29,7 @@ private:
     SwitchEtat switchMode;
     void render();
     void gameManager();
+    void effectManager(bool stateKeys[]);
 
     // les differents modes du jeu!
     ModeGame mGame;
@@ -44,6 +45,7 @@ private:
     float dTime; // interval de temps pour les trajectoires ...
     float TTime; //Temp total pour le moteur3D
     int shad;
+    bool changePostFX;
 
 };
 

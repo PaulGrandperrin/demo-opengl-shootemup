@@ -19,6 +19,12 @@ public:
     bool isEnd() {
         return end;
     }
+    int getplayerHeart() {
+        return playerHeart;
+    }
+    void changePlayerHeart(int i) {
+        playerHeart+=i;;
+    }
 
 private:
     void playerManager();
@@ -39,6 +45,7 @@ private:
 
     bool end;
     bool toEnd;
+    int playerHeart;
 
     int timerGenTrajectorySequence; // Correspond à l'intervalle de temps qui sépare l'apparition de 2 ennemis situes sur une trajectoire differente
     list<int> timersGenEnemy; // chaque element de cette liste correspond au timer d'apparition d'un ennemi sur la trajectoire de meme rang que cet

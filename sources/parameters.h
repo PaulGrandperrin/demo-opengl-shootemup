@@ -63,8 +63,8 @@ private :
 #define POSTFX_CELLSHADING 16
 
 
-#define NB_NUAGE 6 // le nombre de nuage sur la scene
-#define NB_SOL 20
+#define NB_NUAGE 4 // le nombre de nuage sur la scene
+#define NB_SOL 30
 
 #define TYPE_DEFAULT_MESH 1
 #define TAILLE_DEFAULT_VAISSEAU 0.1
@@ -98,9 +98,10 @@ private :
 #define NB_UNITY_HEIGHT 12
 
 #define TEMP_RESETCAM_SMART_PAUSE 50
+#define TEMP_BROUILLAGE_CAM_PLAYER_HEARTH 50
 
-#define ZOOM_MENU 15 // temps mis pour reset l'angle apres la pause
-#define LATITUDE_MENU 0.5 // temps mis pour reset l'angle apres la pause
+#define ZOOM_MENU 20 // temps mis pour reset l'angle apres la pause
+#define LATITUDE_MENU 1.0 // temps mis pour reset l'angle apres la pause
 #define LONGITUDE_MENU 0.5 // temps mis pour reset l'angle apres la pause
 #define ZOOM_GAME 30 // temps mis pour reset l'angle apres la pause
 #define LATITUDE_GAME 1.5 // temps mis pour reset l'angle apres la pause
@@ -110,7 +111,7 @@ private :
 #define CENTERZ_MIN -100 // le plus proche
 #define CENTERZ_MAX 100 // le plus loins
 #define ZOOM_MIN 3 // le plus proche
-#define ZOOM_MAX 100 // le plus loins
+#define ZOOM_MAX 60 // le plus loins
 
 #define NB_KEYS 18
 #define K_QUIT 0

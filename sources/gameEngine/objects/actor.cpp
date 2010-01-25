@@ -63,6 +63,7 @@ bool ActorPhysique::sortieEcran(float width, float height)
 
 ActorPlayer::ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask, int damage) : ActorPhysique(idModel,position,rotation,scale,health,damage,mask)
 {
+  resetPosition = true;
 }
 
 void ActorPlayer::colisionBord(float width, float height)

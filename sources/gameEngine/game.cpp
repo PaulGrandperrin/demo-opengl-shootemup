@@ -30,7 +30,7 @@ Game::Game() // construction des camera, du GE et des autre objets tell que les 
     etatGame = MENU;
     switchMode = NONE;
     shad=POSTFX_NOTHING;
-
+    changePostFX = false;
     // on abesoin du GE pour construire les models
     models = Models(&GE);
 
@@ -59,7 +59,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
     // de modePause, on ne peut retourner que au game
     // et du menu, on passe en mode game
     this->dTime=time;
-
+    TTime+=dTime;// Pour le moteur 3D !
 
     if (etatGame==MENU) {
         if (mGame.isEnd()) { // si on retourne au menu et que c'est la fin, on reinitialise
@@ -78,13 +78,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
         cout << "XXXXXXXXX" << endl;
         etatGame = MENU;
     }
-    if (stateKeys[K_PAUSE]) {
-      if(!shad)
-	      shad=1;
-      else
-	      shad*=2;
-    }
-    shad%=32;
+    effectManager(stateKeys);
 
     if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND])) {
         etatGame=STOP;
@@ -125,11 +119,37 @@ void Game::render()
         mPause.getRender(&instances,&instances2D);
     }
 
-    //camera came2D={0,30,0,0,0,0,0,0,-1};//TODO si y'en a plus besoin, faut le virer
+    camera came2D={0,30,0,0,0,0,0,0,-1};//TODO si y'en a plus besoin, faut le virer >> biensure que si yen a besoin !
     camera came = {(-sin(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom()) + cam.getCenterX(), (sin(cam.getLatitude())*cam.getZoom())/* + camera.getCenterZ()*/, cos(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom() + cam.getCenterZ(), cam.getCenterX(), 0 , cam.getCenterZ(),0,1,0};
 
-    lightVec light = {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.4,1},{0.8,0.8,0.8,1}};
+    lightVec light = {0.5,0.5,0.5,{0.12,0.12,0.1,0.2},{0.4,0.4,0.25,0.2},{0.4,0.4,0.2,0.1}};
 	
-	TTime+=dTime;//TODO faut peut etre le mettre ailleur
-    GE.render(instances, came, instances2D, came , light, shad ,TTime);
+    GE.render(instances, came, instances2D, came2D , light, shad ,TTime);
+}
+
+void Game::effectManager(bool stateKeys[]) {  
+    if (stateKeys[K_PAUSE] && !changePostFX) {
+	changePostFX = true;
+    }
+    if (!stateKeys[K_PAUSE] && changePostFX) {
+      if(!shad)
+	      shad=1;
+      else
+	      shad*=2;
+	changePostFX = false;
+    }
+    shad%=32;
+    
+   // le player a ete touché, on brouille la camera, pendant TEMP_BROUILLAGE_CAM_PLAYER_HEARTH
+    if (mGame.getplayerHeart() == TEMP_BROUILLAGE_CAM_PLAYER_HEARTH) {
+      mGame.changePlayerHeart(-1);
+      shad = POSTFX_WATER;
+    }
+    else if (mGame.getplayerHeart() > 1) { 
+      mGame.changePlayerHeart(-1);
+    }
+    else if (mGame.getplayerHeart() == 1) {
+      mGame.changePlayerHeart(-1);
+      shad = POSTFX_NOTHING;
+    }
 }

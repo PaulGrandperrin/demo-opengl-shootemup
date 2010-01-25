@@ -13,7 +13,7 @@
 
 #define BUFFER_OFFSET(a) ((char*)NULL + (a)) //HACK un gros cast de ouf dingue très pratique
 
-#define RATIO 1.25
+#define RATIO 1.05
 
 //Quelques définitions de structures
 struct v 		//vecteur position 3D

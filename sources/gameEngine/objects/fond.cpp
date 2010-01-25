@@ -18,15 +18,19 @@ Fond::Fond(vector<int> MNuages, vector<int> MSols,vect position,vect rotation,ve
     this->rotation=rotation;
     this->scale=scale;
     this->velocity = vel;
+    
+    float step = (48/NB_NUAGE); // 48 : nb uniter sur Z pour placer un nuage
+    float start = -24;
 
     Actor plan; // le fond est composer de plan
     vect p={position.x,position.y,position.z} ,r={rotation.x,rotation.z,rotation.y},s={scale.x,scale.y,scale.z};
     int choix = 0; // plutard on choisira aleatoirement un model
     for (unsigned int i=0;i<NB_NUAGE;i++) { // on genere les nuages
         p.x = random(-15,15);
-        p.z = random(-24,24);
-        p.y +=0.01; // pas de superposition
-        choix = random(0,1.99);
+        p.z = random(start,start+step);
+	start +=step;
+        p.y +=0.1; // pas de superposition
+        choix = random(0,2.99);
         plan = Actor(MNuages[choix], p, r, s);
         this->nuages.push_back(plan);
     }
@@ -35,8 +39,8 @@ Fond::Fond(vector<int> MNuages, vector<int> MSols,vect position,vect rotation,ve
     s.y+= 1;
     s.z += 1;
     for (unsigned int i=0;i<NB_SOL;i++) { // on genere le sol
-        p.x = random(-15,15);
-        p.z = random(-24,24);
+        p.x = random(-25,25);
+        p.z = random(-30,30);
         p.y +=0.01; // pas de superposition
         choix = random(0,1.99);
         plan = Actor(MSols[choix], p, r, s);

@@ -14,7 +14,7 @@ Models::Models(graphicEngine* GE) {
 	for (int i=1; i<=2;i++) {
         MSols.push_back(GE->loadModel("meshes/plan.obj","textures/sol" + entierToString(i) + ".png"));
     }
-    for (int i=1; i<=2;i++) {
+    for (int i=1; i<=3;i++) {
         MNuages.push_back(GE->loadModel("meshes/plan.obj","textures/nuage" + entierToString(i) + ".png"));
     }
     for (int i=0; i<=9; i++) {

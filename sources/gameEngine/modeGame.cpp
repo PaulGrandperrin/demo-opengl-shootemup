@@ -29,6 +29,7 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     // si on reconstruit le modeGame, se n'est pas la fin !!
     end = false;
     toEnd = false;
+    playerHeart = 0;
 
     // on vide les vecteur d'ennemi... pour la prochaine partie
     friendFires.clear();
@@ -47,16 +48,16 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
     player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer, intHealth, intDamage ,0.4);
 
-    vect pScore={-12.5,0,-11}, rScore= {0,0,0}, sScore={1,1,0.5};
+    vect pScore={-11.5,0,-11}, rScore= {0,0,0}, sScore={1,1,0.5};
     score = Score(models->getMChiffres(), 0, pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
 
-    vect pLeScore={-12.5,0,-12}, rLeScore= {0,0,0}, sLeScore={0.8,0.8,0.5};
+    vect pLeScore={-11.5,0,-12}, rLeScore= {0,0,0}, sLeScore={0.8,0.8,0.5};
     tScore = Text(models->getMChiffres(),models->getMLettersM(), "Score", pLeScore, rLeScore, sLeScore, 0.6, LEFT); // test du text, pour l'instant "abcde"
 
-    vect pVie={12.5,0,-11}, rVie= {0,0,0}, sVie={1,1,0.5};
+    vect pVie={11.5,0,-11}, rVie= {0,0,0}, sVie={1,1,0.5};
     health = Health(models->getMChiffres(), intHealth , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
 
-    vect pLaVie={12.5,0,-12}, rLaVie= {0,0,0}, sLaVie={0.8,0.8,0.5};
+    vect pLaVie={11.5,0,-12}, rLaVie= {0,0,0}, sLaVie={0.8,0.8,0.5};
     tHealth = Text(models->getMChiffres(),models->getMLettersM(), "Health", pLaVie, rLaVie, sLaVie, 0.6, RIGHT); // test du text, pour l'instant "abcde"
 
     vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={3,3,2};
@@ -193,6 +194,7 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
 */
 void ModeGame::playerManager()
 {
+  
 //     player.setAcceleration( {0,0,0});
     vect accl={0,0,0};
     if (stateKeys[K_LEFT]) // -x
@@ -359,6 +361,7 @@ void ModeGame::collisionManager()
                 it_enn->colisionFires(&friendFires); // idem avec les tir Player
                 if (it_enn->colisionPlayer(&player)) { // on regarde si l'ennemi est en colision avec le playerManager
                     player.setHealth(-it_enn->getDamage());
+		    playerHeart = TEMP_BROUILLAGE_CAM_PLAYER_HEARTH;
                     it_enn = enemies.erase(it_enn);
                 }
                 else if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
