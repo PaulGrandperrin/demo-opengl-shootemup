@@ -63,7 +63,7 @@ private :
 #define POSTFX_CELLSHADING 16
 
 
-#define NB_NUAGE 4 // le nombre de nuage sur la scene
+#define NB_NUAGE_TYPE 6 // le nombre de nuage sur la scene
 #define NB_SOL 30
 
 #define TYPE_DEFAULT_MESH 1
