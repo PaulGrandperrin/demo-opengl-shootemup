@@ -43,7 +43,7 @@ Game::Game() // construction des camera, du GE et des autre objets tell que les 
     fond = Fond(models.getMNuages(), models.getMSols(), pFond, rFond, sFond, vFond);
 
     srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
-
+	TTime=0;
 }
 
 void Game::resize(int width,int heigth)
@@ -125,10 +125,11 @@ void Game::render()
         mPause.getRender(&instances,&instances2D);
     }
 
-    camera came2D={0,30,0,0,0,0,0,0,-1};
+    //camera came2D={0,30,0,0,0,0,0,0,-1};//TODO si y'en a plus besoin, faut le virer
     camera came = {(-sin(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom()) + cam.getCenterX(), (sin(cam.getLatitude())*cam.getZoom())/* + camera.getCenterZ()*/, cos(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom() + cam.getCenterZ(), cam.getCenterX(), 0 , cam.getCenterZ(),0,1,0};
 
     lightVec light = {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}};
-
-    GE.render(instances, came, instances2D, came , light, shad ,dTime);
+	
+	TTime+=dTime;//TODO faut peut etre le mettre ailleur
+    GE.render(instances, came, instances2D, came , light, shad ,TTime);
 }

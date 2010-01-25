@@ -285,7 +285,6 @@ void graphicEngine::draw(vector<instance> inst, camera cam,unsigned int shader,l
 
 void graphicEngine::render(vector<instance> inst,camera cam,vector<instance> instMenu,camera camMenu,lightVec lv,int postFX,float time) //TODO bien tt desactiver
 {
-
 	pthread_mutex_lock(&mutex);
 	//On bind le frame buffer "off-screen"
 	

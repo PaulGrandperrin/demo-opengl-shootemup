@@ -42,6 +42,7 @@ private:
     Camera cam;
 
     float dTime; // interval de temps pour les trajectoires ...
+    float TTime; //Temp total pour le moteur3D
     int shad;
 
 };
