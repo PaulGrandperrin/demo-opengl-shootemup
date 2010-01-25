@@ -149,7 +149,7 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
 }
 
 
-void ModeMenu::getRender(vector<instance>* instances, vector<instance>* instances2D) {
+void ModeMenu::getRender(vector<instance>* /*instances*/, vector<instance>* instances2D) {
     vector<MenuItem>::iterator itA;
     for (itA=vectorItems.begin(); itA!=vectorItems.end(); itA++) {
         itA->getRender(instances2D);

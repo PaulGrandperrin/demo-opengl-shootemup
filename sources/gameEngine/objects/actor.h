@@ -127,6 +127,17 @@ public:
     ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask, int damage);
     void update(float time);
     void colisionBord(float width, float height);
+    
+    inline bool isCenter() {
+        return ((position.x==0) && (position.z==0) && (position.y==0));
+    }
+    
+    void toCenter();
+    
+private:
+    bool resetPosition; // si on a à reinitialise la camera (Smart), il ne faut evaluer les step..s qu'une seule fois (constant)
+    int nbfoisResetPosition; // le nombre de fois a faire resetCamSmart pour arriver proche de 0
+    float stepCenterX, stepCenterY, stepCenterZ; // pour resetCamSmart, le changement a chaque etape
 };
 
 class Trajectory;

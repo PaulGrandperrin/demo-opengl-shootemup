@@ -73,8 +73,10 @@ private:
 	};
 	vector<model> models;
 
-	unsigned int fbo,textFbo,rbo,postFXBlur,postFXWater,postFXNothing,sceneShader;
+	unsigned int fbo,textFbo,rbo;
 	int width,height;
+	
+	unsigned int sceneShader,postFXBlur,postFXWater,postFXFakeHDR, postFXBlackWhite,postFXCellShading, postFXNothing;
 
 	pthread_mutex_t mutex;
 };

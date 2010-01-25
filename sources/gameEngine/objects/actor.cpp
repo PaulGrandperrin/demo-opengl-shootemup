@@ -101,6 +101,40 @@ void ActorPlayer::update(float time)
     velocity.z*=0.98;
 }
 
+
+void ActorPlayer::toCenter()
+{
+    if (resetPosition) {
+        nbfoisResetPosition = TEMP_RESETCAM_SMART_PAUSE;
+        stepCenterX = -position.x / nbfoisResetPosition;
+	stepCenterY = -position.y / nbfoisResetPosition;
+        stepCenterZ = -position.z / nbfoisResetPosition;
+        resetPosition = false;
+    }
+
+    if (position.x != 0) {
+        position.x += stepCenterX;
+    }
+    if (position.y != 0) {
+        position.y += stepCenterY;
+    }
+    if (position.z != 0) {
+        position.z += stepCenterZ;
+    }
+
+    nbfoisResetPosition--; // on approche du {0,0,ZOOM_DEFAULT,0,0}
+
+    if (nbfoisResetPosition == 0) { // on est tres proche donc on peut le faire
+        position.x = 0;
+	position.y = 0;
+	position.z = 0;
+    }
+    if (isCenter()) {
+        resetPosition = true; // pour une qutre fois
+    }
+
+}
+
 ////////////////////////////////////////
 // ActorEnemy
 ////////////////////////////////////////

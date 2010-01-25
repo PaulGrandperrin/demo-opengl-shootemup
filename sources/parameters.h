@@ -58,6 +58,10 @@ private :
 #define POSTFX_NOTHING 0
 #define POSTFX_BLUR 1
 #define POSTFX_WATER 2
+#define POSTFX_FAKEHDR 4
+#define POSTFX_BLACKWHITE 8
+#define POSTFX_CELLSHADING 16
+
 
 #define NB_NUAGE 6 // le nombre de nuage sur la scene
 #define NB_SOL 20
@@ -95,9 +99,9 @@ private :
 
 #define TEMP_RESETCAM_SMART_PAUSE 50
 
-#define ZOOM_MENU 30 // temps mis pour reset l'angle apres la pause
-#define LATITUDE_MENU 1.0 // temps mis pour reset l'angle apres la pause
-#define LONGITUDE_MENU 0.0 // temps mis pour reset l'angle apres la pause
+#define ZOOM_MENU 15 // temps mis pour reset l'angle apres la pause
+#define LATITUDE_MENU 0.5 // temps mis pour reset l'angle apres la pause
+#define LONGITUDE_MENU 0.5 // temps mis pour reset l'angle apres la pause
 #define ZOOM_GAME 30 // temps mis pour reset l'angle apres la pause
 #define LATITUDE_GAME 1.5 // temps mis pour reset l'angle apres la pause
 #define LONGITUDE_GAME 0.0 // temps mis pour reset l'angle apres la pause

@@ -88,6 +88,9 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
     }
     else if (*switchMode == TOMENU && (!camera->camOKMenu())) {
         camera->toModeMenuSmart();
+	if (end) {
+	    player.toCenter();
+	}
     }
     else if (*switchMode == TOMENU && (camera->camOKMenu())) {
         *switchMode = NONE;

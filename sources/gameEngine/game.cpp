@@ -30,7 +30,7 @@ Game::Game() // construction des camera, du GE et des autre objets tell que les 
     etatGame = MENU;
     switchMode = NONE;
     shad=POSTFX_NOTHING;
-    
+
     // on abesoin du GE pour construire les models
     models = Models(&GE);
 
@@ -78,6 +78,13 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
         cout << "XXXXXXXXX" << endl;
         etatGame = MENU;
     }
+    if (stateKeys[K_PAUSE]) {
+      if(!shad)
+	      shad=1;
+      else
+	      shad*=2;
+    }
+    shad%=32;
 
     if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND])) {
         etatGame=STOP;
@@ -95,6 +102,8 @@ void Game::render()
     vector<Actor> vActor;
     vector<Actor>::iterator itA;
 
+    vector<instance>::iterator itInst;
+
     // le fond en premier pour la transparence.
     vActor = fond.getSols();
     for (itA=vActor.begin(); itA!=vActor.end(); itA++) { // sol en premier car c'est le premier niveau
@@ -104,7 +113,6 @@ void Game::render()
     for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
         instances.push_back(itA->getInstance());
     }
-
     if (etatGame==MENU) {
         mMenu.getRender(&instances,&instances2D);
         mGame.getRender(&instances,&instances2D); // pour Paul
@@ -116,10 +124,11 @@ void Game::render()
         mGame.getRender(&instances,&instances2D);
         mPause.getRender(&instances,&instances2D);
     }
-    camera came2D={0,30,0,0,0,0,0,0,1};
+
+    camera came2D={0,30,0,0,0,0,0,0,-1};
     camera came = {(-sin(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom()) + cam.getCenterX(), (sin(cam.getLatitude())*cam.getZoom())/* + camera.getCenterZ()*/, cos(cam.getLongitude())*cos(cam.getLatitude())*cam.getZoom() + cam.getCenterZ(), cam.getCenterX(), 0 , cam.getCenterZ(),0,1,0};
-    
+
     lightVec light = {0.5,0.5,0.5,{0.05,0.05,0.05,1},{0.4,0.4,0.3,1},{0.9,0.8,0.8,1}};
-    
+
     GE.render(instances, came, instances2D, came2D , light, shad ,dTime);
 }
