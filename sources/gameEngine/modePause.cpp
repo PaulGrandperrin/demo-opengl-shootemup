@@ -31,7 +31,7 @@ ModePause::ModePause(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* 
     cursorPause = Actor(models->getMCursorPause(), p, r, s);
     
     vect pTPause={-11.5,0,-12}, rTPause= {0,0,0}, sTPause={0.8,0.8,0.5};
-    tPause = Text(models->getMChiffres(),models->getMLettersM(), "Stop Motion", pTPause, rTPause, sTPause, 0.6, LEFT); // test du text, pour l'instant "abcde"
+    tPause = Text(models->getMChiffres(),models->getMLettersM(), "Pause Mode", pTPause, rTPause, sTPause, 0.6, LEFT); // test du text, pour l'instant "abcde"
 
 }
 
