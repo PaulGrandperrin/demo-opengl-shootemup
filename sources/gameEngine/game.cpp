@@ -18,6 +18,7 @@
 // for trace during test , to kept
 #include <iostream>
 using namespace std;
+extern Parameters * parametre;
 
 
 Game::~Game()
@@ -83,7 +84,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
     }
     effectManager(stateKeys);
 
-    if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND])) {
+    if (stateKeys[parametre->getCtrl()] && (stateKeys[parametre->getQuit()] || stateKeys[parametre->getQuitSecond()])) {
         etatGame=STOP;
     }
     render(); // a la fin on affiche tout
@@ -134,10 +135,10 @@ void Game::render()
 }
 
 void Game::effectManager(bool stateKeys[]) {  
-    if (stateKeys[K_PAUSE] && !changePostFX) {
+    if (stateKeys[parametre->getPause()] && !changePostFX) {
 	changePostFX = true;
     }
-    if (!stateKeys[K_PAUSE] && changePostFX) {
+    if (!stateKeys[parametre->getPause()] && changePostFX) {
       if(!shad)
 	      shad=1;
       else

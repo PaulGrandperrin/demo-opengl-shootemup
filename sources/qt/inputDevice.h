@@ -7,10 +7,12 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 
+extern Parameters *parametre;
+
 class Keyboard {
 private:
-    int connectionKey[NB_KEYS];  // connection between keycode of Qt, and our keycode
-    bool stateKeys[NB_KEYS]; // every key has one state (push or not)
+    int connectionKey[NB_Keys];  // connection between keycode of Qt, and our keycode
+    bool stateKeys[NB_Keys]; // every key has one state (push or not)
 public:
     Keyboard();
     void updateEvent(int key, bool state);  // change state of key : state of key = state. If invalid key, nothing
@@ -21,8 +23,8 @@ public:
 
 class Mouse {
 private:
-    int connectionButton[NB_BUTTON];  // connection between keycode of Qt, and our keycode
-    bool stateButtons[NB_BUTTON]; // every key has one state (push or not)
+    int connectionButton[NB_Button];  // connection between keycode of Qt, and our keycode
+    bool stateButtons[NB_Button]; // every key has one state (push or not)
     Point pMouse, lastPMouse;
     int dWheel;
 public:

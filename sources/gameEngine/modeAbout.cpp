@@ -16,6 +16,7 @@
 // for trace during test , to kept
 #include <iostream>
 using namespace std;
+extern Parameters *parametre;
 
 ModeAbout::ModeAbout(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode) : Mode(models, camera, etatGame, switchMode)
 {
@@ -53,7 +54,7 @@ ModeAbout::ModeAbout(Models* models, Camera* camera, Etat* etatGame, SwitchEtat*
 
 void ModeAbout::aboutManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) {
     Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
-    if(stateKeys[K_ESC]) {
+    if(stateKeys[parametre->getEsc()]) {
 	*etatGame=MENU;
 	*switchMode=TOMENU;
     }

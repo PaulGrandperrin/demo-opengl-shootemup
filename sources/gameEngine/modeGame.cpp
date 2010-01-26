@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <sstream>
+extern Parameters *parametre; 
 
 /* le plan de jeu ce fait sur xz */
 
@@ -15,7 +16,7 @@
 // for trace during test , to kept
 #include <iostream>
 using namespace std;
-
+extern Parameters *parametre;
 
 
 
@@ -37,8 +38,8 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     trajectories.clear();
     timersGenEnemy.clear();
 
-    int intHealth = HEALTH_PLAYER;
-    int intDamage = DAMAGE_PLAYER;
+    int intHealth = parametre->getHealthPlayer();
+    int intDamage = parametre->getDamagePlayer();
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
     timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
@@ -97,16 +98,16 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
         *switchMode = NONE;
         *etatGame = MENU; // seulement une fois que la transition est fini, on change l'etat.
     }
-    else if (*switchMode == NONE && stateKeys[K_ESC]) {
+    else if (*switchMode == NONE && stateKeys[parametre->getEsc()]) {
         *switchMode = TOMENU;
     }
     else {
         Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
         if (end) {
-            if (toEnd && !(stateKeys[K_ENTER] && stateButtons[B_LEFT])) { // et on attend une action pour sortir
+            if (toEnd && !(stateKeys[parametre->getEnter()] && stateButtons[parametre->getBLeft()])) { // et on attend une action pour sortir
                 *switchMode = TOMENU;
             }
-            if (stateKeys[K_ENTER] || stateButtons[B_LEFT]) {
+            if (stateKeys[parametre->getEnter()] || stateButtons[parametre->getBLeft()]) {
                 toEnd = true;
             }
         }
@@ -197,16 +198,16 @@ void ModeGame::playerManager()
   
 //     player.setAcceleration( {0,0,0});
     vect accl={0,0,0};
-    if (stateKeys[K_LEFT])  {// -x
+    if (stateKeys[parametre->getLeft()])  {// -x
         accl.x-=10;
     }
-    if (stateKeys[K_RIGHT]) {// +x
+    if (stateKeys[parametre->getRight()]) {// +x
         accl.x+=10;
     }
-    if (stateKeys[K_UP]) { // +y
+    if (stateKeys[parametre->getUp()]) { // +y
         accl.z-=20;
     }
-    if (stateKeys[K_DOWN]) { // -y
+    if (stateKeys[parametre->getDown()]) { // -y
         accl.z+=20;
     }
 
@@ -219,7 +220,7 @@ void ModeGame::playerManager()
     vect pRight={player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z};
     vect vel={player.getVelocity().x/3,player.getVelocity().y/3,player.getVelocity().z/3};
 
-    if ((((stateKeys[K_TIR]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
+    if ((((stateKeys[parametre->getTir()]) || (stateButtons[parametre->getBLeft()])) and timerGenShoot<=0))
     {
         ActorPhysique fire;
 	vel.z -= random(15,18);
@@ -232,7 +233,7 @@ void ModeGame::playerManager()
 			
         timerGenShoot=INTERVALE_TEMP_SHOOT;
     }
-    if ((((stateKeys[K_TIR_SECOND]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
+    if ((((stateKeys[parametre->getTirSecond()]) || (stateButtons[parametre->getBRight()])) and timerGenShootGros<=0))
     {
         ActorPhysique fire;
         for (float f =-0.8;f<=0.8;f+=0.2)
@@ -330,7 +331,7 @@ void ModeGame::enemiesManager()
         {
             int rec_num = *(it_traj->getRecordNumbers().begin());
             vect r={0,0,0}, s={1,1,1};
-            int damage = ACTOR_DAMAGE;
+            int damage = parametre->getActorDamage();
             ActorEnemy e(models->getEnemiesInfos()[rec_num].idModel,it_traj->getInitialPosition(),r,s,&(*it_traj),damage,models->getEnemiesInfos()[rec_num].health);
             it_traj->addEnemy(e);
             it_traj->removeFirstRecordNumber(); // On enleve le numero d'enregistrement pour dire qu'on a bien cree l'ennemi

@@ -5,15 +5,16 @@
 // for trace during test , to kept
 #include <iostream>
 using namespace std;
+extern Parameters *parametre;
 
 //http://doc.trolltech.com/4.1/qt.html
 
 Keyboard::Keyboard() {
     // On definit les touches par defaut
 
-    int connectionKeyTab[NB_KEYS] = {Qt::QT_K_QUIT, Qt::QT_K_CTRL, Qt::QT_K_SHIFT, Qt::QT_K_ALT, Qt::QT_K_UP, Qt::QT_K_DOWN, Qt::QT_K_LEFT, Qt::QT_K_RIGHT, Qt::QT_K_TIR, Qt::QT_K_TIR_SECOND, Qt::QT_K_PAUSE, Qt::QT_K_FULLSCREEN, Qt::QT_K_FULLSCREEN_SECOND, Qt::QT_K_QUIT_SECOND, Qt::QT_K_ESC, Qt::QT_K_MENU, Qt::QT_K_ENTER, Qt::QT_K_SCREENSHOT};
+    int connectionKeyTab[NB_Keys] = {Qt::QT_K_QUIT, Qt::QT_K_CTRL, Qt::QT_K_SHIFT, Qt::QT_K_ALT, Qt::QT_K_UP, Qt::QT_K_DOWN, Qt::QT_K_LEFT, Qt::QT_K_RIGHT, Qt::QT_K_TIR, Qt::QT_K_TIR_SECOND, Qt::QT_K_PAUSE, Qt::QT_K_FULLSCREEN, Qt::QT_K_FULLSCREEN_SECOND, Qt::QT_K_QUIT_SECOND, Qt::QT_K_ESC, Qt::QT_K_MENU, Qt::QT_K_ENTER, Qt::QT_K_SCREENSHOT};
     // Initialisation des attributs
-    for (int i = 0; i<NB_KEYS; i++) {
+    for (int i = 0; i<parametre->getNbKeys(); i++) {
         stateKeys[i] = 0;
         connectionKey[i] = connectionKeyTab[i];
     }
@@ -23,17 +24,17 @@ Keyboard::Keyboard() {
 void Keyboard::updateEvent(int key, bool state) {
     int i = 0;
     // Grace au code de la touche et au tableau de correspondance, on recupere son etat
-    while (i < NB_KEYS && connectionKey[i] != key) {
+    while (i < parametre->getNbKeys() && connectionKey[i] != key) {
         i++;
     }
-    if (i < NB_KEYS)
+    if (i < parametre->getNbKeys())
         stateKeys[i] = state;
 }
 
 
 Mouse::Mouse() {
-    int connectionButtonTab[NB_BUTTON] = {Qt::LeftButton, Qt::MidButton, Qt::RightButton};
-    for (int i = 0; i<NB_BUTTON; i++) {
+    int connectionButtonTab[NB_Button] = {Qt::LeftButton, Qt::MidButton, Qt::RightButton};
+    for (int i = 0; i<parametre->getNbButton(); i++) {
         stateButtons[i] = 0;
         connectionButton[i] = connectionButtonTab[i];
     }
@@ -44,10 +45,10 @@ Mouse::Mouse() {
 
 void Mouse::updateEvent(int button, int state) {
     int i = 0;
-    while (i < NB_BUTTON && connectionButton[i] != button) {
+    while (i < parametre->getNbButton() && connectionButton[i] != button) {
         i++;
     }
-    if (i < NB_BUTTON)
+    if (i < parametre->getNbButton())
         stateButtons[i] = state;
 }
 

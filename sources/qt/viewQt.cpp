@@ -42,18 +42,18 @@ void ViewOpenGl::paintGL()
     if (game->close()) //FIXME il ya surement une place plus adaptée pour ça
         close();
 
-    if (passageScreen && !(kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
+    if (passageScreen && !(kb.getStateKeys()[parametre->getFullscreen()] || (kb.getStateKeys()[parametre->getAlt()] && kb.getStateKeys()[parametre->getFullscreenSecond()]))) {
         if (!isFullScreen())
             setWindowState(Qt::WindowFullScreen);
         else
             setWindowState(Qt::WindowMaximized);
         passageScreen = false;
     }
-    else if (!passageScreen && (kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
+    else if (!passageScreen && (kb.getStateKeys()[parametre->getFullscreen()] || (kb.getStateKeys()[parametre->getAlt()] && kb.getStateKeys()[parametre->getFullscreenSecond()]))) {
         passageScreen = true;
     }
       
-    if(kb.getStateKeys()[K_SCREENSHOT] && !(screenShot)) {  
+    if(kb.getStateKeys()[parametre->getScreenshot()] && !(screenShot)) {  
 	screenShot=true;
 	QPixmap originalPixmap = QPixmap::grabWindow(winId());
 	QString format = "png";
@@ -65,7 +65,7 @@ void ViewOpenGl::paintGL()
 	}
 	originalPixmap.save("screenshots/"+dateTime+".png",format.toAscii());//folder+dateTime+format, format.toAscii());
     }
-    else if(!(kb.getStateKeys()[K_SCREENSHOT] && screenShot))
+    else if(!(kb.getStateKeys()[parametre->getScreenshot()] && screenShot))
 	screenShot=false;
     
 }
