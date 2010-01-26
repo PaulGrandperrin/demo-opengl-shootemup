@@ -14,6 +14,7 @@
 #define BUFFER_OFFSET(a) ((char*)NULL + (a)) //HACK un gros cast de ouf dingue très pratique
 
 #define RATIO 1.05
+//#define JEMAPPELLEJEANLUC
 
 //Quelques définitions de structures
 struct v 		//vecteur position 3D
@@ -147,8 +148,8 @@ void graphicEngine::init()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
-
+	#ifndef JEMAPPELLEJEANLUC
+	
 	//chargement des shaders
 	loadShaders(&sceneShader,"shaders/scene/vsNormal.glsl","shaders/scene/psNormal.glsl");
 	loadShaders(&postFXBlur,"shaders/postFX/vsNothing.glsl","shaders/postFX/psBlur.glsl");
@@ -159,6 +160,8 @@ void graphicEngine::init()
 	loadShaders(&postFXNothing,"shaders/postFX/vsNothing.glsl","shaders/postFX/psNothing.glsl");
 	
 	shadWaterParam=glGetUniformLocation(postFXWater, "shadParam");
+
+	#endif
 	
 	cout << "openGL initialized"<<endl;
 }
@@ -232,7 +235,9 @@ void graphicEngine::draw(vector<instance> inst, camera cam,unsigned int shader,l
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	glUseProgram(shader);
+	#ifndef JEMAPPELLEJEANLUC
+		glUseProgram(shader);
+	
 	
 	// gestion de la lumière
 	glEnable(GL_LIGHTING);
@@ -248,7 +253,7 @@ void graphicEngine::draw(vector<instance> inst, camera cam,unsigned int shader,l
 
 	float Sl[4] = {lv.sl.r,lv.sl.g,lv.sl.b,lv.sl.a };
 	glLightfv( GL_LIGHT0, GL_SPECULAR, Sl );
-
+	#endif
 
 	for(unsigned int i=0; i<models.size();i++)
 	{
@@ -318,6 +323,8 @@ void graphicEngine::render(vector<instance> inst,camera cam,vector<instance> ins
 	//on dessine un rectangle ayant pour texture le FBO
 	glBindTexture(GL_TEXTURE_2D, textFbo);
 
+	#ifndef JEMAPPELLEJEANLUC
+	
 	if(postFX & POSTFX_CELLSHADING)
 		glUseProgram(postFXCellShading);
 	else if(postFX & POSTFX_BLACKWHITE)
@@ -333,6 +340,8 @@ void graphicEngine::render(vector<instance> inst,camera cam,vector<instance> ins
 		glUseProgram(postFXBlur);
 	else
 		glUseProgram(postFXNothing);
+
+	#endif
 	
 	//glRotatef(time/50,1,1,0);
 	glBegin(GL_QUADS);
