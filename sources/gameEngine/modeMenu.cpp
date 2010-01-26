@@ -32,22 +32,23 @@ ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     MenuItem itemPlay(models->getMChiffres(),models->getMLettersM(), "Play Game",p, r, s, 0.6, CENTER,GAME,TOGAME);
 
     p.x=0;p.y=0;p.z=-3; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
-    MenuItem itemPause(models->getMChiffres(),models->getMLettersM(), "Pause Mode", p, r,s, 0.6, CENTER,PAUSE,NONE);
+    MenuItem itemPause(models->getMChiffres(),models->getMLettersM(), "Stop Motion", p, r,s, 0.6, CENTER,PAUSE,NONE);
 
     p.x=0;p.y=0;p.z=0; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
     MenuItem itemOption(models->getMChiffres(),models->getMLettersM(), "Option",p, r, s, 0.6, CENTER,OPTION,NONE);
 
     p.x=0;p.y=0;p.z=3; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
-    MenuItem itemQuit(models->getMChiffres(),models->getMLettersM(), "Quit Game", p,r, s, 0.6, CENTER,STOP,NONE);
+    MenuItem itemAbout(models->getMChiffres(),models->getMLettersM(), "About", p,r,s, 0.6, CENTER,ABOUT,NONE);
     
     p.x=0;p.y=0;p.z=6; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
-    MenuItem itemAbout(models->getMChiffres(),models->getMLettersM(), "About", p,r,s, 0.6, CENTER,ABOUT,NONE);
+    MenuItem itemQuit(models->getMChiffres(),models->getMLettersM(), "Quit Game", p,r, s, 0.6, CENTER,STOP,NONE);
+   
     
     this->vectorItems.push_back(itemPlay);
     this->vectorItems.push_back(itemPause);
     this->vectorItems.push_back(itemOption);
-    this->vectorItems.push_back(itemQuit);
     this->vectorItems.push_back(itemAbout);
+    this->vectorItems.push_back(itemQuit);
 }
 
 
