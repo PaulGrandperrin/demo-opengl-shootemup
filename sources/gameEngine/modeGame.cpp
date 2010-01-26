@@ -223,7 +223,7 @@ void ModeGame::playerManager()
     {
         ActorPhysique fire;
 	vel.z -= random(15,18);
-        vel.x += random(-0.5,0.5)/*-(sin(player.getRotation().y+90)*vel.z*0.8)*/; // si le vaisseau a une rotation, on l'applique legerment au boulet
+        vel.x += random(-0.5,0.5); // si le vaisseau a une rotation, on l'applique legerment au boulet
 	
         fire=ActorPhysique(models->getMboulet(), p, r, s);
         fire.setVelocity( vel );
@@ -243,7 +243,7 @@ void ModeGame::playerManager()
 // 	        pRight.x=player.getPosition().x+0.3;
                 pRight.z=player.getPosition().z+f;
                 vel.x += random(15,18);
-                vel.z += random(-0.5,0.5)/*-(sin(player.getRotation().y+90)*vel.x*0.2)*/;
+                vel.z += random(-0.5,0.5);
                 fire=ActorPhysique(models->getMboulet(), pRight, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);
@@ -254,7 +254,7 @@ void ModeGame::playerManager()
 // 	        pLeft.x=player.getPosition().x+0.3;
                 pLeft.z=player.getPosition().z+f;
                 vel.x -= random(15,18);
-                vel.z += random(-0.5,0.5)/*+(sin(player.getRotation().y+90)*vel.x*0.2)*/;
+                vel.z += random(-0.5,0.5);
                 fire=ActorPhysique(models->getMboulet(),pLeft, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);
