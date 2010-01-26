@@ -35,6 +35,7 @@ HEADERS += sources/parameters.h \
            sources/gameEngine/models.h \
            sources/gameEngine/modeMenu.h \
            sources/gameEngine/modePause.h \
+	   sources/gameEngine/modeAbout.h \
            sources/graphicEngine/graphicEngine.h \
            sources/qt/inputDevice.h \
            sources/qt/viewQt.h \
@@ -53,6 +54,7 @@ SOURCES += sources/main.cpp \
            sources/gameEngine/models.cpp \
            sources/gameEngine/modeMenu.cpp \
            sources/gameEngine/modePause.cpp \
+	   sources/gameEngine/modeAbout.cpp \
            sources/graphicEngine/graphicEngine.cpp \
            sources/qt/inputDevice.cpp \
            sources/qt/viewQt.cpp \

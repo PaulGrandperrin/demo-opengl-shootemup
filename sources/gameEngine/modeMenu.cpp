@@ -28,22 +28,26 @@ ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     oldMouse.y = 0;
 
     // on reconstruit les objet du menu
-    vect pPlay={0,0,-6}, rPlay={0,0,0}, sPlay={2.5,2.5,1.5};
-    MenuItem itemPlay(models->getMChiffres(),models->getMLettersM(), "Play Game",pPlay, rPlay, sPlay, 0.6, CENTER,GAME,TOGAME);
+    vect p={0,0,-6}, r={0,0,0}, s={2.5,2.5,1.5};
+    MenuItem itemPlay(models->getMChiffres(),models->getMLettersM(), "Play Game",p, r, s, 0.6, CENTER,GAME,TOGAME);
 
-    vect pPause={0,0,-3}, rPause={0,0,0}, sPause={2,2,1};
-    MenuItem itemPause(models->getMChiffres(),models->getMLettersM(), "Stop Motion", pPause, rPause,sPause, 0.6, CENTER,PAUSE,NONE);
+    p.x=0;p.y=0;p.z=-3; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
+    MenuItem itemPause(models->getMChiffres(),models->getMLettersM(), "Stop Motion", p, r,s, 0.6, CENTER,PAUSE,NONE);
 
-    vect pOption={0,0,0}, rOption={0,0,0}, sOption={2,2,1};
-    MenuItem itemOption(models->getMChiffres(),models->getMLettersM(), "Option",pOption, rOption, sOption, 0.6, CENTER,OPTION,NONE);
+    p.x=0;p.y=0;p.z=0; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
+    MenuItem itemOption(models->getMChiffres(),models->getMLettersM(), "Option",p, r, s, 0.6, CENTER,OPTION,NONE);
 
-    vect pQuit={0,0,3}, rQuit={0,0,0}, sQuit={2,2,1};
-    MenuItem itemQuit(models->getMChiffres(),models->getMLettersM(), "Quit Game", pQuit, rQuit, sQuit, 0.6, CENTER,STOP,NONE);
-
+    p.x=0;p.y=0;p.z=3; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
+    MenuItem itemQuit(models->getMChiffres(),models->getMLettersM(), "Quit Game", p,r, s, 0.6, CENTER,STOP,NONE);
+    
+    p.x=0;p.y=0;p.z=6; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
+    MenuItem itemAbout(models->getMChiffres(),models->getMLettersM(), "About", p,r,s, 0.6, CENTER,ABOUT,NONE);
+    
     this->vectorItems.push_back(itemPlay);
     this->vectorItems.push_back(itemPause);
     this->vectorItems.push_back(itemOption);
     this->vectorItems.push_back(itemQuit);
+    this->vectorItems.push_back(itemAbout);
 }
 
 

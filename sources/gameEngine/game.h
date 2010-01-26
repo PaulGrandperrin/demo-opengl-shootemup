@@ -10,8 +10,8 @@
 #include "./modePause.h"
 #include "./modeMenu.h"
 #include "./modeGame.h"
+#include "./modeAbout.h"
 #include "../utilities.h"
-
 
 class Game
 {
@@ -35,6 +35,7 @@ private:
     ModeGame mGame;
     ModeMenu mMenu;
     ModePause mPause;
+    ModeAbout mAbout;
     Fond fond;
 
     // tout les models qu'il peut exister

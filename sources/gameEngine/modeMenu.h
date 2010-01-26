@@ -19,7 +19,7 @@ public:
 
 private:
     Point oldMouse;
-    MenuItem itemPlay, itemPause, itemOption, itemQuit;
+    MenuItem itemPlay, itemPause, itemOption, itemQuit, itemAbout;
     bool keyDown, keyUp, bMouse;
     vector<MenuItem> vectorItems;
     int select;
