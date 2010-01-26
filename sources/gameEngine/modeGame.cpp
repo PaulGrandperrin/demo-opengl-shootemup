@@ -197,19 +197,20 @@ void ModeGame::playerManager()
   
 //     player.setAcceleration( {0,0,0});
     vect accl={0,0,0};
-    if (stateKeys[K_LEFT]) // -x
+    if (stateKeys[K_LEFT])  {// -x
         accl.x-=10;
-    player.setAcceleration( accl );
-    if (stateKeys[K_RIGHT]) // +x
+    }
+    if (stateKeys[K_RIGHT]) {// +x
         accl.x+=10;
-    player.setAcceleration( accl);
-    if (stateKeys[K_UP]) // +y
+    }
+    if (stateKeys[K_UP]) { // +y
         accl.z-=20;
-    player.setAcceleration( accl);
-    if (stateKeys[K_DOWN]) // -y
+    }
+    if (stateKeys[K_DOWN]) { // -y
         accl.z+=20;
-    player.setAcceleration( accl);
+    }
 
+    player.setAcceleration( accl );
     player.update(dTime);
     // TODO ameliorer definition des bords
 
@@ -221,12 +222,14 @@ void ModeGame::playerManager()
     if ((((stateKeys[K_TIR]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
         ActorPhysique fire;
-        vel.x += random(-0.5,0.5);
-        vel.z -= random(15,18);
+	vel.z -= random(15,18);
+        vel.x += random(-0.5,0.5)-(sin(player.getRotation().y+90)*vel.z*0.2); // si le vaisseau a une rotation, on l'applique legerment au boulet
+	
         fire=ActorPhysique(models->getMboulet(), p, r, s);
         fire.setVelocity( vel );
+        friendFires.push_back(fire); // on double la pussance des boulet tire a l'avant
         friendFires.push_back(fire);
-
+			
         timerGenShoot=INTERVALE_TEMP_SHOOT;
     }
     if ((((stateKeys[K_TIR_SECOND]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
@@ -240,7 +243,7 @@ void ModeGame::playerManager()
 // 	        pRight.x=player.getPosition().x+0.3;
                 pRight.z=player.getPosition().z+f;
                 vel.x += random(15,18);
-                vel.z += random(-0.5,0.5);
+                vel.z += random(-0.5,0.5)-(sin(player.getRotation().y+90)*vel.x*0.2);
                 fire=ActorPhysique(models->getMboulet(), pRight, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);
@@ -251,7 +254,7 @@ void ModeGame::playerManager()
 // 	        pLeft.x=player.getPosition().x+0.3;
                 pLeft.z=player.getPosition().z+f;
                 vel.x -= random(15,18);
-                vel.z += random(-0.5,0.5);
+                vel.z += random(-0.5,0.5)+(sin(player.getRotation().y+90)*vel.x*0.2);
                 fire=ActorPhysique(models->getMboulet(),pLeft, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);

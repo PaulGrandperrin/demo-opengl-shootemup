@@ -90,16 +90,43 @@ void ActorPlayer::colisionBord(float width, float height)
 
 void ActorPlayer::update(float time)
 {
+  vect r = {0,0,0};
     velocity.x+=time*acceleration.x/1000;
     velocity.y+=time*acceleration.y/1000;
     velocity.z+=time*acceleration.z/1000;
+    
     position.x+=time*velocity.x/1000;
     position.y+=time*velocity.y/1000;
     position.z+=time*velocity.z/1000;
 
+    if (acceleration.x != 0 && getRotation().y <= -80 && getRotation().y >= -100) {
+      if (acceleration.z <= 0) {
+	  if (acceleration.x < 0)
+	    r.y = 1;
+	  if (acceleration.x > 0)
+	    r.y = -1;
+      }
+      else { // acceleratin.z > 0
+	  if (acceleration.x < 0)
+	    r.y = -1;
+	  if (acceleration.x > 0)
+	    r.y = 1;
+      }
+      rotate(r);
+    }
+    
     velocity.x*=0.97; // fortement plus grand car surface ++
     velocity.y*=0.98;
     velocity.z*=0.98;
+    if (getRotation().y < -90) {
+      vect rot = {0,0.5,0};
+      rotate(rot);
+    }
+    else if (getRotation().y > -90) {
+      vect rot = {0,-0.5,0};
+      rotate(rot);
+    }
+    
 }
 
 
