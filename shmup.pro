@@ -11,12 +11,14 @@ DEPENDPATH += . \
               sources/gameEngine \
               sources/graphicEngine \
               sources/qt \
+              sources/soundEngine \
               sources/gameEngine/objects
 INCLUDEPATH += . \
                sources/qt \
                sources \
                sources/gameEngine \
                sources/gameEngine/objects \
+               sources/soundEngine \
                sources/graphicEngine
 QT += opengl
 LIBS += -lGLEW  -lIL -lopenal -lsndfile
@@ -46,7 +48,7 @@ HEADERS += sources/parameters.h \
            sources/gameEngine/objects/fond.h \
            sources/gameEngine/objects/trajectory.h \
            sources/gameEngine/objects/menuItem.h \
-	   sources/gameEngine/objects/soundEngine.h
+		sources/soundEngine/soundEngine.h
 SOURCES += sources/main.cpp \
            sources/utilities.cpp \
            sources/gameEngine/game.cpp \
@@ -65,4 +67,5 @@ SOURCES += sources/main.cpp \
            sources/gameEngine/objects/text.cpp \
            sources/gameEngine/objects/fond.cpp \
            sources/gameEngine/objects/trajectory.cpp \
-           sources/gameEngine/objects/menuItem.cpp
+           sources/gameEngine/objects/menuItem.cpp \
+           sources/soundEngine/soundEngine.cpp

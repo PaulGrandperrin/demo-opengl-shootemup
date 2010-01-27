@@ -11,7 +11,7 @@
 #include "./objects/text.h"
 #include "./objects/fond.h"
 #include "./objects/camera.h"
-//#include "./objects/soundEngine.h"
+#include "../soundEngine/soundEngine.h"
 
 class Mode
 {
