@@ -48,6 +48,11 @@ public:
         rotation.y+=r.y;
         rotation.z+=r.z;
     }
+    inline void scal(vect s) {
+        scale.x+=s.x;
+        scale.y+=s.y;
+        scale.z+=s.z;
+    }
 
     inline void setTranslation(vect t) {
         position.x=t.x;

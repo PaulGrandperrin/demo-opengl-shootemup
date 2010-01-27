@@ -4,8 +4,8 @@
 #include <iostream>
 using namespace std;
 
-MenuItem::MenuItem(vector<int> MChiffres, vector<int> MLettersM, string text, vect position,vect rotation,vect scale, float esp, TextStyle style, Etat stat, SwitchEtat switchstat):
-        text(MChiffres,MLettersM,text,position,rotation,scale,esp,style) {
+MenuItem::MenuItem(Models* models, string text, vect position,vect rotation,vect scale, float esp, TextStyle style, Etat stat, SwitchEtat switchstat):
+        text(models,text,position,rotation,scale,esp,style) {
     state=stat;
     switchState=switchstat;
 }

@@ -28,6 +28,12 @@ public :
     inline int getMCursorPause() {
         return MCursorPause;
     }
+    inline int getMFondScore() {
+        return MFondScore;
+    }
+    inline int getMFondMenu() {
+        return MFondMenu;
+    }
     inline vector<int> getMChiffres() {
         return MChiffres;
     }
@@ -45,7 +51,7 @@ public :
     }
 
 //public : //TODO metre private probleme vector
-    int Mplayer,Mboulet,MCursorPause;
+    int Mplayer,Mboulet,MCursorPause,MFondScore,MFondMenu;
     vector<int> MChiffres;
     vector<int> MLettersM;
     vector<int> MNuages;

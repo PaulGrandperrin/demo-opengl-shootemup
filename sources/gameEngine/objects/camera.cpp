@@ -45,15 +45,15 @@ void Camera::setCenterZ(float f) {
 
 
 
-void Camera::resetSmart(float longitudeAim, float latitudeAim, float zoomAim, SwitchEtat toEtat)
+void Camera::resetSmart(float longitudeAim, float latitudeAim, float zoomAim, float posXAim, float posZAim, SwitchEtat toEtat)
 {
     if (resetCamS) {
         nbfoisResetCamSmart = TEMP_RESETCAM_SMART_PAUSE;
         stepLong = -(longitude-longitudeAim) / nbfoisResetCamSmart;
         stepLat = -(latitude-latitudeAim) / nbfoisResetCamSmart;
         stepZoom = -(zoom - zoomAim) / nbfoisResetCamSmart;
-        stepCentreX = -centerX / nbfoisResetCamSmart;
-        stepCentreZ = -centerZ / nbfoisResetCamSmart;
+        stepCentreX = -(centerX -posXAim) / nbfoisResetCamSmart;
+        stepCentreZ = -(centerZ -posZAim) / nbfoisResetCamSmart;
         resetCamS = false;
     }
 
@@ -66,10 +66,10 @@ void Camera::resetSmart(float longitudeAim, float latitudeAim, float zoomAim, Sw
     if (zoom != zoomAim) {
         zoom += stepZoom;
     }
-    if (centerX != 0) {
+    if (centerX != posXAim) {
         centerX += stepCentreX;
     }
-    if (centerZ != 0) {
+    if (centerZ != posZAim) {
         centerZ += stepCentreZ;
     }
 
@@ -79,13 +79,16 @@ void Camera::resetSmart(float longitudeAim, float latitudeAim, float zoomAim, Sw
         longitude=longitudeAim;
         latitude=latitudeAim;
         zoom=zoomAim;
-        centerX = 0;
-        centerZ = 0;
+        centerX = posXAim;
+        centerZ = posZAim;
     }
-    if ((toEtat == TOMENU) && (camOKMenu())) {
+    if ((toEtat == TOMENU) && (camOKMenu()) && (nbfoisResetCamSmart == 0)) {
         resetCamS = true; // pour une qutre fois
     }
-    if ((toEtat == TOGAME) && (camOKGame())) {
+    if ((toEtat == TOGAME) && (camOKGame()) && (nbfoisResetCamSmart == 0)) {
+        resetCamS = true; // pour une qutre fois
+    }
+    if ((toEtat == TOPAUSE) && (camOKPause()) && (nbfoisResetCamSmart == 0)) {
         resetCamS = true; // pour une qutre fois
     }
 

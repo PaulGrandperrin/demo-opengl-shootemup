@@ -32,7 +32,7 @@ ModePause::ModePause(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* 
     cursorPause = Actor(models->getMCursorPause(), p, r, s);
     
     vect pTPause={-11.5,0,-12}, rTPause= {0,0,0}, sTPause={0.8,0.8,0.5};
-    tPause = Text(models->getMChiffres(),models->getMLettersM(), "Pause Mode", pTPause, rTPause, sTPause, 0.6, LEFT); // test du text, pour l'instant "abcde"
+    tPause = Text(models, "Pause Mode", pTPause, rTPause, sTPause, 0.6, LEFT); // test du text, pour l'instant "abcde"
 
 }
 
@@ -44,7 +44,13 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordM
     oldMouse.x=coordMouse.x;
     oldMouse.y=coordMouse.y;
 
-    if (*switchMode == TOMENU && (!camera->camOKMenu())) {
+    if (*switchMode == TOPAUSE && !camera->camOKPause()) {
+        camera->toModePauseSmart();
+    }
+    else if (*switchMode == TOPAUSE && camera->camOKPause()) {
+        *switchMode = NONE;
+    }
+    else if (*switchMode == TOMENU && (!camera->camOKMenu())) {
         camera->toModeMenuSmart();
     }
     else if (*switchMode == TOMENU && (camera->camOKMenu())) {
@@ -69,8 +75,8 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordM
 void ModePause::moveCam() {
 
     if (resetCam) {
-        camera->toModeMenuSmart();
-        if (camera->camOKMenu()) {
+        camera->toModePauseSmart();
+        if (camera->camOKPause()) {
             resetCam=false;
         }
     }
@@ -88,7 +94,7 @@ void ModePause::moveCam() {
             vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
             cursorPause = Actor(models->getMCursorPause(), p, r, s);
             camera->toModeMenuSmart();
-            if (camera->camOKMenu())
+            if (camera->camOKPause())
                 resetCam=false;
         }
     }

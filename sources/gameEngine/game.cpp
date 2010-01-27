@@ -27,14 +27,12 @@ Game::~Game()
 
 Game::Game() // construction des camera, du GE et des autre objets tell que les Mode, mais il seront reconstruit apres de toute maniere
 {
-
     etatGame = MENU;
     switchMode = NONE;
     shad=POSTFX_NOTHING;
     changePostFX = false;
     // on abesoin du GE pour construire les models
     models = Models(&GE);
-
     // on initialise les different mode (etat) du jeu
     mMenu = ModeMenu(&models, &cam,&etatGame, &switchMode);
     mGame = ModeGame(&models, &cam,&etatGame, &switchMode);

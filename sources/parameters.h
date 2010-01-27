@@ -162,6 +162,7 @@ public :
     }
     inline int getBMiddle() {
         return B_MIDDLE;
+	
     }
     inline int getBRight() {
         return B_RIGHT;
@@ -214,7 +215,6 @@ private :
 #define NB_Button 9
 #define NB_Keys 18
 
-
 #define NB_NUAGE_TYPE 3 // le nombre de nuage sur la scene
 #define NB_SOL 30
 
@@ -252,12 +252,28 @@ private :
 #define TEMP_RESETCAM_SMART_PAUSE 50
 #define TEMP_BROUILLAGE_CAM_PLAYER_HEARTH 50
 
-#define ZOOM_MENU 20 // temps mis pour reset l'angle apres la pause
+#define POSITION_CAM_MENU_X -3
+#define POSITION_CAM_MENU_Z -2.5
+#define ZOOM_MENU 15 // temps mis pour reset l'angle apres la pause
 #define LATITUDE_MENU 1.0 // temps mis pour reset l'angle apres la pause
 #define LONGITUDE_MENU 0.5 // temps mis pour reset l'angle apres la pause
+
+#define POSITION_CAM_GAME_X 0
+#define POSITION_CAM_GAME_Z 0
 #define ZOOM_GAME 30 // temps mis pour reset l'angle apres la pause
 #define LATITUDE_GAME 1.5 // temps mis pour reset l'angle apres la pause
 #define LONGITUDE_GAME 0.0 // temps mis pour reset l'angle apres la pause
+
+#define POSITION_CAM_PAUSE_X 0
+#define POSITION_CAM_PAUSE_Z 0
+#define ZOOM_PAUSE 15 // temps mis pour reset l'angle apres la pause
+#define LATITUDE_PAUSE 1.0 // temps mis pour reset l'angle apres la pause
+#define LONGITUDE_PAUSE -0.5 // temps mis pour reset l'angle apres la pause
+
+#define POSITION_MENU_X -3
+#define POSITION_MENU_Y 0
+
+
 #define CENTERX_MIN -100 // le plus proche
 #define CENTERX_MAX 100 // le plus loins
 #define CENTERZ_MIN -100 // le plus proche

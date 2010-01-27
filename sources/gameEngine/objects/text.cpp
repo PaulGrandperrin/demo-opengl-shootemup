@@ -11,7 +11,7 @@ using namespace std;
 // Text
 //---------------------------------------------------------------
 
-Text::Text(vector<int> MChiffres, vector<int> MLettersM, string text, vect position,vect rotation,vect scale, float esp, TextStyle style)
+Text::Text(Models* models, string text, vect position,vect rotation,vect scale, float esp, TextStyle style)
 {
     // on sauvegarde certaines donne qui reservirons plutart
     this->position=position;
@@ -20,6 +20,7 @@ Text::Text(vector<int> MChiffres, vector<int> MLettersM, string text, vect posit
     this->style=style;
     this->text=text;
     this->espace=esp;
+    this->models = models;
 
     Actor car;
     float rayon= 0;
@@ -41,13 +42,13 @@ Text::Text(vector<int> MChiffres, vector<int> MLettersM, string text, vect posit
         p.z = position.z - sin(rotation.y*3.1415/180) * rayon;
         //  (int)text[i] - (int)'0' --> on converti le caractere de la chaine en entier
         if  ((int)text[i] >= (int)'0' &&  (int)text[i] <= (int)'9') {
-            car = Actor(MChiffres[ (int)text[i] - (int)'0'], p, r, sMajChi);
+            car = Actor(models->getMChiffres()[ (int)text[i] - (int)'0'], p, r, sMajChi);
         }
         else if  ((int)text[i] >= (int)'a' &&  (int)text[i] <= (int)'z') {
-            car = Actor(MLettersM[ (int)text[i] - (int)'a'], p, r, s);
+            car = Actor(models->getMLettersM()[ (int)text[i] - (int)'a'], p, r, s);
         }
         else if ((int)text[i] >= (int)'A' &&  (int)text[i] <= (int)'Z') {
-            car = Actor(MLettersM[ (int)text[i] - (int)'A'], p, r, sMajChi);
+            car = Actor(models->getMLettersM()[ (int)text[i] - (int)'A'], p, r, sMajChi);
         }
         else {
             car = Actor(-1, p, r, s);
@@ -168,7 +169,7 @@ void Text::translate(vect tr) {
     }
 }
 
-Number::Number(vector<int> MChiffres, int number, vect position, vect rotation, vect scale, float esp, TextStyle style)
+Number::Number(Models* models, int number, vect position, vect rotation, vect scale, float esp, TextStyle style)
 {
     // grosso modo meme procedure que Text (au dessus)
     string text = entierToString(number);
@@ -179,6 +180,7 @@ Number::Number(vector<int> MChiffres, int number, vect position, vect rotation, 
     this->style=style;
     this->text=text;
     this->espace=esp;
+    this->models = models;
 
     Actor car;
     float rayon= 0;
@@ -199,7 +201,7 @@ Number::Number(vector<int> MChiffres, int number, vect position, vect rotation, 
         p.z = position.z - sin(rotation.y*3.1415/180) * rayon;
         //  (int)text[i] - (int)'0' --> on converti le caractere de la chaine en entier
         if  ((int)text[i] >= (int)'0' &&  (int)text[i] <= (int)'9') {
-            car = Actor(MChiffres[ (int)text[i] - (int)'0'], p, r, s);
+            car = Actor(models->getMChiffres()[ (int)text[i] - (int)'0'], p, r, s);
         }
         else {
             car = Actor(-1, p, r, s);
@@ -210,9 +212,8 @@ Number::Number(vector<int> MChiffres, int number, vect position, vect rotation, 
 }
 
 
-void Number::update(vector<int> MChiffres, int number)
+void Number::update(int number)
 {
-    // TODO a revoir, surment optimisation a faire !
     string text = entierToString(number);
     Actor car;
     float rayon= 0;
@@ -230,9 +231,8 @@ void Number::update(vector<int> MChiffres, int number)
         rayon += espace*scale.x;
         p.x = position.x + cos(rotation.y*3.1415/180) * rayon;
         p.z = position.z - sin(rotation.y*3.1415/180) * rayon;
-
         if  ((int)text[i] >= (int)'0' &&  (int)text[i] <= (int)'9') {
-            car = Actor(MChiffres[ (int)text[i] - (int)'0'], p, r, s);
+            car = Actor(models->getMChiffres()[ (int)text[i] - (int)'0'], p, r, s);
         }
         else {
             car = Actor(-1, p, r, s);
@@ -241,27 +241,68 @@ void Number::update(vector<int> MChiffres, int number)
     }
 }
 
-Score::Score(vector<int> MChiffres, int number, vect position, vect rotation, vect scale, float esp, TextStyle style) : Number(MChiffres, number, position, rotation, scale, esp, style)
+Score::Score(Models* models, int number, string st, vect position, vect rotation, vect scale, float esp, TextStyle style) : Number(models, number, position, rotation, scale, esp, style)
 {
     this->score = number;
+      
+    vect p=position, r= rotation, s=scale;
+    p.z +=-1;
+    tScore = Text(models, st, p, r, s, 0.6, style); // test du text, pour l'instant "abcde"
+    
+    p.z +=0.5;
+    fondScore = Actor(models->getMFondScore(), p, r, s);
 }
 
-void Score::setScore(vector<int> MChiffres, int number) {
+void Score::setScore(int number) {
     score += number;
-    Number::update(MChiffres,score);
+    Number::update(score);
 }
 
-void Score::initScore(vector<int> MChiffres, int number) {
+void Score::initScore( int number) {
     score = number;
-    Number::update(MChiffres,score);
+    Number::update(score);
 }
 
-Health::Health(vector<int> MChiffres, int number, vect position, vect rotation, vect scale, float esp, TextStyle style) : Number(MChiffres, number, position, rotation, scale, esp, style)
+void Score::getRender(vector<instance>* instances2D) {
+    vector<Actor> vActor;
+    vector<Actor>::iterator itA;
+    
+    instances2D->push_back(fondScore.getInstance());
+    for (itA=caract.begin(); itA!=caract.end(); itA++) {
+	instances2D->push_back(itA->getInstance());
+    }
+    vActor = tScore.getText();
+    for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+	instances2D->push_back(itA->getInstance());
+    }
+}
+
+Health::Health(Models* models, int number, string st, vect position, vect rotation, vect scale, float esp, TextStyle style) : Number(models, number, position, rotation, scale, esp, style)
 {
     this->health = number;
+    vect p=position, r= rotation, s=scale;
+    p.z +=-1;
+    tHealth = Text(models, st, p, r, s, 0.6, style); // test du text, pour l'instant "abcde"
+    
+    p.z +=0.5;
+    fondHealth = Actor(models->getMFondScore(), p, r, s);
 }
 
-void Health::setHealth(vector<int> MChiffres, int number) { //TODO a modifier
+void Health::setHealth(int number) { //TODO a modifier
     this->health = number;
-    Number::update(MChiffres,health);
+    Number::update(health);
+}
+
+void Health::getRender(vector<instance>* instances2D) {
+    vector<Actor> vActor;
+    vector<Actor>::iterator itA;
+    
+    instances2D->push_back(fondHealth.getInstance());
+    for (itA=caract.begin(); itA!=caract.end(); itA++) {
+	instances2D->push_back(itA->getInstance());
+    }
+    vActor = tHealth.getText();
+    for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+	instances2D->push_back(itA->getInstance());
+    }
 }

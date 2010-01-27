@@ -49,20 +49,14 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
 	vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
 	player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer, intHealth, intDamage ,0.4);
 
-	vect pScore={-11.5,0,-11}, rScore= {0,0,0}, sScore={1,1,0.5};
-	score = Score(models->getMChiffres(), 0, pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
+    vect pScore={-12,0,-11}, rScore= {0,0,0}, sScore={1,1,0.5};
+    score = Score(models, 0, "Score", pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
 
-	vect pLeScore={-11.5,0,-12}, rLeScore= {0,0,0}, sLeScore={0.8,0.8,0.5};
-	tScore = Text(models->getMChiffres(),models->getMLettersM(), "Score", pLeScore, rLeScore, sLeScore, 0.6, LEFT); // test du text, pour l'instant "abcde"
+    vect pVie={12,0,-11}, rVie= {0,0,0}, sVie={1,1,0.5};
+    health = Health(models, intHealth, "Health" , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
 
-	vect pVie={11.5,0,-11}, rVie= {0,0,0}, sVie={1,1,0.5};
-	health = Health(models->getMChiffres(), intHealth , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
-
-	vect pLaVie={11.5,0,-12}, rLaVie= {0,0,0}, sLaVie={0.8,0.8,0.5};
-	tHealth = Text(models->getMChiffres(),models->getMLettersM(), "Health", pLaVie, rLaVie, sLaVie, 0.6, RIGHT); // test du text, pour l'instant "abcde"
-
-	vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={3,3,2};
-	tEnd = Text(models->getMChiffres(),models->getMLettersM(), "End", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
+    vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={3,3,2};
+    tEnd = Text(models, "End", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
 
 	playSound("ocean.wav");
 
@@ -165,32 +159,18 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
 		instances->push_back(itAP->getInstance());
 	}
 
-	// les text, score et health et End si c'est la fin
-	if (*etatGame == GAME && *switchMode == NONE) {
-		// on affiche le score ..., et autre info
-		vActor = score.getText();
-		for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-			instances2D->push_back(itA->getInstance());
-		}
-		vActor = tScore.getText();
-		for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-			instances2D->push_back(itA->getInstance());
-		}
-		vActor = health.getText();
-		for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-			instances2D->push_back(itA->getInstance());
-		}
-		vActor = tHealth.getText();
-		for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-			instances2D->push_back(itA->getInstance());
-		}
-		if (end) {
-			vActor = tEnd.getText();
-			for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-				instances2D->push_back(itA->getInstance());
-			}
-		}
-	}
+    // les text, score et health et End si c'est la fin
+    if (*etatGame == GAME && *switchMode == NONE) {
+        // on affiche le score ..., et autre info
+        score.getRender(instances2D);
+        health.getRender(instances2D);
+        if (end) {
+            vActor = tEnd.getText();
+            for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+                instances2D->push_back(itA->getInstance());
+            }
+        }
+    }
 }
 /*
 *NOTE j'ai fait une version un peu compliqué du déplacement du joueur pour montrer les possibilités de
@@ -394,7 +374,7 @@ void ModeGame::collisionManager()
 					it_enn = enemies.erase(it_enn);
 				}
 				else if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
-					score.setScore(models->getMChiffres(),10);
+					score.setScore(10);
 					deadEnemies.push_back(ActorPhysique(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
 					deadEnemies.back().setVelocity(it_enn->getVelocity());
 					it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
@@ -422,5 +402,5 @@ void ModeGame::collisionManager()
 		else
 			itAP++;
 	}
-	health.setHealth(models->getMChiffres(), player.getHealth()); // al la fin, on met a jour l'objet graphi sante
+	health.setHealth(player.getHealth()); // al la fin, on met a jour l'objet graphi sante
 }

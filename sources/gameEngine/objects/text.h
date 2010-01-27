@@ -8,6 +8,7 @@ using namespace std;
 #include "../../parameters.h"
 #include "../../utilities.h"
 #include "./actor.h"
+#include "../models.h"
 
 #include <vector>
 #include <QGLWidget>
@@ -22,7 +23,7 @@ class Text
 {
 public:
     Text() {};
-    Text( vector<int> MChiffres, vector<int> MLettersM, string text, vect position,vect rotation,vect scale, float esp, TextStyle style);
+    Text( Models* models, string text, vect position,vect rotation,vect scale, float esp, TextStyle style);
 
     void update(string, vector<int>) {}
 
@@ -53,42 +54,49 @@ protected:
     string text;
     TextStyle style;
     float espace;
+    Models* models;
 };
 
 class Number : public Text
 {
 public :
     Number() {};
-    Number(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
-    void update(vector<int> MChiffres, int number);
+    Number(Models* models, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
+    void update(int number);
 };
 
 class Score : public Number
 {
 public :
     Score() {};
-    Score(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
-    void setScore(vector<int> MChiffres, int number);
-    void initScore(vector<int> MChiffres, int number);
+    Score(Models* models, int number, string st, vect position,vect rotation,vect scale, float esp, TextStyle style);
+    void setScore(int number);
+    void initScore(int number);
     int getScore() {
         return score;
     }
+    void getRender(vector<instance>* instances2D);
 
 private:
     int score;
+    Text tScore;
+    Actor fondScore;
 };
 
 class Health : public Number
 {
 public :
     Health() {};
-    Health(vector<int> MChiffres, int number, vect position,vect rotation,vect scale, float esp, TextStyle style);
-    void setHealth(vector<int> MChiffres, int number);
+    Health(Models* models, int number, string st, vect position,vect rotation,vect scale, float esp, TextStyle style);
+    void setHealth(int number);
     int getHealth() {
         return health;
     }
-
+    void getRender(vector<instance>* instances2D);
+    
 private:
     int health;
+    Text tHealth;
+    Actor fondHealth;
 };
 #endif

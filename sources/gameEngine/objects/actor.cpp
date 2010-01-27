@@ -90,7 +90,6 @@ void ActorPlayer::colisionBord(float width, float height)
 
 void ActorPlayer::update(float time)
 {
-  vect r = {0,0,0};
     velocity.x+=time*acceleration.x/1000;
     velocity.y+=time*acceleration.y/1000;
     velocity.z+=time*acceleration.z/1000;

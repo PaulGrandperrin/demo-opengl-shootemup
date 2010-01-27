@@ -15,7 +15,7 @@ private:
     SwitchEtat switchState;
 public:
     MenuItem() {}
-    MenuItem(vector<int> MChiffres, vector<int> MLettersM, string text, vect position,vect rotation,vect scale, float esp, TextStyle style,Etat stat, SwitchEtat switchstate);
+    MenuItem(Models* models, string text, vect position,vect rotation,vect scale, float esp, TextStyle style, Etat stat, SwitchEtat switchstat);
     inline void changeScale(vect sca) {
         text.scal(sca);
     }

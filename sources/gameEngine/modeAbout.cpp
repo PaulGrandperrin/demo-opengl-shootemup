@@ -23,31 +23,31 @@ ModeAbout::ModeAbout(Models* models, Camera* camera, Etat* etatGame, SwitchEtat*
   
     // on reconstruit les objet du menu
     vect p={0,0,-9}, r={0,0,0}, s={2,2,1};
-    Text madeBy(models->getMChiffres(),models->getMLettersM(), "Made By  ",p, r, s, 0.5, RIGHT);
+    Text madeBy(models, "Made By  ",p, r, s, 0.5, RIGHT);
     this->vectorText.push_back(madeBy);
     
     p.x=0;p.y=0;p.z=-6; r.x=0;r.y=0;r.z=0; s.x=1.5;s.y=1.5;s.z=0.75;
-    Text robin(models->getMChiffres(),models->getMLettersM(), "DAVID Robin",p,r,s, 0.5, CENTER);
+    Text robin(models, "DAVID Robin",p,r,s, 0.5, CENTER);
     this->vectorText.push_back(robin);
     
     p.x=0;p.y=0;p.z=-3; r.x=0;r.y=0;r.z=0; s.x=1.5;s.y=1.5;s.z=0.75;
-    Text jeanlu(models->getMChiffres(),models->getMLettersM(), "PASQUIER Jean-Luc",p,r,s, 0.5, CENTER);
+    Text jeanlu(models, "PASQUIER Jean-Luc",p,r,s, 0.5, CENTER);
     this->vectorText.push_back(jeanlu);
 
     p.x=0;p.y=0;p.z=0; r.x=0;r.y=0;r.z=0; s.x=1.5;s.y=1.5;s.z=0.75;
-    Text sebastien(models->getMChiffres(),models->getMLettersM(), "BERTHIER Sebastien", p,r,s, 0.5, CENTER);
+    Text sebastien(models, "BERTHIER Sebastien", p,r,s, 0.5, CENTER);
     this->vectorText.push_back(sebastien);
     
     p.x=0;p.y=0;p.z=3; r.x=0;r.y=0;r.z=0; s.x=1.5;s.y=1.5;s.z=0.75;
-    Text remi(models->getMChiffres(),models->getMLettersM(), "PEYRIN Remi", p,r,s, 0.5, CENTER);
+    Text remi(models, "PEYRIN Remi", p,r,s, 0.5, CENTER);
     this->vectorText.push_back(remi);
     
     p.x=0;p.y=0;p.z=6; r.x=0;r.y=0;r.z=0; s.x=1.5;s.y=1.5;s.z=0.75;
-    Text paul(models->getMChiffres(),models->getMLettersM(), "GRANDPERRIN Paul", p,r,s, 0.5, CENTER);
+    Text paul(models, "GRANDPERRIN Paul", p,r,s, 0.5, CENTER);
     this->vectorText.push_back(paul);
     
     p.x=0;p.y=0;p.z=9; r.x=0;r.y=0;r.z=0; s.x=1.5;s.y=1.5;s.z=0.75;
-    Text romain(models->getMChiffres(),models->getMLettersM(), "LETENDART Romain", p,r,s, 0.5, CENTER);
+    Text romain(models, "LETENDART Romain", p,r,s, 0.5, CENTER);
     this->vectorText.push_back(romain);
 }
 

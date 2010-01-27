@@ -40,7 +40,6 @@ private:
 	list<ActorPhysique> deadEnemies;
     ActorPlayer player;
     Score score;
-    Text tScore;
     Health health;
     Text tHealth;
     Text tEnd;

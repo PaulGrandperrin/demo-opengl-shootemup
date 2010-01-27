@@ -7,6 +7,7 @@
 #include "./mode.h"
 #include "./objects/menuItem.h"
 
+
 class ModeMenu : public Mode
 {
 public:
@@ -24,6 +25,7 @@ private:
     vector<MenuItem> vectorItems;
     int select;
     int selectMouse;
+    Actor fondMenu;
 
 };
 

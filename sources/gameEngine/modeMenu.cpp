@@ -28,20 +28,26 @@ ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     oldMouse.y = 0;
 
     // on reconstruit les objet du menu
-    vect p={0,0,-6}, r={0,0,0}, s={2.5,2.5,1.5};
-    MenuItem itemPlay(models->getMChiffres(),models->getMLettersM(), "Play Game",p, r, s, 0.6, CENTER,GAME,TOGAME);
+    vect p={POSITION_MENU_X,0,-6}, r={0,0,0}, s={2,2,1}; // on donne la meme taille pour tout les objet pour uniformiser les fond !
+    MenuItem itemPlay(models, "Play Game",p, r, s, 0.6, CENTER,GAME,TOGAME);
 
-    p.x=0;p.y=0;p.z=-3; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
-    MenuItem itemPause(models->getMChiffres(),models->getMLettersM(), "Photo Mode", p, r,s, 0.6, CENTER,PAUSE,NONE);
+    p.x=POSITION_MENU_X;p.y=0;p.z=-3; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
+    MenuItem itemPause(models, "Pause Mode", p, r,s, 0.6, CENTER,PAUSE,TOPAUSE);
 
-    p.x=0;p.y=0;p.z=0; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
-    MenuItem itemOption(models->getMChiffres(),models->getMLettersM(), "Options",p, r, s, 0.6, CENTER,OPTION,NONE);
+    p.x=POSITION_MENU_X;p.y=0;p.z=0; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
+    MenuItem itemOption(models, "Options",p, r, s, 0.6, CENTER,OPTION,NONE);
 
-    p.x=0;p.y=0;p.z=3; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
-    MenuItem itemAbout(models->getMChiffres(),models->getMLettersM(), "About", p,r,s, 0.6, CENTER,ABOUT,NONE);
+    p.x=POSITION_MENU_X;p.y=0;p.z=3; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
+    MenuItem itemAbout(models, "About", p,r,s, 0.6, CENTER,ABOUT,NONE);
     
-    p.x=0;p.y=0;p.z=6; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
-    MenuItem itemQuit(models->getMChiffres(),models->getMLettersM(), "Quit Game", p,r, s, 0.6, CENTER,STOP,NONE);
+    p.x=POSITION_MENU_X;p.y=0;p.z=6; r.x=0;r.y=0;r.z=0; s.x=2;s.y=2;r.z=1;
+    MenuItem itemQuit(models, "Quit Game", p,r, s, 0.6, CENTER,STOP,NONE);
+    
+    s.x=0.5; s.y=0.5; s.z=0.5;
+    itemPlay.changeScale(s); // et on agrandi le selectionne
+    
+    vect pFond={POSITION_MENU_X,-1,0}, rFond={-90,0,0}, sFond={9.5,9.5,2};
+    fondMenu = Actor(models->getMFondMenu(), pFond, rFond, sFond);
    
     
     this->vectorItems.push_back(itemPlay);
@@ -60,6 +66,7 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
     float halfHeight=height/2;
     float curHeightScale=NB_UNITY_WIDTH*2;
     float curWidthScale=NB_UNITY_HEIGHT*2;
+    
 
     Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
     //cout << "les coordonnées sont : x = " << coordMouse.x << " et y = " << coordMouse.y << endl;
@@ -155,6 +162,7 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
 
 
 void ModeMenu::getRender(vector<instance>* /*instances*/, vector<instance>* instances2D) {
+  instances2D->push_back(fondMenu.getInstance());
     vector<MenuItem>::iterator itA;
     for (itA=vectorItems.begin(); itA!=vectorItems.end(); itA++) {
         itA->getRender(instances2D);
