@@ -37,7 +37,7 @@ private:
     list<Trajectory> trajectories;
     list<ActorPhysique> friendFires;
     list<ActorPhysique> enemiesFires;
-	list<Actor> deadEnemies;
+	list<ActorPhysique> deadEnemies;
     ActorPlayer player;
     Score score;
     Text tScore;

@@ -91,7 +91,6 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
 	}
 	else if (*switchMode == TOMENU && (!camera->camOKMenu())) {
 		camera->toModeMenuSmart();
-
 	if (end) {
 		player.toCenter();
 	}
@@ -162,10 +161,8 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
 	for (itAP=friendFires.begin(); itAP!= friendFires.end(); itAP++) {
 		instances->push_back(itAP->getInstance());
 	}
-	
-	list<Actor>::iterator itDE;
-	for (itDE=deadEnemies.begin(); itDE!= deadEnemies.end(); itDE++) {
-		instances->push_back(itDE->getInstance());
+	for (itAP=deadEnemies.begin(); itAP!= deadEnemies.end(); itAP++) {
+		instances->push_back(itAP->getInstance());
 	}
 
 	// les text, score et health et End si c'est la fin
@@ -355,8 +352,9 @@ void ModeGame::enemiesManager()
 
 void ModeGame::deadEnemiesManager()
 {
-	list<Actor>::iterator itDE;
+	list<ActorPhysique>::iterator itDE;
 	for (itDE=deadEnemies.begin(); itDE!= deadEnemies.end();) {
+		itDE->update(dTime);
 		if(itDE->getScale().x<0.01)
 			itDE=deadEnemies.erase(itDE);
 		else
@@ -391,12 +389,14 @@ void ModeGame::collisionManager()
 				if (it_enn->colisionPlayer(&player)) { // on regarde si l'ennemi est en colision avec le playerManager
 					player.setHealth(-it_enn->getDamage());
 			playerHeart = TEMP_BROUILLAGE_CAM_PLAYER_HEARTH;
-					deadEnemies.push_back(Actor(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
+					deadEnemies.push_back(ActorPhysique(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
+					deadEnemies.back().setVelocity(it_enn->getVelocity());
 					it_enn = enemies.erase(it_enn);
 				}
 				else if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
 					score.setScore(models->getMChiffres(),10);
-					deadEnemies.push_back(Actor(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
+					deadEnemies.push_back(ActorPhysique(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
+					deadEnemies.back().setVelocity(it_enn->getVelocity());
 					it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
 				}
 				else
