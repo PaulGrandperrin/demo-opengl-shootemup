@@ -89,6 +89,36 @@ bool ActorPhysique::sortieEcran(float width, float height)
     return  ((position.x<=-width) || (position.x>=width) || (position.z<=-height) || (position.z>=height));
 }
 
+
+bool ActorPhysique::colision(ActorPhysique* act) {
+    float dist = 0;
+    float distX,distZ;
+    distX = getPosition().x - act->getPosition().x;
+    distZ = getPosition().z - act->getPosition().z;
+    dist = sqrt(distX*distX + distZ*distZ);
+    return (act->getMask() + getMask() > dist);
+}
+
+void ActorPhysique::colisionFires(list<ActorPhysique>* fires) {
+    float dist = 0;
+    float distX,distZ;
+    list<ActorPhysique>::iterator itAP;
+    itAP = fires->begin();
+    while (itAP!=fires->end())
+    {
+        distX = getPosition().x - itAP->getPosition().x;
+        distZ = getPosition().z - itAP->getPosition().z;
+        dist = sqrt(distX*distX + distZ*distZ);
+        if (itAP->getMask() + getMask() > dist) {
+            itAP = fires->erase(itAP);
+            setHealth(-itAP->getDamage());
+        }
+        else {
+            itAP++;
+        }
+    }
+}
+
 //---------------------------------------------------------------
 // ActorPlayer
 //---------------------------------------------------------------
@@ -180,31 +210,4 @@ void ActorEnemy::update(float time) {
     ActorPhysique::update(time);
 }
 
-bool ActorEnemy::colisionPlayer(ActorPlayer* player) {
-    float dist = 0;
-    float distX,distZ;
-    distX = getPosition().x - player->getPosition().x;
-    distZ = getPosition().z - player->getPosition().z;
-    dist = sqrt(distX*distX + distZ*distZ);
-    return (player->getMask() + getMask() > dist);
-}
 
-void ActorEnemy::colisionFires(list<ActorPhysique>* fires) {
-    float dist = 0;
-    float distX,distZ;
-    list<ActorPhysique>::iterator itAP;
-    itAP = fires->begin();
-    while (itAP!=fires->end())
-    {
-        distX = getPosition().x - itAP->getPosition().x;
-        distZ = getPosition().z - itAP->getPosition().z;
-        dist = sqrt(distX*distX + distZ*distZ);
-        if (itAP->getMask() + getMask() > dist) {
-            itAP = fires->erase(itAP);
-            setHealth(-itAP->getDamage());
-        }
-        else {
-            itAP++;
-        }
-    }
-}

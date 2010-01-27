@@ -31,13 +31,15 @@ private:
     void firesManager();
     void trajectoriesManager();
     void enemiesManager();
-	void deadEnemiesManager();
+    void deadEnemiesManager();
     void collisionManager();
+    void bombManager();
 
     list<Trajectory> trajectories;
     list<ActorPhysique> friendFires;
     list<ActorPhysique> enemiesFires;
-	list<ActorPhysique> deadEnemies;
+    list<ActorPhysique> deadEnemies;
+    ActorPhysique bomb;
     ActorPlayer player;
     Score score;
     Health health;

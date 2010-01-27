@@ -125,7 +125,9 @@ public:
     inline void initHealth(int hel) {
         health =hel ;
     }
-
+    bool colision(ActorPhysique* act);
+    void colisionFires(list<ActorPhysique>* fires);
+	
 protected:
     vect velocity;
     vect acceleration;
@@ -154,8 +156,6 @@ public:
     inline Trajectory * getTraj() {
         return traj;
     }
-    bool colisionPlayer(ActorPlayer* player);
-    void colisionFires(list<ActorPhysique>* fires);
 
 private:
     Trajectory * traj;

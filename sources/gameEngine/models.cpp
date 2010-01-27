@@ -14,6 +14,7 @@ Models::Models(graphicEngine* GE) {
     }
     Mplayer=GE->loadModel("meshes/player.obj","textures/player.png");
     Mboulet=GE->loadModel("meshes/boulet.obj","textures/boulet.png");
+    MBomb=GE->loadModel("meshes/bomb.obj","textures/noir.png");
     MCursorPause=GE->loadModel("meshes/cursorPause.obj","textures/noir.png");
     MFondScore=GE->loadModel("meshes/plan.obj","textures/papyrus.png");
     MFondMenu=GE->loadModel("meshes/panneau.obj","textures/panneau.png");

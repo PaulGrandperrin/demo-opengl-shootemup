@@ -49,6 +49,9 @@ public :
     inline int getMVirg() {
 	return MVirg;
     }
+    inline int getMBomb() {
+	return MBomb;
+    }
     inline vector<int> getMChiffres() {
         return MChiffres;
     }
@@ -66,7 +69,7 @@ public :
     }
 
 //public : //TODO metre private probleme vector
-    int Mplayer,Mboulet,MCursorPause,MFondScore,MFondMenu;
+    int Mplayer,Mboulet,MCursorPause,MFondScore,MFondMenu, MBomb;
     int MDpoint, MPoint, MPointEx, MPointInt, MVirg;
     vector<int> MChiffres;
     vector<int> MLettersM;

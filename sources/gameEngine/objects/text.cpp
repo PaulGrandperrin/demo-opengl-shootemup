@@ -297,6 +297,9 @@ Health::Health(Models* models, int number, string st, vect position, vect rotati
 
 void Health::setHealth(int number) { //TODO a modifier
     this->health = number;
+    if (number <0) {
+      this->health = 0;
+    }
     Number::update(health);
 }
 

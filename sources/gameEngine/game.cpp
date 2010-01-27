@@ -148,7 +148,7 @@ void Game::effectManager(bool stateKeys[]) {
     shad%=32;
     
    // le player a ete touché, on brouille la camera, pendant TEMP_BROUILLAGE_CAM_PLAYER_HEARTH
-    if (mGame.getplayerHeart() == TEMP_BROUILLAGE_CAM_PLAYER_HEARTH) {
+    if (mGame.getplayerHeart() == TEMP_BROUILLAGE_CAM_PLAYER_HEARTH || mGame.getplayerHeart() == TEMP_BROUILLAGE_CAM_PLAYER_HEARTH_LONG) {
       mGame.changePlayerHeart(-1);
       shad = POSTFX_WATER;
     }
