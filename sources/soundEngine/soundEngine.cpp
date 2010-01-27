@@ -178,6 +178,7 @@ void * playASound(void *soundToPlay)
 
         // R�cup�ration de l'�tat du son
         alGetSourcei(Source, AL_SOURCE_STATE, &Status);
+		sleep(1);
     }
     while (Status == AL_PLAYING);
 
