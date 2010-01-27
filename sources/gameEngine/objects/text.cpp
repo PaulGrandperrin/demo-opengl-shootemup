@@ -249,8 +249,8 @@ Score::Score(Models* models, int number, string st, vect position, vect rotation
     p.z +=-1;
     tScore = Text(models, st, p, r, s, 0.6, style); // test du text, pour l'instant "abcde"
     
-    p.z +=0.5;
-    s.x -= 0.1; s.z-=0.1;
+    p.z +=0.8; p.x += 0.6;
+    s.x -= 0.1; s.z-=0.02;
     fondScore = Actor(models->getMFondScore(), p, r, s);
 }
 
@@ -285,8 +285,8 @@ Health::Health(Models* models, int number, string st, vect position, vect rotati
     p.z +=-1;
     tHealth = Text(models, st, p, r, s, 0.6, style); // test du text, pour l'instant "abcde"
     
-    p.z +=0.5;
-    s.x -= 0.1; s.z-=0.1;
+    p.z +=0.8; p.x += -0.6;
+    s.x -= 0.1; s.z-=0.02;
     fondHealth = Actor(models->getMFondScore(), p, r, s);
 }
 

@@ -15,7 +15,7 @@ Models::Models(graphicEngine* GE) {
     Mplayer=GE->loadModel("meshes/player.obj","textures/player.png");
     Mboulet=GE->loadModel("meshes/boulet.obj","textures/boulet.png");
     MCursorPause=GE->loadModel("meshes/cursorPause.obj","textures/noir.png");
-    MFondScore=GE->loadModel("meshes/plan.obj","textures/fondScore.png");
+    MFondScore=GE->loadModel("meshes/plan.obj","textures/papyrus.png");
     MFondMenu=GE->loadModel("meshes/panneau.obj","textures/panneau.png");
     for (int i=0; i<=9; i++) {
         MChiffres.push_back(GE->loadModel("meshes/chiffres/" + entierToString(i) + ".obj","textures/noir.png"));
