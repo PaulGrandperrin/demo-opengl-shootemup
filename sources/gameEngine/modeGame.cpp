@@ -64,11 +64,7 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={3,3,2};
     tEnd = Text(models->getMChiffres(),models->getMLettersM(), "End", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
 
-//     int ret = playASound("ocean.wav");
-//     if(ret==0)
-//       cout << "La lecture du son s'est bien passée!"<<endl;
-//     else
-//       cout << "Un problème es survenu lors de la lecture du son" <<endl;
+     playSound("ocean.wav");
     
     // Chargement des trajectoires
     TrajectoryFile tFile("levels/traj_lvl_default.data");

@@ -126,10 +126,17 @@ void ShutdownOpenAL()
     alcCloseDevice(Device);
 }
 
+void playSound(string soundToPlay)
+{
+	string* file=new string(soundToPlay);
+	pthread_t th;
+	pthread_create(&th,NULL,
+				   &playASound ,
+				   (void*)file);
+	pthread_detach(th);
+}
 
-
-
-int playASound(string soundToPlay)
+void * playASound(void *soundToPlay)
 {
     // R�cup�ration des devices disponibles
     //vector<string> Devices;
@@ -143,14 +150,14 @@ int playASound(string soundToPlay)
     // Et on le laisse choisir
     //int Choice;
     //cin >> Choice;
-
+	//string *file=(string*)soundToPlay;
+	cout << *((string*)soundToPlay)<< endl;
     // Initialisation d'OpenAL
     InitOpenAL("ALSA Software");//InitOpenAL(Devices[Choice].c_str());
 
     // Chargement du fichier audio
-    ALuint Buffer = LoadSound(soundToPlay);//"ocean.wav");
-    if (Buffer == 0)
-        return -1;
+    ALuint Buffer = LoadSound(*((string*)soundToPlay));//"ocean.wav");
+	delete((string*)soundToPlay);
 
     // Cr�ation d'une source
     ALuint Source;
@@ -189,5 +196,5 @@ int playASound(string soundToPlay)
     //cin.ignore(10000, '\n');
     //cin.ignore(10000, '\n');
 
-    return 0;
+	return NULL;
 }

@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <string.h>
+#include <pthread.h>
 //-------------------
 using namespace std;
 
@@ -18,6 +19,7 @@ void GetDevices(vector<string>& Devices);
 bool InitOpenAL(const char* DeviceName = NULL);
 ALuint LoadSound(const string& Filename);
 void ShutdownOpenAL();
-int playASound(string soundToPlay);
+void * playASound(void* soundToPlay);
+void playSound(string soundToPlay);
 
 #endif
