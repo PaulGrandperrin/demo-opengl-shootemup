@@ -40,6 +40,7 @@ Game::Game() // construction des camera, du GE et des autre objets tell que les 
     mGame = ModeGame(&models, &cam,&etatGame, &switchMode);
     mPause = ModePause(&models, &cam,&etatGame, &switchMode);
     mAbout = ModeAbout(&models, &cam,&etatGame, &switchMode);
+    mOption = ModeOption(&models, &cam,&etatGame, &switchMode);
     vect pFond={0,-3,0}, rFond= {0,0,0}, sFond={2,2,2}, vFond={0,0,2};
     fond = Fond(models.getMNuages(), models.getMSols(), pFond, rFond, sFond, vFond);
 
@@ -76,8 +77,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
         mPause.pauseManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
     }
     else if (etatGame==OPTION) {
-        cout << "XXXXXXXXX" << endl;
-        etatGame = MENU;
+        mOption.optionManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
     }
     else if (etatGame==ABOUT) {
 	mAbout.aboutManager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
@@ -124,6 +124,9 @@ void Game::render()
     }
     else if (etatGame==ABOUT) {
 	mAbout.getRender(&instances,&instances2D);
+    }
+    else if (etatGame==OPTION) {
+	mOption.getRender(&instances,&instances2D);
     }
     
     camera came2D={0,30,0,0,0,0,0,0,-1};//TODO si y'en a plus besoin, faut le virer >> biensure que si yen a besoin !

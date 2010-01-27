@@ -11,6 +11,7 @@
 #include "./modeMenu.h"
 #include "./modeGame.h"
 #include "./modeAbout.h"
+#include "./modeOption.h"
 #include "../utilities.h"
 
 class Game
@@ -36,6 +37,7 @@ private:
     ModeMenu mMenu;
     ModePause mPause;
     ModeAbout mAbout;
+    ModeOption mOption;
     Fond fond;
 
     // tout les models qu'il peut exister
