@@ -89,7 +89,6 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
     }
     render(); // a la fin on affiche tout
 }
-
 // fin de l'interface, debut des méthodes privés
 
 void Game::render()
