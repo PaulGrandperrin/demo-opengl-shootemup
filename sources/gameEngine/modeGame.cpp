@@ -3,7 +3,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <sstream>
-extern Parameters *parametre; 
+extern Parameters *parametre;
 
 /* le plan de jeu ce fait sur xz */
 
@@ -22,176 +22,178 @@ extern Parameters *parametre;
 
 ModeGame::~ModeGame()
 {
-    cout << endl; //a cause du compteur de missile, avant de quitter, il faut un seut de ligne
+	cout << endl; //a cause du compteur de missile, avant de quitter, il faut un seut de ligne
 }
 
 ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode) : Mode(models, camera, etatGame, switchMode)
 {
-    // si on reconstruit le modeGame, se n'est pas la fin !!
-    end = false;
-    toEnd = false;
-    playerHeart = 0;
+	// si on reconstruit le modeGame, se n'est pas la fin !!
+	end = false;
+	toEnd = false;
+	playerHeart = 0;
 
-    // on vide les vecteur d'ennemi... pour la prochaine partie
-    friendFires.clear();
-    enemiesFires.clear();
-    trajectories.clear();
-    timersGenEnemy.clear();
+	// on vide les vecteur d'ennemi... pour la prochaine partie
+	friendFires.clear();
+	enemiesFires.clear();
+	trajectories.clear();
+	timersGenEnemy.clear();
 
-    int intHealth = parametre->getHealthPlayer();
-    int intDamage = parametre->getDamagePlayer();
-    timerGenEnemy=INTERVALE_TEMP_ENEMY;
-    timerGenShoot=INTERVALE_TEMP_SHOOT;
-    timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
-    timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
+	int intHealth = parametre->getHealthPlayer();
+	int intDamage = parametre->getDamagePlayer();
+	timerGenEnemy=INTERVALE_TEMP_ENEMY;
+	timerGenShoot=INTERVALE_TEMP_SHOOT;
+	timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
+	timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
 
-    // on reconstruit tout les objets
-    vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
-    player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer, intHealth, intDamage ,0.4);
+	// on reconstruit tout les objets
+	vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
+	player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer, intHealth, intDamage ,0.4);
 
-    vect pScore={-11.5,0,-11}, rScore= {0,0,0}, sScore={1,1,0.5};
-    score = Score(models->getMChiffres(), 0, pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
+	vect pScore={-11.5,0,-11}, rScore= {0,0,0}, sScore={1,1,0.5};
+	score = Score(models->getMChiffres(), 0, pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
 
-    vect pLeScore={-11.5,0,-12}, rLeScore= {0,0,0}, sLeScore={0.8,0.8,0.5};
-    tScore = Text(models->getMChiffres(),models->getMLettersM(), "Score", pLeScore, rLeScore, sLeScore, 0.6, LEFT); // test du text, pour l'instant "abcde"
+	vect pLeScore={-11.5,0,-12}, rLeScore= {0,0,0}, sLeScore={0.8,0.8,0.5};
+	tScore = Text(models->getMChiffres(),models->getMLettersM(), "Score", pLeScore, rLeScore, sLeScore, 0.6, LEFT); // test du text, pour l'instant "abcde"
 
-    vect pVie={11.5,0,-11}, rVie= {0,0,0}, sVie={1,1,0.5};
-    health = Health(models->getMChiffres(), intHealth , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
+	vect pVie={11.5,0,-11}, rVie= {0,0,0}, sVie={1,1,0.5};
+	health = Health(models->getMChiffres(), intHealth , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
 
-    vect pLaVie={11.5,0,-12}, rLaVie= {0,0,0}, sLaVie={0.8,0.8,0.5};
-    tHealth = Text(models->getMChiffres(),models->getMLettersM(), "Health", pLaVie, rLaVie, sLaVie, 0.6, RIGHT); // test du text, pour l'instant "abcde"
+	vect pLaVie={11.5,0,-12}, rLaVie= {0,0,0}, sLaVie={0.8,0.8,0.5};
+	tHealth = Text(models->getMChiffres(),models->getMLettersM(), "Health", pLaVie, rLaVie, sLaVie, 0.6, RIGHT); // test du text, pour l'instant "abcde"
 
-    vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={3,3,2};
-    tEnd = Text(models->getMChiffres(),models->getMLettersM(), "End", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
+	vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={3,3,2};
+	tEnd = Text(models->getMChiffres(),models->getMLettersM(), "End", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
 
-//      int ret = playASound("ocean.wav");
-//      if(ret==0)
-//        cout << "La lecture du son s'est bien passée!"<<endl;
-//      else
-//        cout << "Un problème es survenu lors de la lecture du son" <<endl;
-    
-    // Chargement des trajectoires
-    TrajectoryFile tFile("levels/traj_lvl_default.data");
-    if (!tFile.isEnded()) {
-        tFile.read(trajectories); // On charge les trajectoires dans trajectories
-    } else {
-        cout << "Trajectory file not found !" << endl;
-        exit(0);
-    }
+	playSound("ocean.wav");
 
-    // On initialise les timers de generation d'ennemi à TIMER_OFF pour dire qu'ils sont désactivés au début
-    int traj_list_size = trajectories.size();
-    for (int i=0; i<traj_list_size; i++)
-        timersGenEnemy.push_back(TIMER_OFF);
+	// Chargement des trajectoires
+	TrajectoryFile tFile("levels/traj_lvl_default.data");
+	if (!tFile.isEnded()) {
+		tFile.read(trajectories); // On charge les trajectoires dans trajectories
+	} else {
+		cout << "Trajectory file not found !" << endl;
+		exit(0);
+	}
+
+	// On initialise les timers de generation d'ennemi à TIMER_OFF pour dire qu'ils sont désactivés au début
+	int traj_list_size = trajectories.size();
+	for (int i=0; i<traj_list_size; i++)
+		timersGenEnemy.push_back(TIMER_OFF);
 }
 
 void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
-  
-    if (*switchMode == TOGAME && !camera->camOKGame()) {
-        camera->toModeGameSmart();
-    }
-    else if (*switchMode == TOGAME && camera->camOKGame()) {
-        *switchMode = NONE;
-    }
-    else if (*switchMode == TOMENU && (!camera->camOKMenu())) {
-        camera->toModeMenuSmart();
-	if (end) {
-	    player.toCenter();
+	if (*switchMode == TOGAME && !camera->camOKGame()) {
+		camera->toModeGameSmart();
 	}
-    }
-    else if (*switchMode == TOMENU && (camera->camOKMenu())) {
-        *switchMode = NONE;
-        *etatGame = MENU; // seulement une fois que la transition est fini, on change l'etat.
-    }
-    else if (*switchMode == NONE && stateKeys[parametre->getEsc()]) {
-        *switchMode = TOMENU;
-    }
-    else {
-        Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
-        if (end) {
-            if (toEnd && !(stateKeys[parametre->getEnter()] && stateButtons[parametre->getBLeft()])) { // et on attend une action pour sortir
-                *switchMode = TOMENU;
-            }
-            if (stateKeys[parametre->getEnter()] || stateButtons[parametre->getBLeft()]) {
-                toEnd = true;
-            }
-        }
-        else {
-            playerManager();
-            firesManager();
-            trajectoriesManager();
-            enemiesManager();
-            //bonusManager();
-            //decorManager();
-            collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
-            if ((timersGenEnemy.empty()) ||  (player.isMort())) {
-                end = true; // c'est la fin, on bloque les fonctions du jeu.
-            }
-        }
-    }
+	else if (*switchMode == TOGAME && camera->camOKGame()) {
+		*switchMode = NONE;
+	}
+	else if (*switchMode == TOMENU && (!camera->camOKMenu())) {
+		camera->toModeMenuSmart();
 
-    //Pour le fun
-    cout << (char)0x0D << friendFires.size() +  enemiesFires.size()<<" missile(s) " << flush;
+	if (end) {
+		player.toCenter();
+	}
+	}
+	else if (*switchMode == TOMENU && (camera->camOKMenu())) {
+		*switchMode = NONE;
+		*etatGame = MENU; // seulement une fois que la transition est fini, on change l'etat.
+	}
+	else if (*switchMode == NONE && stateKeys[parametre->getEsc()]) {
+		*switchMode = TOMENU;
+	}
+	else {
+		Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
+		if (end) {
+			if (toEnd && !(stateKeys[parametre->getEnter()] && stateButtons[parametre->getBLeft()])) { // et on attend une action pour sortir
+				*switchMode = TOMENU;
+			}
+			if (stateKeys[parametre->getEnter()] || stateButtons[parametre->getBLeft()]) {
+				toEnd = true;
+			}
+		}
+		else {
+			playerManager();
+			firesManager();
+			trajectoriesManager();
+			enemiesManager();
+			deadEnemiesManager();
+			//bonusManager();
+			//decorManager();
+			collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
+			if ((timersGenEnemy.empty()) ||  (player.isMort())) {
+				end = true; // c'est la fin, on bloque les fonctions du jeu.
+			}
+		}
+	}
+
+	//Pour le fun
+	cout << (char)0x0D << friendFires.size() +  enemiesFires.size()<<" missile(s) " << flush;
 
 }
 
 
 void ModeGame::getRender(vector<instance>* instances, vector<instance>* instances2D) {
 
-    // on recupere toute les instances a afficher
-    vector<Actor> vActor;
-    vector<Actor>::iterator itA;
-    list<ActorPhysique>::iterator itAP;
+	// on recupere toute les instances a afficher
+	vector<Actor> vActor;
+	vector<Actor>::iterator itA;
+	list<ActorPhysique>::iterator itAP;
 
-    // le player
-    instances->push_back(player.getInstance());
+	// le player
+	instances->push_back(player.getInstance());
 
-    // le enemies
-    list<Trajectory>::iterator it_traj;
-    //NOTE La boucle qui suit semble ne pas fonctionner !!!
-    for (it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
-    {
-        list<ActorEnemy>::iterator it_enn;
-        list<ActorEnemy> enemies = it_traj->getEnemies();
-        for (it_enn=enemies.begin(); it_enn != enemies.end(); it_enn++)
-        {
-            instances->push_back(it_enn->getInstance());
-        }
-    }
-    for (itAP=enemiesFires.begin(); itAP!= enemiesFires.end(); itAP++) {
-        instances->push_back(itAP->getInstance());
-    }
-    for (itAP=friendFires.begin(); itAP!= friendFires.end(); itAP++) {
-        instances->push_back(itAP->getInstance());
-    }
+	// le enemies
+	list<Trajectory>::iterator it_traj;
+	//NOTE La boucle qui suit semble ne pas fonctionner !!!
+	for (it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
+	{
+		list<ActorEnemy>::iterator it_enn;
+		list<ActorEnemy> enemies = it_traj->getEnemies();
+		for (it_enn=enemies.begin(); it_enn != enemies.end(); it_enn++)
+		{
+			instances->push_back(it_enn->getInstance());
+		}
+	}
+	for (itAP=enemiesFires.begin(); itAP!= enemiesFires.end(); itAP++) {
+		instances->push_back(itAP->getInstance());
+	}
+	for (itAP=friendFires.begin(); itAP!= friendFires.end(); itAP++) {
+		instances->push_back(itAP->getInstance());
+	}
+	
+	list<Actor>::iterator itDE;
+	for (itDE=deadEnemies.begin(); itDE!= deadEnemies.end(); itDE++) {
+		instances->push_back(itDE->getInstance());
+	}
 
-    // les text, score et health et End si c'est la fin
-    if (*etatGame == GAME && *switchMode == NONE) {
-        // on affiche le score ..., et autre info
-        vActor = score.getText();
-        for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-            instances2D->push_back(itA->getInstance());
-        }
-        vActor = tScore.getText();
-        for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-            instances2D->push_back(itA->getInstance());
-        }
-        vActor = health.getText();
-        for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-            instances2D->push_back(itA->getInstance());
-        }
-        vActor = tHealth.getText();
-        for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-            instances2D->push_back(itA->getInstance());
-        }
-        if (end) {
-            vActor = tEnd.getText();
-            for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
-                instances2D->push_back(itA->getInstance());
-            }
-        }
-    }
+	// les text, score et health et End si c'est la fin
+	if (*etatGame == GAME && *switchMode == NONE) {
+		// on affiche le score ..., et autre info
+		vActor = score.getText();
+		for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+			instances2D->push_back(itA->getInstance());
+		}
+		vActor = tScore.getText();
+		for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+			instances2D->push_back(itA->getInstance());
+		}
+		vActor = health.getText();
+		for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+			instances2D->push_back(itA->getInstance());
+		}
+		vActor = tHealth.getText();
+		for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+			instances2D->push_back(itA->getInstance());
+		}
+		if (end) {
+			vActor = tEnd.getText();
+			for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+				instances2D->push_back(itA->getInstance());
+			}
+		}
+	}
 }
 /*
 *NOTE j'ai fait une version un peu compliqué du déplacement du joueur pour montrer les possibilités de
@@ -201,205 +203,224 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
 */
 void ModeGame::playerManager()
 {
-  
+
 //     player.setAcceleration( {0,0,0});
-    vect accl={0,0,0};
-    if (stateKeys[parametre->getLeft()])  {// -x
-        accl.x-=10;
-    }
-    if (stateKeys[parametre->getRight()]) {// +x
-        accl.x+=10;
-    }
-    if (stateKeys[parametre->getUp()]) { // +y
-        accl.z-=20;
-    }
-    if (stateKeys[parametre->getDown()]) { // -y
-        accl.z+=20;
-    }
+	vect accl={0,0,0};
+	if (stateKeys[parametre->getLeft()])  {// -x
+		accl.x-=10;
+	}
+	if (stateKeys[parametre->getRight()]) {// +x
+		accl.x+=10;
+	}
+	if (stateKeys[parametre->getUp()]) { // +y
+		accl.z-=20;
+	}
+	if (stateKeys[parametre->getDown()]) { // -y
+		accl.z+=20;
+	}
 
-    player.setAcceleration( accl );
-    player.update(dTime);
-    // TODO ameliorer definition des bords
+	player.setAcceleration( accl );
+	player.update(dTime);
+	// TODO ameliorer definition des bords
 
-    vect p={player.getPosition().x,player.getPosition().y,player.getPosition().z}, r={0,0,0}, s={0.1,0.1,0.1};
-    vect pLeft={player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z};
-    vect pRight={player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z};
-    vect vel={player.getVelocity().x/3,player.getVelocity().y/3,player.getVelocity().z/3};
+	vect p={player.getPosition().x,player.getPosition().y,player.getPosition().z}, r={0,0,0}, s={0.1,0.1,0.1};
+	vect pLeft={player.getPosition().x-0.3,player.getPosition().y,player.getPosition().z};
+	vect pRight={player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z};
+	vect vel={player.getVelocity().x/3,player.getVelocity().y/3,player.getVelocity().z/3};
 
-    if ((((stateKeys[parametre->getTir()]) || (stateButtons[parametre->getBLeft()])) and timerGenShoot<=0))
-    {
-        ActorPhysique fire;
+	if ((((stateKeys[parametre->getTir()]) || (stateButtons[parametre->getBLeft()])) and timerGenShoot<=0))
+	{
+		ActorPhysique fire;
 	vel.z -= random(15,18);
-        vel.x += random(-0.5,0.5); // si le vaisseau a une rotation, on l'applique legerment au boulet
-	
-        fire=ActorPhysique(models->getMboulet(), p, r, s);
-        fire.setVelocity( vel );
-        friendFires.push_back(fire); // on double la pussance des boulet tire a l'avant
-        friendFires.push_back(fire);
-			
-        timerGenShoot=INTERVALE_TEMP_SHOOT;
-    }
-    if ((((stateKeys[parametre->getTirSecond()]) || (stateButtons[parametre->getBRight()])) and timerGenShootGros<=0))
-    {
-        ActorPhysique fire;
-        for (float f =-0.8;f<=0.8;f+=0.2)
-        {
-            if (random(0,1) < 0.9) {
-                vel.x = 0;
-                vel.z = 0;
+		vel.x += random(-0.5,0.5); // si le vaisseau a une rotation, on l'applique legerment au boulet
+
+		fire=ActorPhysique(models->getMboulet(), p, r, s);
+		fire.setVelocity( vel );
+		friendFires.push_back(fire); // on double la pussance des boulet tire a l'avant
+		friendFires.push_back(fire);
+
+		timerGenShoot=INTERVALE_TEMP_SHOOT;
+	}
+	if ((((stateKeys[parametre->getTirSecond()]) || (stateButtons[parametre->getBRight()])) and timerGenShootGros<=0))
+	{
+		ActorPhysique fire;
+		for (float f =-0.8;f<=0.8;f+=0.2)
+		{
+			if (random(0,1) < 0.9) {
+				vel.x = 0;
+				vel.z = 0;
 // 	        pRight.x=player.getPosition().x+0.3;
-                pRight.z=player.getPosition().z+f;
-                vel.x += random(15,18);
-                vel.z += random(-0.5,0.5);
-                fire=ActorPhysique(models->getMboulet(), pRight, r, s);
-                fire.setVelocity( vel);
-                friendFires.push_back(fire);
-            }
-            if (random(0,1) < 0.9) {
-                vel.x = 0;
-                vel.z = 0;
+				pRight.z=player.getPosition().z+f;
+				vel.x += random(15,18);
+				vel.z += random(-0.5,0.5);
+				fire=ActorPhysique(models->getMboulet(), pRight, r, s);
+				fire.setVelocity( vel);
+				friendFires.push_back(fire);
+			}
+			if (random(0,1) < 0.9) {
+				vel.x = 0;
+				vel.z = 0;
 // 	        pLeft.x=player.getPosition().x+0.3;
-                pLeft.z=player.getPosition().z+f;
-                vel.x -= random(15,18);
-                vel.z += random(-0.5,0.5);
-                fire=ActorPhysique(models->getMboulet(),pLeft, r, s);
-                fire.setVelocity( vel);
-                friendFires.push_back(fire);
-            }
-        }
-        timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
-    }
-    else {
-        timerGenShoot--;
-        timerGenShootGros--;
-    }
+				pLeft.z=player.getPosition().z+f;
+				vel.x -= random(15,18);
+				vel.z += random(-0.5,0.5);
+				fire=ActorPhysique(models->getMboulet(),pLeft, r, s);
+				fire.setVelocity( vel);
+				friendFires.push_back(fire);
+			}
+		}
+		timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
+	}
+	else {
+		timerGenShoot--;
+		timerGenShootGros--;
+	}
 }
 
 void ModeGame::firesManager()
 {
-    list<ActorPhysique>::iterator it;
+	list<ActorPhysique>::iterator it;
 
-    for (it=friendFires.begin(); it!=friendFires.end(); it++) {
-        it->update(dTime);
-    }
-    for (it=enemiesFires.begin(); it!=enemiesFires.end(); it++) {
-        it->update(dTime);
-    }
+	for (it=friendFires.begin(); it!=friendFires.end(); it++) {
+		it->update(dTime);
+	}
+	for (it=enemiesFires.begin(); it!=enemiesFires.end(); it++) {
+		it->update(dTime);
+	}
 }
 
 
 void ModeGame::trajectoriesManager() {
-    bool timerGenEnemyStarted = FALSE;
-    bool timerOffMet = FALSE; // Booleen pour savoir s'il est toujours utile de faire une decrementation du timer (s'il reste des sequences à demarrer)
-    list<Trajectory>::iterator it_traj = trajectories.begin();
-    list<int>::iterator it_gene = timersGenEnemy.begin();
-    // On parcourt les trajectoires pour supprimer celles qui n'ont plus d'ennemis, et pour démarrer la génération des ennemis de chaque trajectoire
-    // de facon ordonnée (ex : on démarre la première trajectoire, puis au prochain top, on en démarre une autre...)
-    while (it_traj != trajectories.end())
-    {
-        // Si tous les ennemis ont ete generes et qu'il n'en reste plus, alors on supprime la trajectoire et son timer
-        if (it_traj->getRecordNumbers().size() == 0 && it_traj->getEnemies().size() == 0) {
-            it_traj = trajectories.erase(it_traj);
-            it_gene = timersGenEnemy.erase(it_gene);
-        }
-        else {
-            if (*it_gene == TIMER_OFF)
-            {
-                if (timerGenTrajectorySequence <= 0) {
-                    *it_gene = it_traj->getInterval(); // On demarre le timer d'ennemis de cette trajectoire en quelque sorte
-                    timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
-                    timerGenEnemyStarted = TRUE;
-                }
-                timerOffMet = TRUE;
-            }
-            it_traj++;
-            it_gene++;
-        }
-    }
-    if (timerOffMet && timerGenTrajectorySequence > 0 && !timerGenEnemyStarted)
-        timerGenTrajectorySequence--;
+	bool timerGenEnemyStarted = FALSE;
+	bool timerOffMet = FALSE; // Booleen pour savoir s'il est toujours utile de faire une decrementation du timer (s'il reste des sequences à demarrer)
+	list<Trajectory>::iterator it_traj = trajectories.begin();
+	list<int>::iterator it_gene = timersGenEnemy.begin();
+	// On parcourt les trajectoires pour supprimer celles qui n'ont plus d'ennemis, et pour démarrer la génération des ennemis de chaque trajectoire
+	// de facon ordonnée (ex : on démarre la première trajectoire, puis au prochain top, on en démarre une autre...)
+	while (it_traj != trajectories.end())
+	{
+		// Si tous les ennemis ont ete generes et qu'il n'en reste plus, alors on supprime la trajectoire et son timer
+		if (it_traj->getRecordNumbers().size() == 0 && it_traj->getEnemies().size() == 0) {
+			it_traj = trajectories.erase(it_traj);
+			it_gene = timersGenEnemy.erase(it_gene);
+		}
+		else {
+			if (*it_gene == TIMER_OFF)
+			{
+				if (timerGenTrajectorySequence <= 0) {
+					*it_gene = it_traj->getInterval(); // On demarre le timer d'ennemis de cette trajectoire en quelque sorte
+					timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
+					timerGenEnemyStarted = TRUE;
+				}
+				timerOffMet = TRUE;
+			}
+			it_traj++;
+			it_gene++;
+		}
+	}
+	if (timerOffMet && timerGenTrajectorySequence > 0 && !timerGenEnemyStarted)
+		timerGenTrajectorySequence--;
 }
 
 void ModeGame::enemiesManager()
 {
-    list<Trajectory>::iterator it_traj = trajectories.begin();
-    list<int>::iterator it_gene = timersGenEnemy.begin();
-    for (int i = 0; i<(int)timersGenEnemy.size(); i++)
-    {
-        // On met a jour la position de chacun des ennemis presents sur la trajectoire
-        list<ActorEnemy>::iterator it_enn;
-        list<ActorEnemy> enemies = it_traj->getEnemies();
-        for (it_enn = enemies.begin(); it_enn != enemies.end(); it_enn++) {
-            it_enn->update(dTime);
-        }
-        it_traj->setEnemies(enemies);
-        if (it_traj->getRecordNumbers().size() && *it_gene <=0)
-        {
-            int rec_num = *(it_traj->getRecordNumbers().begin());
-            vect r={0,0,0}, s={1,1,1};
-            int damage = parametre->getActorDamage();
-            ActorEnemy e(models->getEnemiesInfos()[rec_num].idModel,it_traj->getInitialPosition(),r,s,&(*it_traj),damage,models->getEnemiesInfos()[rec_num].health);
-            it_traj->addEnemy(e);
-            it_traj->removeFirstRecordNumber(); // On enleve le numero d'enregistrement pour dire qu'on a bien cree l'ennemi
-            *it_gene = it_traj->getInterval();
-        }
-        else
-            *it_gene = *it_gene - 1;
-        it_traj++;
-        it_gene++;
-    }
+	list<Trajectory>::iterator it_traj = trajectories.begin();
+	list<int>::iterator it_gene = timersGenEnemy.begin();
+	for (int i = 0; i<(int)timersGenEnemy.size(); i++)
+	{
+		// On met a jour la position de chacun des ennemis presents sur la trajectoire
+		list<ActorEnemy>::iterator it_enn;
+		list<ActorEnemy> enemies = it_traj->getEnemies();
+		for (it_enn = enemies.begin(); it_enn != enemies.end(); it_enn++) {
+			it_enn->update(dTime);
+		}
+		it_traj->setEnemies(enemies);
+		if (it_traj->getRecordNumbers().size() && *it_gene <=0)
+		{
+			int rec_num = *(it_traj->getRecordNumbers().begin());
+			vect r={0,0,0}, s={1,1,1};
+			int damage = parametre->getActorDamage();
+			ActorEnemy e(models->getEnemiesInfos()[rec_num].idModel,it_traj->getInitialPosition(),r,s,&(*it_traj),damage,models->getEnemiesInfos()[rec_num].health);
+			it_traj->addEnemy(e);
+			it_traj->removeFirstRecordNumber(); // On enleve le numero d'enregistrement pour dire qu'on a bien cree l'ennemi
+			*it_gene = it_traj->getInterval();
+		}
+		else
+			*it_gene = *it_gene - 1;
+		it_traj++;
+		it_gene++;
+	}
 
+}
+
+void ModeGame::deadEnemiesManager()
+{
+	list<Actor>::iterator itDE;
+	for (itDE=deadEnemies.begin(); itDE!= deadEnemies.end();) {
+		if(itDE->getScale().x<0.01)
+			itDE=deadEnemies.erase(itDE);
+		else
+		{
+			vect rotation={0,itDE->getRotation().y+4,itDE->getRotation().z+4};
+			vect scale={itDE->getScale().x*0.95,itDE->getScale().y*0.95,itDE->getScale().z*0.95};
+			itDE->setRotation(rotation);
+			itDE->setScale(scale);
+			itDE++;
+		}
+	}
 }
 
 void ModeGame::collisionManager()
 {
-    //pour l'instant ne sert a virer les objets sortant du cadre
-    // si on rentre en collision avec la bordure exterieur on efface l'object
-    player.colisionBord(width,height); // donner une leger rotation au vaisseau
+	//pour l'instant ne sert a virer les objets sortant du cadre
+	// si on rentre en collision avec la bordure exterieur on efface l'object
+	player.colisionBord(width,height); // donner une leger rotation au vaisseau
 
-    list<Trajectory>::iterator it_traj;
-    for (it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
-    {
-        list<ActorEnemy> enemies = it_traj->getEnemies();
-        list<ActorEnemy>::iterator it_enn;
-        it_enn = enemies.begin();
-        while (it_enn != enemies.end())
-        {
-            if (it_enn->sortieEcran(width+5,height+5)) {
-                it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
-            } else {
-                it_enn->colisionFires(&friendFires); // idem avec les tir Player
-                if (it_enn->colisionPlayer(&player)) { // on regarde si l'ennemi est en colision avec le playerManager
-                    player.setHealth(-it_enn->getDamage());
-		    playerHeart = TEMP_BROUILLAGE_CAM_PLAYER_HEARTH;
-                    it_enn = enemies.erase(it_enn);
-                }
-                else if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
-                    score.setScore(models->getMChiffres(),10);
-                    it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
-                }
-                else
-                    it_enn++;
-            }
-        }
-        it_traj->setEnemies(enemies);
-    }
-    list<ActorPhysique>::iterator itAP;
-    itAP = friendFires.begin();
-    while (itAP!=friendFires.end())
-    {
-        if (itAP-> sortieEcran(width+5,height+5))
-            itAP = friendFires.erase(itAP);
-        else
-            itAP++;
-    }
-    itAP=enemiesFires.begin();
-    while (itAP!=enemiesFires.end())
-    {
-        if (itAP-> sortieEcran(width+5,height+5))
-            itAP = enemiesFires.erase(itAP);
-        else
-            itAP++;
-    }
-    health.setHealth(models->getMChiffres(), player.getHealth()); // al la fin, on met a jour l'objet graphi sante
+	list<Trajectory>::iterator it_traj;
+	for (it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
+	{
+		list<ActorEnemy> enemies = it_traj->getEnemies();
+		list<ActorEnemy>::iterator it_enn;
+		it_enn = enemies.begin();
+		while (it_enn != enemies.end())
+		{
+			if (it_enn->sortieEcran(width+5,height+5)) {
+				it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
+			} else {
+				it_enn->colisionFires(&friendFires); // idem avec les tir Player
+				if (it_enn->colisionPlayer(&player)) { // on regarde si l'ennemi est en colision avec le playerManager
+					player.setHealth(-it_enn->getDamage());
+			playerHeart = TEMP_BROUILLAGE_CAM_PLAYER_HEARTH;
+					deadEnemies.push_back(Actor(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
+					it_enn = enemies.erase(it_enn);
+				}
+				else if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
+					score.setScore(models->getMChiffres(),10);
+					deadEnemies.push_back(Actor(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
+					it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)
+				}
+				else
+					it_enn++;
+			}
+		}
+		it_traj->setEnemies(enemies);
+	}
+	list<ActorPhysique>::iterator itAP;
+	itAP = friendFires.begin();
+	while (itAP!=friendFires.end())
+	{
+		if (itAP-> sortieEcran(width+5,height+5))
+			itAP = friendFires.erase(itAP);
+		else
+			itAP++;
+	}
+	itAP=enemiesFires.begin();
+	while (itAP!=enemiesFires.end())
+	{
+		if (itAP-> sortieEcran(width+5,height+5))
+			itAP = enemiesFires.erase(itAP);
+		else
+			itAP++;
+	}
+	health.setHealth(models->getMChiffres(), player.getHealth()); // al la fin, on met a jour l'objet graphi sante
 }

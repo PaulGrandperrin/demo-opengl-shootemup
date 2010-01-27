@@ -31,11 +31,13 @@ private:
     void firesManager();
     void trajectoriesManager();
     void enemiesManager();
+	void deadEnemiesManager();
     void collisionManager();
 
     list<Trajectory> trajectories;
     list<ActorPhysique> friendFires;
     list<ActorPhysique> enemiesFires;
+	list<Actor> deadEnemies;
     ActorPlayer player;
     Score score;
     Text tScore;
