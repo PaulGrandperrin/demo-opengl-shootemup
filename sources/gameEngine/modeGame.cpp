@@ -49,11 +49,11 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
 	vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
 	player = ActorPlayer(models->getMplayer(), pPlayer, rPlayer, sPlayer, intHealth, intDamage ,0.4);
 
-    vect pScore={-12,0,-10.5}, rScore= {0,0,0}, sScore={1,1,0.5};
-    score = Score(models, 0, "Score", pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
+    vect pScore={-12,0,-10}, rScore= {0,0,0}, sScore={1,1,0.5};
+    score = Score(models, 0, "Score:", pScore, rScore, sScore, 0.6, LEFT); // test des chiffres
 
-    vect pVie={12,0,-10.5}, rVie= {0,0,0}, sVie={1,1,0.5};
-    health = Health(models, intHealth, "Health" , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
+    vect pVie={12,0,-10}, rVie= {0,0,0}, sVie={1,1,0.5};
+    health = Health(models, intHealth, "Health:" , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
 
     vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={3,3,2};
     tEnd = Text(models, "End", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"

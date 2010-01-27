@@ -20,7 +20,7 @@ private:
 
     MenuItem title,up,down,right,left,fire1,fire2,full,screen,pause,menu;
     vector<MenuItem> vectorItems;
-
+    Actor fondMenu;
 };
 
 #endif

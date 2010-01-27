@@ -34,6 +34,21 @@ public :
     inline int getMFondMenu() {
         return MFondMenu;
     }
+    inline int getMDpoint() {
+        return MDpoint;
+    }
+    inline int getMPoint() {
+        return MPoint;
+    }
+    inline int getMPointEx() {
+        return MPointEx;
+    }
+    inline int getMPointInt() {
+        return MPointInt;
+    }
+    inline int getMVirg() {
+	return MVirg;
+    }
     inline vector<int> getMChiffres() {
         return MChiffres;
     }
@@ -52,6 +67,7 @@ public :
 
 //public : //TODO metre private probleme vector
     int Mplayer,Mboulet,MCursorPause,MFondScore,MFondMenu;
+    int MDpoint, MPoint, MPointEx, MPointInt, MVirg;
     vector<int> MChiffres;
     vector<int> MLettersM;
     vector<int> MNuages;

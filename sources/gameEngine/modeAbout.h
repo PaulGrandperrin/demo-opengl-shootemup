@@ -19,10 +19,10 @@ public:
 
 private:
     //Point oldMouse;
-    Text madeBy,robin,jeanlu,sebastien,remi,paul,romain;
+    Text paragraphe1, paragraphe2, madeBy,robin,jeanlu,sebastien,remi,paul,romain;
     //bool keyDown, keyUp, bMouse;//pourrais bien servir si on veut faire défiler le texte..
     vector<Text> vectorText;
-
+    Actor fondMenu;
 
 };
 

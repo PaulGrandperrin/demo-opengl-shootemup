@@ -69,12 +69,21 @@ public:
         scale.y=s.y;
         scale.z=s.z;
     }
+    
+    inline bool isCenter() {
+        return ((position.x==0) && (position.z==0) && (position.y==0));
+    }
+    
+    void toCenter();
 
 protected:
     vect position;
     vect rotation;
     vect scale;
     int idModel;
+    bool resetPosition; // si on a à reinitialise la camera (Smart), il ne faut evaluer les step..s qu'une seule fois (constant)
+    int nbfoisResetPosition; // le nombre de fois a faire resetCamSmart pour arriver proche de 0
+    float stepCenterX, stepCenterY, stepCenterZ; // pour resetCamSmart, le changement a chaque etape
 };
 
 
@@ -133,16 +142,6 @@ public:
     void update(float time);
     void colisionBord(float width, float height);
     
-    inline bool isCenter() {
-        return ((position.x==0) && (position.z==0) && (position.y==0));
-    }
-    
-    void toCenter();
-    
-private:
-    bool resetPosition; // si on a à reinitialise la camera (Smart), il ne faut evaluer les step..s qu'une seule fois (constant)
-    int nbfoisResetPosition; // le nombre de fois a faire resetCamSmart pour arriver proche de 0
-    float stepCenterX, stepCenterY, stepCenterZ; // pour resetCamSmart, le changement a chaque etape
 };
 
 class Trajectory;

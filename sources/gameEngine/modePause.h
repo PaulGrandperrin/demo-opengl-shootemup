@@ -23,6 +23,7 @@ public:
 private:
     void moveCam();
     bool vContrainteFond(VarMove var, float val);
+    bool vContrainteMove(float valx, float valz);
     Point oldMouse;
     Point deltaMouse;
     Actor cursorPause; // facilite la navigation !

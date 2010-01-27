@@ -17,6 +17,11 @@ Models::Models(graphicEngine* GE) {
     MCursorPause=GE->loadModel("meshes/cursorPause.obj","textures/noir.png");
     MFondScore=GE->loadModel("meshes/plan.obj","textures/papyrus.png");
     MFondMenu=GE->loadModel("meshes/panneau.obj","textures/panneau.png");
+    MPoint=GE->loadModel("meshes/ponctuation/point.obj","textures/noir.png");
+    MDpoint=GE->loadModel("meshes/ponctuation/dpoint.obj","textures/noir.png");
+    MPointEx=GE->loadModel("meshes/ponctuation/excl.obj","textures/noir.png");
+    MPointInt=GE->loadModel("meshes/ponctuation/int.obj","textures/noir.png");
+    MVirg=GE->loadModel("meshes/ponctuation/virg.obj","textures/noir.png");
     for (int i=0; i<=9; i++) {
         MChiffres.push_back(GE->loadModel("meshes/chiffres/" + entierToString(i) + ".obj","textures/noir.png"));
     }

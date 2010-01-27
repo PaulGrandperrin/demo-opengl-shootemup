@@ -64,8 +64,8 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
     oldMouse.y=coordMouse.y;
     float halfWidth=width/2;
     float halfHeight=height/2;
-    float curHeightScale=NB_UNITY_WIDTH*2;
-    float curWidthScale=NB_UNITY_HEIGHT*2;
+    float curHeightScale=NB_UNITY_HEIGHT;
+    float curWidthScale=NB_UNITY_WIDTH;
     
 
     Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
@@ -132,11 +132,11 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
     //gestion de la souris
     for (int i=0; i<(int)vectorItems.size();i++) {
         vect s={-0.5,-0.5,-0.5};
-        if (!vectorItems[i].mouseOver(coordMouse,halfWidth,halfHeight,curHeightScale,curWidthScale) && selectMouse == i && select != i ) {//si la souris n'est plus sur l'item precedement selectionne
+        if (!vectorItems[i].mouseOver(coordMouse,halfWidth,halfHeight,height/curHeightScale/2,width/curWidthScale/2) && selectMouse == i && select != i ) {//si la souris n'est plus sur l'item precedement selectionne
             vectorItems[selectMouse].changeScale(s);
             selectMouse = select;
         }
-        if (vectorItems[i].mouseOver(coordMouse,halfWidth,halfHeight,curHeightScale,curWidthScale) && selectMouse != i && i != select
+        if (vectorItems[i].mouseOver(coordMouse,halfWidth,halfHeight,height/curHeightScale/2,width/curWidthScale/2) && selectMouse != i && i != select
                 && (deltaMouse.x != 0 || deltaMouse.y != 0)) {//si la souris est sur l'item
             vectorItems[select].changeScale(s);
             select = i;

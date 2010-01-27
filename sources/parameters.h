@@ -274,10 +274,10 @@ private :
 #define POSITION_MENU_Y 0
 
 
-#define CENTERX_MIN -100 // le plus proche
-#define CENTERX_MAX 100 // le plus loins
-#define CENTERZ_MIN -100 // le plus proche
-#define CENTERZ_MAX 100 // le plus loins
+#define CENTERX_MIN -25 // le plus proche
+#define CENTERX_MAX 25 // le plus loins
+#define CENTERZ_MIN -25 // le plus proche
+#define CENTERZ_MAX 25 // le plus loins
 #define ZOOM_MIN 3 // le plus proche
 #define ZOOM_MAX 60 // le plus loins
 

@@ -40,8 +40,8 @@ Fond::Fond(vector<int> MNuages, int MSol,vect position,vect rotation,vect scale,
     s.y= 1;
     s.z= 1.01;
     r.y = 0;
-    for (int i=-18;i<=18;i = i +12) { // on genere le sol
-      for (int j=-18;j<=18;j = j +12) {
+    for (int i=-30;i<=30;i = i +12) { // on genere le sol
+      for (int j=-30;j<=30;j = j +12) {
         p.x = i;
         p.z = j;
          p.y +=0.001; // pas de superposition
@@ -72,8 +72,8 @@ void Fond::update(float time) {
         p.z=itA->getPosition().z+time*velocity.z/2000;
         p.y=itA->getPosition().y;
         p.x=itA->getPosition().x;
-        if (p.z > 24) { // si le plan est en bas, on le remonte (invisible sur l'ecran)
-            p.z = -24;
+        if (p.z > 36) { // si le plan est en bas, on le remonte (invisible sur l'ecran)
+            p.z = -36;
         }
         itA->setTranslation(p); // a la fin, on le translate
     }
