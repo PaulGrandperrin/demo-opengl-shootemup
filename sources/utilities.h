@@ -6,6 +6,7 @@
 #include <string>
 
 #include <iostream>
+
 using namespace std;
 
 float random(float min, float max);

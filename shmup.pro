@@ -19,7 +19,7 @@ INCLUDEPATH += . \
                sources/gameEngine/objects \
                sources/graphicEngine
 QT += opengl
-LIBS += -lGLEW  -lIL
+LIBS += -lGLEW  -lIL -lopenal -lsndfile
 
  CONFIG += debug
 
@@ -45,7 +45,8 @@ HEADERS += sources/parameters.h \
            sources/gameEngine/objects/text.h \
            sources/gameEngine/objects/fond.h \
            sources/gameEngine/objects/trajectory.h \
-           sources/gameEngine/objects/menuItem.h
+           sources/gameEngine/objects/menuItem.h \
+	   sources/gameEngine/objects/soundEngine.h
 SOURCES += sources/main.cpp \
            sources/utilities.cpp \
            sources/gameEngine/game.cpp \
