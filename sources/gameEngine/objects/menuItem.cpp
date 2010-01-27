@@ -12,8 +12,8 @@ MenuItem::MenuItem(Models* models, string text, vect position,vect rotation,vect
 
 
 bool MenuItem::mouseOver(Point mouse, float halfW, float halfH, float curW, float curH) {
-    return (mouse.x >= halfW-text.getXY().x*curW) && (mouse.y <= halfH+(text.getPosition().z+text.getXY().y)*curH) &&
-           (mouse.x <= halfW+text.getXY().x*curW) && (mouse.y >= halfH+(text.getPosition().z-text.getXY().y)*curH);
+    return (mouse.x >= halfW-(-text.getPosition().x+text.getXY().x)*curW) && (mouse.y <= halfH+(text.getPosition().z+text.getXY().y)*curH) &&
+           (mouse.x <= halfW+(text.getPosition().x+text.getXY().x)*curW) && (mouse.y >= halfH+(text.getPosition().z-text.getXY().y)*curH);
 }
 
 void MenuItem::getRender(vector<instance>* instances) {

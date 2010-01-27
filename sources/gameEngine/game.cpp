@@ -39,8 +39,8 @@ Game::Game() // construction des camera, du GE et des autre objets tell que les 
     mPause = ModePause(&models, &cam,&etatGame, &switchMode);
     mAbout = ModeAbout(&models, &cam,&etatGame, &switchMode);
     mOption = ModeOption(&models, &cam,&etatGame, &switchMode);
-    vect pFond={0,-3,0}, rFond= {0,0,0}, sFond={2,2,2}, vFond={0,0,2};
-    fond = Fond(models.getMNuages(), models.getMSols(), pFond, rFond, sFond, vFond);
+    vect pFond={0,-3,0}, rFond= {0,0,0}, sFond={1.6,1.6,1.6}, vFond={0,0,2.5};
+    fond = Fond(models.getMNuages(), models.getMSol(), pFond, rFond, sFond, vFond);
 
     srand( time(NULL) ); // un peu de random ne fait pas de mal (function.h, random())
 	TTime=0;

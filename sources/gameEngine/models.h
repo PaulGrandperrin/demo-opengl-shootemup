@@ -43,8 +43,8 @@ public :
     inline vector<int> getMNuages() {
         return MNuages;
     }
-    inline vector<int> getMSols() {
-        return MSols;
+    inline int getMSol() {
+        return MSol;
     }
     inline vector<EnemyInfo> getEnemiesInfos() {
         return enemiesInfos;
@@ -55,7 +55,7 @@ public :
     vector<int> MChiffres;
     vector<int> MLettersM;
     vector<int> MNuages;
-    vector<int> MSols;
+    int MSol;
     vector<EnemyInfo> enemiesInfos;
 };
 

@@ -21,7 +21,7 @@ class Fond
 {
 public:
     Fond() {};
-    Fond( vector<int> MPlans, vector<int> MSols, vect position,vect rotation,vect scale, vect vel);
+    Fond( vector<int> MPlans, int MSol, vect position,vect rotation,vect scale, vect vel);
 
 
     inline vector<Actor> getNuages() {

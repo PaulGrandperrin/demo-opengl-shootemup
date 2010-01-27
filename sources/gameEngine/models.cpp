@@ -8,9 +8,7 @@
 
 Models::Models(graphicEngine* GE) {
 // l'ordre n'est pas sans importance !
-    for (int i=1; i<=2;i++) {
-        MSols.push_back(GE->loadModel("meshes/plan.obj","textures/sol" + entierToString(i) + ".png"));
-    }
+    MSol=GE->loadModel("meshes/plan.obj","textures/sol2.png");
     for (int i=1; i<=3;i++) {
         MNuages.push_back(GE->loadModel("meshes/plan.obj","textures/nuage" + entierToString(i) + ".png"));
     }
