@@ -220,7 +220,7 @@ void graphicEngine::resize(int width,int height)
 }
 
 
-void graphicEngine::draw(vector<instance> inst, camera cam,unsigned int shader,lightVec lv,float )
+void graphicEngine::draw(vector<instance> inst, camera cam,unsigned int,lightVec lv,float time)
 {
 
 	glMatrixMode(GL_PROJECTION);
@@ -237,7 +237,6 @@ void graphicEngine::draw(vector<instance> inst, camera cam,unsigned int shader,l
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	#ifndef JEMAPPELLEJEANLUC
-		glUseProgram(shader);
 	
 	
 	// gestion de la lumière
@@ -256,6 +255,7 @@ void graphicEngine::draw(vector<instance> inst, camera cam,unsigned int shader,l
 	glLightfv( GL_LIGHT0, GL_SPECULAR, Sl );
 	#endif
 
+
 	for(unsigned int i=0; i<models.size();i++)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, models[i].ibo);
@@ -264,7 +264,10 @@ void graphicEngine::draw(vector<instance> inst, camera cam,unsigned int shader,l
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*8, BUFFER_OFFSET(0));
 		glNormalPointer( GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*3);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*8, (char*) NULL+sizeof(float)*6);
-
+		
+		glUseProgram(models[i].shaders);
+		glUniform1f(shadWaterParam, time);
+		
 		for(unsigned int j=0;j<inst.size();j++)
 		{
 			if(inst[j].idModel==i+1) //TODO optimiser ça
@@ -375,7 +378,10 @@ unsigned int graphicEngine::loadModel(string pathModel,string pathTexture)
 
 	loadMeshe(id,pathModel.c_str());
 	loadTexture(id,pathTexture.c_str());
-	//loadShaders(&(models[id].shaders),"shaders/scene/vsNormal.glsl","shaders/scene/psNormal.glsl");
+	if(pathTexture=="textures/sol2.png")
+		loadShaders(&(models[id].shaders),"shaders/scene/vsNormal.glsl","shaders/postFX/psWater.glsl");
+	else
+		loadShaders(&(models[id].shaders),"shaders/scene/vsNormal.glsl","shaders/scene/psNormal.glsl");
 
 	return id+1;
 }
