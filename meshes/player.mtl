@@ -1,13 +1,112 @@
-# Blender3D MTL File: player.blend
-# Material Count: 1
-newmtl Material.001_player_oclu.png
-Ns 25.490196
+# Blender3D MTL File: player_6.blend
+# Material Count: 10
+newmtl coque_player_oclu.png
+Ns 0.000000
 Ka 0.000000 0.000000 0.000000
-Kd 0.476647 0.476647 0.476647
-Ks 0.144354 0.144354 0.144354
+Kd 0.316850 0.327448 0.157884
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd player_oclu.png
+
+
+newmtl Tour_player_oclu.png
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.641319 0.678951 0.076838
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd player_oclu.png
+
+
+newmtl Sol_player_oclu.png
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.316850 0.327448 0.157884
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd player_oclu.png
+
+
+newmtl Canon_player_oclu.png
+Ns 23.529412
+Ka 0.000000 0.000000 0.000000
+Kd 0.141159 0.141159 0.141159
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd player_oclu.png
+
+
+newmtl Mur_player_oclu.png
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.316850 0.327448 0.157884
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd player_oclu.png
+
+
+newmtl ballon_player_oclu.png
+Ns 23.529412
+Ka 0.000000 0.000000 0.000000
+Kd 0.612465 0.612465 0.612465
+Ks 0.153551 0.153551 0.153551
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd player_oclu.png
+
+
+newmtl Wood_player_oclu.png
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.508821 0.516085 0.399871
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd player_oclu.png
+
+
+newmtl door_player_oclu.png
+Ns 23.529412
+Ka 0.000000 0.000000 0.000000
+Kd 0.169671 0.169671 0.169671
+Ks 0.153551 0.153551 0.153551
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd player_oclu.png
+
+
+newmtl fenetre_player_oclu.png
+Ns 23.529412
+Ka 0.000000 0.000000 0.000000
+Kd 0.609647 0.749884 0.682570
+Ks 0.153551 0.153551 0.153551
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd player_oclu.png
+
+
+newmtl corde_player_oclu.png
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
 map_Kd player_oclu.png
 
 
