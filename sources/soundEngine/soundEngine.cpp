@@ -50,20 +50,20 @@ SoundEngine::SoundEngine()
 SoundEngine::~SoundEngine()
 {
 	// R�cup�ration du contexte et du device
-	ALCcontext* Context = alcGetCurrentContext();
-	ALCdevice*  Device  = alcGetContextsDevice(Context);
-
-	// D�sactivation du contexte
-	alcMakeContextCurrent(NULL);
-
-	// Destruction du contexte
-	alcDestroyContext(Context);
-
-	// Fermeture du device
-	alcCloseDevice(Device);
-
-
-	//TODO tt bien fermer
+// 	ALCcontext* Context = alcGetCurrentContext();
+// 	ALCdevice*  Device  = alcGetContextsDevice(Context);
+// 
+// 	// D�sactivation du contexte
+// 	alcMakeContextCurrent(NULL);
+// 
+// 	// Destruction du contexte
+// 	alcDestroyContext(Context);
+// 
+// 	// Fermeture du device
+// 	alcCloseDevice(Device);
+// 
+// 
+// 	//TODO tt bien fermer
 }
 
 void SoundEngine::load(string file)

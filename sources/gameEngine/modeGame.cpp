@@ -57,6 +57,7 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     health = Health(models, intHealth, "Health:" , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
 
     vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={2,2,1};
+
     tEndDead = Text(models, "Oh, you died !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
     tEndWin = Text(models, "Nice, you won !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
 
@@ -373,8 +374,8 @@ void ModeGame::enemiesManager()
         {
             int rec_num = *(it_traj->getRecordNumbers().begin());
             vect r={0,0,0}, s={1,1,1};
-            int damage = ACTOR_DAMAGE;
-            ActorEnemy e(models->getEnemiesInfos()[rec_num].idModel,it_traj->getInitialPosition(),r,s,&(*it_traj),damage,models->getEnemiesInfos()[rec_num].health);
+            ActorEnemy e(models->getEnemiesInfos()[rec_num].idModel,it_traj->getInitialPosition(),r,s,&(*it_traj),models->getEnemiesInfos()[rec_num].health,
+            models->getEnemiesInfos()[rec_num].damages,models->getEnemiesInfos()[rec_num].score,models->getEnemiesInfos()[rec_num].mask_radius/1000);
             it_traj->addEnemy(e);
             it_traj->removeFirstRecordNumber(); // On enleve le numero d'enregistrement pour dire qu'on a bien cree l'ennemi
             *it_gene = it_traj->getInterval();
@@ -426,14 +427,14 @@ void ModeGame::collisionManager()
             } else {
                 it_enn->colisionFires(&friendFires); // idem avec les tir Player
                 if (it_enn->colision(&player)) { // on regarde si l'ennemi est en colision avec le playerManager
-                    player.setHealth(-it_enn->getDamage());
+                    player.setHealth(-it_enn->getDamages());
                     playerHeart = TEMP_BROUILLAGE_CAM_PLAYER_HEARTH;
                     deadEnemies.push_back(ActorPhysique(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
                     deadEnemies.back().setVelocity(it_enn->getVelocity());
                     it_enn = enemies.erase(it_enn);
                 }
                 else if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
-                    score.setScore(10);
+                    score.setScore(it_enn->getScore());
                     deadEnemies.push_back(ActorPhysique(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
                     deadEnemies.back().setVelocity(it_enn->getVelocity());
                     it_enn = enemies.erase(it_enn); // On efface l'element et on pointe sur le suivant (donc pas besoin de faire un it_enn++)

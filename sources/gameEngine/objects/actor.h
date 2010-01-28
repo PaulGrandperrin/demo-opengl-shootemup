@@ -166,7 +166,7 @@ class Trajectory;
 class ActorEnemy : public ActorPhysique {
 public:
     ActorEnemy() {};
-    ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health, int damage);
+    ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health, int damages, int score, float mask_radius);
     void update(float time);
     inline bool isMort() {
         return health <= 0;
@@ -177,14 +177,20 @@ public:
     inline int getHealth() {
         return health;
     }
-    inline int getDamage() {
-        return damage;
-    }
     inline void setHealth(int hel) {
         health +=hel ;
     }
     inline void initHealth(int hel) {
         health =hel ;
+    }
+    inline int getDamages() {
+        return damages;
+    }
+    inline int getScore() {
+      return score;
+    }
+    inline float getMaskRadius() {
+      return mask_radius;
     }
     inline int getTimerFire() {
         return timerfire;
@@ -199,7 +205,9 @@ private:
     float timeElapsed;
     int nextKeyStateRank;
     int health;
-    int damage;
+    int damages;
+    int score;
+    float mask_radius;
     int timerfire;
 };
 #endif

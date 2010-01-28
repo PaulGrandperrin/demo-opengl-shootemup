@@ -17,7 +17,7 @@ using namespace std;
 struct t_key_state {
     float ax, ay, az; // new acceleration coordinates
     float vx, vy, vz; // new velocity coordinates
-    float t; // (relative) time when the modification has to be applied
+    int t; // (relative) time when the modification has to be applied
 };
 
 class ActorEnemy;
@@ -63,13 +63,19 @@ public:
     TrajectoryFile(string fileName = "levels/traj_lvl_default.data");
     ~TrajectoryFile();
     void open(string fileName);
-    void close();
+    inline void close() {file.close(); }
     bool isEnded();
-    void begin(); // Place le pointeur de lecture au debut du fichier
-    void end(); // Place le pointeur d'ecriture en fin de fichier
+    inline void begin() {file.seekg(ios_base::beg);} // Place le pointeur de lecture au debut du fichier
+    inline void end() {file.seekp(ios_base::end);} // Place le pointeur d'ecriture en fin de fichier
     void write(t_key_state s); // Ecrit un etat cle dans le fichier (ecrit en fait ses attributs les uns à la suite des autres)
+    inline void write(int i) {file << i;}
+    inline void write(vect v) {file << v.x; writeSpace(); file << v.y; writeSpace(); file << v.z; }
+    inline void writeLine() {  file << endl;}
+    inline void writeSpace() {  file << " ";}
+    inline void read(vect & v) {file >> v.x; file >> v.y; file >> v.z; }
     void read(t_key_state & s);
     void read(Trajectory & t);
+    inline void read(int & i) {file >> i;}
     void read(list<Trajectory> & l);
     void enterInfos(); // Permet de saisir une nouvelle trajectoire et de l'ajouter au fichier
     void displayContent(); // affiche le contenu du fichier

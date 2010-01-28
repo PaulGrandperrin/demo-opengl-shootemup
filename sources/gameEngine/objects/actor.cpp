@@ -232,8 +232,8 @@ bool ActorPlayer::colisionFires(list<ActorMissile>* fires) {
 // ActorEnemy
 ////////////////////////////////////////
 
-ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health, int damage)
-        : ActorPhysique(idModel,position,rotation,scale,mask) {
+ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health, int damages, int score, float mask_radius)
+        : ActorPhysique(idModel,position,rotation,scale,mask_radius) {
     if (traj != NULL)
         this->traj = traj;
     else {
@@ -243,7 +243,9 @@ ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Traje
     timeElapsed = 0;
     nextKeyStateRank = 0;
     this->health = health;
-    this->damage = damage;
+    this->damages = damages;
+    this->score = score;
+    this->mask_radius = mask_radius;
     this->timerfire = 0;
 }
 
@@ -259,14 +261,10 @@ void ActorEnemy::update(float time) {
     {
         if (timeElapsed > rit->t && rank == nextKeyStateRank)
         {
-            if (rit->vx != 0 || rit->vy != 0 || rit->vz != 0) {
                 vect v={rit->vx,rit->vy,rit->vz};
                 setVelocity(v);
-            }
-            else {
                 vect a={rit->ax,rit->ay,rit->az};
                 setAcceleration(a);
-            }
             nextKeyStateRank++;
         }
         rank++;

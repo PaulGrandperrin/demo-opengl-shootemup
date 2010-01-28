@@ -41,15 +41,22 @@ Models::Models(graphicEngine* GE) {
         cout << "Enemies file not found !" << endl;
         exit(0);
     }
-    string s;
-    int h, idM;
     while (!eFile.isEnded()) {
+	string s;
+	int idM, health, damages, score;
+	float radius;
         eFile.read(s);
-        eFile.read(h);
-        idM = GE->loadModel("meshes/"+s+".obj","textures/"+s+".png");
-        EnemyInfo enemyInfo={idM,h};
-        enemiesInfos.push_back(enemyInfo);
-        cout << "Enemy infos : (idModel = " << idM << ", Health = " << h << ") ... Loaded" << endl;
+	eFile.read(health);
+	eFile.read(damages);
+	eFile.read(score);
+	eFile.read(radius);
+	if (s!="") {
+	  idM = GE->loadModel("meshes/"+s+".obj","textures/"+s+".png");
+	  EnemyInfo einfo={idM,health,damages,score,radius};
+	  enemiesInfos.push_back(einfo);
+	  cout << "Enemy infos : (idModel = " << idM << ", Health = " << health << ", Damages = " << 
+	  damages << ", Score = " << score << ", Radius = " << radius/1000 << ") ... Loaded" << endl;
+	}
     }
 }
 

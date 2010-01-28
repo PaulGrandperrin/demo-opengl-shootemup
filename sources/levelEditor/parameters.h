@@ -1,0 +1,7 @@
+#define VIEW_WIDTH 500
+#define VIEW_HEIGHT 500
+#define POINT_SIZE 10
+#define TEXT_OFFSET_X 8
+#define TEXT_OFFSET_Y 8
+#define TEXT_MARGIN 2
+#define HIDDEN_BORDER 40

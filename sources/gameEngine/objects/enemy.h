@@ -10,6 +10,9 @@ using namespace std;
 struct EnemyInfo {
     int idModel;
     int health;
+    int damages;
+    int score;
+    float mask_radius;
 };
 
 class EnemyInfosFile {
@@ -17,14 +20,18 @@ public:
     EnemyInfosFile(string fileName = "levels/enem_lvl_default.data");
     ~EnemyInfosFile();
     void open(string fileName);
-    void close();
+    inline void close() {file.close(); }
     bool isEnded();
-    void begin(); // Place le pointeur de lecture au debut du fichier
-    void end(); // Place le pointeur d'ecriture en fin de fichier
-    void write(string s); // Ecrit une chaine dans le fichier (sa taille puis la chaine)
-    void write(int i);
-    void read(string & s);
-    void read(int & i);
+    inline void begin() {file.seekg(ios_base::beg);} // Place le pointeur de lecture au debut du fichier
+    inline void end() {file.seekp(ios_base::end);} // Place le pointeur d'ecriture en fin de fichier
+    inline void write(string s) {file << s;} // Ecrit une chaine dans le fichier (sa taille puis la chaine)
+    inline void write(int i) {file << i;}
+    inline void write(float & f) {file << f;}
+    inline void read(string & s) { file >> s;}
+    inline void read(int & i) {file >> i;}
+    inline void read(float & f) {file >> f;}
+    inline void writeLine() {  file << endl;}
+    inline void writeSpace() {  file << " ";}
     void enterInfos();
     void displayContent();
 private:

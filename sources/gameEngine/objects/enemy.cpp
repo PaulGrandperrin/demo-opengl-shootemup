@@ -23,10 +23,6 @@ void EnemyInfosFile::open(string fileName) {
     }
 }
 
-void EnemyInfosFile::close() {
-    file.close();
-}
-
 bool EnemyInfosFile::isEnded() {
     bool at_the_end = file.peek() == EOF;
     if (file.eof())
@@ -34,68 +30,67 @@ bool EnemyInfosFile::isEnded() {
     return at_the_end;
 }
 
-void EnemyInfosFile::begin() {
-    file.seekg(ios_base::beg);
-}
-
-void EnemyInfosFile::end() {
-    file.seekp(ios_base::end);
-}
-
-void EnemyInfosFile::write(string s) {
-    size_t l = s.size();
-    file.write((char*) &l, sizeof(l));
-    file.write(s.data(), l);
-}
-
-void EnemyInfosFile::write(int i) {
-    file.write((char*) &i, sizeof(i));
-}
-
-void EnemyInfosFile::read(string & s) {
-// 	size_t l;
-    int j; // fonctionne avec un entier car sizeof(int) = 4, et sizeof(size_t =8) sur PC seb et sizeof(size_t =4) sur PC romain
-    file.read((char*) &j, sizeof(int));
-// 	cout << " bonjour : " << l <<  "  si " << sizeof(j)  << endl;
-    char readString[j + 1];
-// 	cout << " bonjour : 2" << endl;
-    file.read(readString, j);
-// 	cout << " bonjour : 3" << endl;
-    readString[j] = '\0';
-    s = readString;
-}
-
-void EnemyInfosFile::read(int & i) {
-    file.read((char*) &i, sizeof(i));
-}
-
 void EnemyInfosFile::enterInfos() {
-    string name;
-    int health;
-    cout << "Please enter a new Enemy :" << endl;
-    cout << "Existing file name (without the extension and the parent directory) :" << endl;
-    getline(cin,name);
-    do {
-        cout << "Health :" << endl;
-        cin >> health;
-        cin.ignore(256,'\n');
-    } while (health < 0);
-    this->write(name);
-    this->write(health);
+  // structure du fichier : Nom Sante dommage score mask
+  
+  string name;
+  int health = 0, dommage =0, score=0, mask=0;
+  cout << "Please enter a new Enemy :" << endl;
+  cout << "Existing file name (without the extension and the parent directory) :" << endl;
+  getline(cin,name);
+  do {
+    cout << "Health :" << endl;
+    cin >> health;
+    cin.ignore(256,'\n');
+  } while(health < 0);
+  do {
+    cout << "Dommage caused :" << endl;
+    cin >> dommage;
+    cin.ignore(256,'\n');
+  } while(dommage < 0);
+  do {
+    cout << "Score given :" << endl;
+    cin >> score;
+    cin.ignore(256,'\n');
+  } while(score < 0);
+  do {
+    cout << "Mask :" << endl;
+    cin >> mask;
+    cin.ignore(256,'\n');
+  } while(mask < 0);
+  this->write(name);
+  this->writeSpace();
+  this->write(health);
+  this->writeSpace();
+  this->write(dommage);
+  this->writeSpace();
+  this->write(score);
+  this->writeSpace();
+  this->write(mask);
+  this->writeLine();
 }
 
-void EnemyInfosFile::displayContent() {
-    begin();
-    int i = 1;
-    while (!isEnded())
-    {
-        string s;
-        int health;
-        read(s);
-        read(health);
-        cout << "#" << i << endl;
-        cout << "File name : \"" << s << "\"" << endl;
-        cout << "Health : " << health << endl << endl;
-        i++;
+void EnemyInfosFile::displayContent() { //FIXME probleme passe une fois de trop dans la boucle !!
+  begin();
+  int i = 1;
+  while(!isEnded())
+  {
+    string s;
+    int health = 0, dommage =0, score=0, mask=0;
+    read(s);
+    read(health);
+    read(dommage);
+    read(score);
+    read(mask);
+    if (s!="") {
+    cout << "#" << i << endl;
+    cout << "File name : \"" << s << "\"" << endl;
+    cout << "Health : " << health << endl;
+    cout << "Domaage : " << dommage  << endl;
+    cout << "Score : " << score << endl;
+    cout << "Mask : " << mask<< endl;
+//     read(s);
     }
+    i++;
+  }
 }

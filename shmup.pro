@@ -23,7 +23,7 @@ INCLUDEPATH += . \
 QT += opengl
 LIBS += -lGLEW  -lIL -lopenal -lsndfile
 
-# CONFIG += debug
+ CONFIG += debug
 
 QMAKE_CXXFLAGS_DEBUG += -ggdb -g -p -pg -Wall
 QMAKE_LFLAGS_DEBUG += -ggdb -g -p -pg -Wall
