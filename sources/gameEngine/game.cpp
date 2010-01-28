@@ -155,10 +155,10 @@ void Game::effectManager(bool stateKeys[]) {
     }
     shad%=32;
 
-    if (switchMode == TOGAME || switchMode == TOPAUSE || mGame.isEnd()) {
+    if ((switchMode == TOGAME || switchMode == TOPAUSE) && shad!=POSTFX_NOTHING) {
         shad = POSTFX_NOTHING;
     }
-    if (switchMode == TOMENU) {
+    if ((switchMode == TOMENU && cam.camOKMenu()) /*&& (mGame.isEnd() || etatGame==MENU))*/ && shad!=POSTFX_BLUR) {
         shad = POSTFX_BLUR;
     }
 

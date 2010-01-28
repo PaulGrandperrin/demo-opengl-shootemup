@@ -60,9 +60,6 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={2,2,1};
     tEndDead = Text(models, "Oh, you died !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
     tEndWin = Text(models, "Nice, you win !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
-//     vect p={random(-12,12),0,random(-25,-15)}, r={0,0,0}, s={0.2,0.2,0.2}, v={0,0,4};
-//     bomb = ActorPhysique(models->getMBomb(), p, r, s, 10, 899, 0.4);
-//     bomb.setVelocity(v);
 
     // Chargement des trajectoires
     TrajectoryFile tFile("levels/traj_lvl_default.data");
@@ -114,10 +111,8 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
             }
         }
         else {
-            playerManager();
             firesManager();
             trajectoriesManager();
-            enemiesManager();
             deadEnemiesManager();
             //bonusManager();
             if ((timerFin == INTERVALE_TEMP_FIN) && (end)) {
@@ -133,8 +128,6 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
                 bombManager();
                 collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
             }
-            bombManager();
-            collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
             if ((timersGenEnemy.empty()) ||  (player.isMort())) {
                 end = true; // c'est la fin, on bloque les fonctions du jeu.
             }
@@ -185,13 +178,13 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
         // on affiche le score ..., et autre info
         score.getRender(instances2D);
         health.getRender(instances2D);
-        if (end && player.isMort()) {
+        if (end && player.isMort() && timerFin == 0) {
             vActor = tEndDead.getText();
             for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
                 instances2D->push_back(itA->getInstance());
             }
         }
-        else if (end) {
+        else if (end && timerFin == 0) {
             vActor = tEndWin.getText();
             for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
                 instances2D->push_back(itA->getInstance());
@@ -311,7 +304,7 @@ void ModeGame::firesManager()
 
 void ModeGame::bombManager() {
     if (bomb.getPosition().z > 20 || bomb.getScale().x < 0.02) {
-        vect p={random(-12,12),0,random(-18,-15)}, r={0,0,0}, s={0.2,0.2,0.2}, v={0,0,4};
+        vect p={random(-12,12),0,random(-18,-15)}, r={0,0,0}, s={0.3,0.3,0.3}, v={0,0,4};
         bomb = ActorMissile(models->getMBomb(), p, r, s, 500, 0.4);
         bomb.setVelocity(v);
     }
