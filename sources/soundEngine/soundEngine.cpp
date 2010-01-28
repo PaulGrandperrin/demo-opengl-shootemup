@@ -2,6 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/** NOTE
+ *	Ce code est extremement moche mais il a été fait
+ * à l'arache dans le seul but de rajouter un peu
+ * de son.....
+ * Ne pas regarder plus bas, merci...
+*/
+
+
+
 vector<unsigned int>* caca;
 
 void * playInThread(void *idFile);
@@ -115,7 +124,7 @@ void SoundEngine::load(string file)
 	}
 	
 	files.insert(pair<string,unsigned int>(file,Buffer));
-
+	cout << Buffer<<endl;
 	playing[files[file]]=false;
 }
 
@@ -129,6 +138,7 @@ void SoundEngine::play(string file,bool loop)
 {
 	if(playing[files[file]]==false)
 	{
+		cout << "playing "<<file << endl;
 		playing[files[file]]=true;
 		unsigned int* id=(unsigned int*)malloc(sizeof(unsigned int)*2);
 		id[0]=files[file];

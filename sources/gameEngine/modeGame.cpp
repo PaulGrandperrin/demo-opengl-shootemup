@@ -81,6 +81,7 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
     SE->stop("sounds/ocean.wav");
     SE->play("sounds/blackpearl.wav", false);
     SE->play("sounds/Bamboo.wav", false);
+
     if (*switchMode == TOGAME && !camera->camOKGame()) {
         camera->toModeGameSmart();
     }
