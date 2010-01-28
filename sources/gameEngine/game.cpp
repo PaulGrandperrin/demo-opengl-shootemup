@@ -159,4 +159,7 @@ void Game::effectManager(bool stateKeys[]) {
       mGame.changePlayerHeart(-1);
       shad = POSTFX_NOTHING;
     }
+    if (mGame.isEnd()) {
+      shad = POSTFX_NOTHING;
+    }
 }
