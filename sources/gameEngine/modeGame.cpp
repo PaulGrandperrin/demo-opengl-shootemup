@@ -359,7 +359,7 @@ void ModeGame::enemiesManager()
         list<ActorEnemy> enemies = it_traj->getEnemies();
         for (it_enn = enemies.begin(); it_enn != enemies.end(); it_enn++) {
             it_enn->update(dTime);
-	       if (firetimer==200)
+	       if ((firetimer==200) && ((player->getPosition()-it_enn->getPosition())>0))
 	      {
 		  vect p={it_enn->getPosition().x,it_enn->getPosition().y,it_enn->getPosition().z}, r={0,0,0}, s={0.1,0.1,0.1};
 		  vect vel={(-it_enn->getPosition().x+player.getPosition().x)/3,(-it_enn->getPosition().y+player.getPosition().y)/3,(-it_enn->getPosition().z+player.getPosition().z)/3};
