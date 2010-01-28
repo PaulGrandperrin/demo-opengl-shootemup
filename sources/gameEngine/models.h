@@ -23,8 +23,11 @@ public :
     inline int getMplayer() {
         return Mplayer;
     }
-    inline int getMboulet() {
-        return Mboulet;
+    inline int getMbouletE() {
+        return MbouletE;
+    }
+    inline int getMbouletP() {
+        return MbouletP;
     }
     inline int getMharpon() {
         return Mharpon;
@@ -73,7 +76,7 @@ public :
     }
 
 //public : //TODO metre private probleme vector
-    int Mplayer,Mboulet,Mharpon,MCursorPause,MFondScore,MFondMenu, MBomb;
+    int Mplayer,MbouletP, MbouletE,Mharpon,MCursorPause,MFondScore,MFondMenu, MBomb;
     int MDpoint, MPoint, MPointEx, MPointInt, MVirg;
     vector<int> MChiffres;
     vector<int> MLettersM;

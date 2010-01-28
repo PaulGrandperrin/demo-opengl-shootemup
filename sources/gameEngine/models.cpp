@@ -13,7 +13,8 @@ Models::Models(graphicEngine* GE) {
         MNuages.push_back(GE->loadModel("meshes/plan.obj","textures/nuage" + entierToString(i) + ".png"));
     }
     Mplayer=GE->loadModel("meshes/player.obj","textures/player.png");
-    Mboulet=GE->loadModel("meshes/boulet.obj","textures/boulet.png");
+    MbouletP=GE->loadModel("meshes/boulet.obj","textures/bouletPlayer.png");
+    MbouletE=GE->loadModel("meshes/boulet.obj","textures/bouletEnemy.png");
     Mharpon=GE->loadModel("meshes/harpon.obj","textures/harpon.png");
     MBomb=GE->loadModel("meshes/bomb.obj","textures/bomb.png");
     MCursorPause=GE->loadModel("meshes/cursorPause.obj","textures/noir.png");

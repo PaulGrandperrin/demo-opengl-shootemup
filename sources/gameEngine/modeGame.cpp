@@ -265,7 +265,7 @@ void ModeGame::playerManager()
                 pRight.z=player.getPosition().z+f;
                 vel.x += random(15,18);
                 vel.z += random(-0.5,0.5);
-                fire=ActorMissile(models->getMboulet(), pRight, r, s);
+                fire=ActorMissile(models->getMbouletP(), pRight, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);
             }
@@ -276,7 +276,7 @@ void ModeGame::playerManager()
                 pLeft.z=player.getPosition().z+f;
                 vel.x -= random(15,18);
                 vel.z += random(-0.5,0.5);
-                fire=ActorMissile(models->getMboulet(),pLeft, r, s);
+                fire=ActorMissile(models->getMbouletP(),pLeft, r, s);
                 fire.setVelocity( vel);
                 friendFires.push_back(fire);
             }
@@ -363,7 +363,7 @@ void ModeGame::enemiesManager()
                 vect pDest={(-it_enn->getPosition().x+player.getPosition().x),(-it_enn->getPosition().y+player.getPosition().y),(-it_enn->getPosition().z+player.getPosition().z)};
                 float coef = sqrt(pDest.x*pDest.x + pDest.z* pDest.z)/8;
                 ActorMissile fire;
-                fire=ActorMissile(models->getMboulet(), p, r, s);
+                fire=ActorMissile(models->getMbouletE(), p, r, s);
                 fire.setCoefVel(coef);
                 fire.setVelocity( pDest );
                 enemiesFires.push_back(fire);
