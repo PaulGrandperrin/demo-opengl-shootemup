@@ -135,18 +135,18 @@ void graphicEngine::init()
 
 
 	// crée le FBO
-	glGenFramebuffers(1, &fbo);
+	glGenFramebuffersEXT(1, &fbo);
 
 
 
 	//NOTE petit test: a virer
-	if( glCheckFramebufferStatus(GL_FRAMEBUFFER)==GL_FRAMEBUFFER_COMPLETE)
+	if( glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT)==GL_FRAMEBUFFER_COMPLETE_EXT)
 		cout << "FBO: OK" << endl;
 	else
 		cout << "FBO: Fail" << endl;
 
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	#ifndef JEMAPPELLEJEANLUC
 	
@@ -184,7 +184,7 @@ void graphicEngine::resize(int width,int height)
 	//glViewport((width-this->width)/2,(height-this->height)/2,this->width,this->height);
 
 	glDeleteTextures(1,&textFbo);
-	glDeleteRenderbuffers(1,&rbo);
+	glDeleteRenderbuffersEXT(1,&rbo);
 
 	//création de la texture //TODO comparer avec le chargement d'un texture
 	glGenTextures(1, &textFbo);
@@ -199,21 +199,21 @@ void graphicEngine::resize(int width,int height)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// création d'un RBO pour le depth buffer
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+	glGenRenderbuffersEXT(1, &rbo);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rbo);
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT,
 							widthV, heightV);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 
 	// attache la texture au FBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0,
 							GL_TEXTURE_2D, textFbo, 0);
 
 	// attache le RBO de deph buffer au FBO
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-								GL_RENDERBUFFER, rbo);
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT,
+								GL_RENDERBUFFER_EXT, rbo);
 
 	pthread_mutex_unlock(&mutex);
 }
@@ -296,7 +296,7 @@ void graphicEngine::render(vector<instance> inst,camera cam,vector<instance> ins
 	pthread_mutex_lock(&mutex);
 	//On bind le frame buffer "off-screen"
 	
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 
 	glClearColor(1, 1, 1, 1); //Le fond du jeu est blanc
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -307,7 +307,7 @@ void graphicEngine::render(vector<instance> inst,camera cam,vector<instance> ins
 	glViewport((widthW-widthV)/2,(heightW-heightV)/2,widthV,heightV);
 	
 	//On active le "window provided framebuffer"
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	//On se met en vue othonormale
 	glMatrixMode(GL_PROJECTION);

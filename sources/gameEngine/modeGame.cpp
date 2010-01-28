@@ -183,7 +183,7 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
         }
     }
 }
-/*
+/**
 *NOTE j'ai fait une version un peu compliqué du déplacement du joueur pour montrer les possibilités de
 * ActorPhysique. Cette simulation est physiquement correcte mais ne correpond pas du tout à ce qu'il y'a d'abitude
 * dans les jeux. Cependant, je trouve le concept interressant, ça oblige le joueur à mieux anticiper ses
@@ -191,8 +191,7 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
 */
 void ModeGame::playerManager()
 {
-
-//     player.setAcceleration( {0,0,0});
+	/*
     vect accl={0,0,0};
     if (stateKeys[parametre->getLeft()])  {// -x
         accl.x-=10;
@@ -206,8 +205,25 @@ void ModeGame::playerManager()
     if (stateKeys[parametre->getDown()]) { // -y
         accl.z+=20;
     }
-
     player.setAcceleration( accl );
+	*/
+	vect velo={0,0,0};
+	if (stateKeys[parametre->getLeft()])  {// -x
+        velo.x-=8;
+    }
+    if (stateKeys[parametre->getRight()]) {// +x
+        velo.x+=8;
+    }
+    if (stateKeys[parametre->getUp()]) { // +y
+        velo.z-=8;
+    }
+    if (stateKeys[parametre->getDown()]) { // -y
+        velo.z+=8;
+    }
+	player.setVelocity( velo );
+
+
+	
     player.update(dTime);
     // TODO ameliorer definition des bords
 
@@ -435,6 +451,10 @@ void ModeGame::collisionManager()
     /* gestion colision bomb */
     bomb.colisionFires(&friendFires); // regarde s'il y a colision avec les tir du joueur
     if (bomb.isMort()) {
+
+		deadEnemies.push_back(ActorPhysique(bomb.getIdModel(),bomb.getPosition(),bomb.getRotation(),  bomb.getScale()));
+		deadEnemies.back().setVelocity(bomb.getVelocity());
+		
       vect s={0,0,0}; // on la cache pour la faire reaparaitre plus tart sous la forme d'une nouvelle bomb
       bomb.setScale(s);
     }
