@@ -27,6 +27,7 @@ Game::~Game()
     SE.stop("sounds/blackpearl.wav");
     //SE.stop("sounds/single-canon.wav");
     //SE.stop("sounds/multi-canon.wav");
+    
 }
 
 Game::Game():SE() // construction des camera, du GE et des autre objets tell que les Mode, mais il seront reconstruit apres de toute maniere
