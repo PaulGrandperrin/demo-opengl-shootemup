@@ -37,10 +37,10 @@ private:
     void killall();
 
     list<Trajectory> trajectories;
-    list<ActorPhysique> friendFires;
-    list<ActorPhysique> enemiesFires;
+    list<ActorMissile> friendFires;
+    list<ActorMissile> enemiesFires;
     list<ActorPhysique> deadEnemies;
-    ActorPhysique bomb;
+    ActorMissile bomb;
     ActorPlayer player;
     Score score;
     Health health;
@@ -51,9 +51,8 @@ private:
     bool end;
     bool toEnd;
     int playerHeart;
-    
-    int firetimer;
-    
+
+
     int timerGenTrajectorySequence; // Correspond à l'intervalle de temps qui sépare l'apparition de 2 ennemis situes sur une trajectoire differente
     list<int> timersGenEnemy; // chaque element de cette liste correspond au timer d'apparition d'un ennemi sur la trajectoire de meme rang que cet
     // element dans la liste des trajectoires (ex : 1er timer de la liste <=> 1ere trajectoire de la liste des trajectoires)

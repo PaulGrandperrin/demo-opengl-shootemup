@@ -26,6 +26,9 @@ public :
     inline int getMboulet() {
         return Mboulet;
     }
+    inline int getMharpon() {
+        return Mharpon;
+    }
     inline int getMCursorPause() {
         return MCursorPause;
     }
@@ -70,7 +73,7 @@ public :
     }
 
 //public : //TODO metre private probleme vector
-    int Mplayer,Mboulet,MCursorPause,MFondScore,MFondMenu, MBomb;
+    int Mplayer,Mboulet,Mharpon,MCursorPause,MFondScore,MFondMenu, MBomb;
     int MDpoint, MPoint, MPointEx, MPointInt, MVirg;
     vector<int> MChiffres;
     vector<int> MLettersM;

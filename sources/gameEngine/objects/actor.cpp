@@ -17,6 +17,7 @@ Actor::Actor(int idModel, vect position,vect rotation,vect scale)
     this->rotation=rotation;
     this->scale=scale;
     this->idModel=idModel;
+    this->resetPosition = true;
 }
 
 void Actor::toCenter()
@@ -24,7 +25,7 @@ void Actor::toCenter()
     if (resetPosition) {
         nbfoisResetPosition = TEMP_RESETCAM_SMART_PAUSE;
         stepCenterX = -position.x / nbfoisResetPosition;
-	stepCenterY = -position.y / nbfoisResetPosition;
+        stepCenterY = -position.y / nbfoisResetPosition;
         stepCenterZ = -position.z / nbfoisResetPosition;
         resetPosition = false;
     }
@@ -43,8 +44,8 @@ void Actor::toCenter()
 
     if (nbfoisResetPosition == 0) { // on est tres proche donc on peut le faire
         position.x = 0;
-	position.y = 0;
-	position.z = 0;
+        position.y = 0;
+        position.z = 0;
     }
     if (isCenter()) {
         resetPosition = true; // pour une qutre fois
@@ -56,7 +57,7 @@ void Actor::toCenter()
 // ActorPhysiqye
 //---------------------------------------------------------------
 
-ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale, int health, int damage, float mask) : Actor(idModel,position,rotation,scale)
+ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale, float mask) : Actor(idModel,position,rotation,scale)
 {
     this->velocity.x=0;
     this->velocity.y=0;
@@ -67,8 +68,6 @@ ActorPhysique::ActorPhysique(int idModel, vect position,vect rotation,vect scale
     this->acceleration.z=0;
 
     this->mask=mask;
-    this->health = health;
-    this->damage = damage;
 }
 
 void ActorPhysique::update(float time) // pas de deleration, gestion simple;
@@ -77,9 +76,9 @@ void ActorPhysique::update(float time) // pas de deleration, gestion simple;
     velocity.y+=time*acceleration.y/1000;
     velocity.z+=time*acceleration.z/1000;
 
-    position.x+=time*velocity.x/1000;
-    position.y+=time*velocity.y/1000;
-    position.z+=time*velocity.z/1000;
+    position.x+=(time*velocity.x)/1000;
+    position.y+=(time*velocity.y)/1000;
+    position.z+=(time*velocity.z)/1000;
 
     // pas de frotement
 }
@@ -99,34 +98,78 @@ bool ActorPhysique::colision(ActorPhysique* act) {
     return (act->getMask() + getMask() > dist);
 }
 
-void ActorPhysique::colisionFires(list<ActorPhysique>* fires) {
-    float dist = 0;
-    float distX,distZ;
-    list<ActorPhysique>::iterator itAP;
+//---------------------------------------------------------------
+// ActorMissile
+//---------------------------------------------------------------
+
+
+ActorMissile::ActorMissile(int idModel, vect position,vect rotation,vect scale, int damage, float mask) : ActorPhysique(idModel,position,rotation,scale,mask)
+{
+    this->damage = damage;
+    this->coefVel = 1;
+}
+
+bool ActorMissile::colisionFires(list<ActorMissile>* fires) {
+    bool col=false;
+    list<ActorMissile>::iterator itAP;
     itAP = fires->begin();
     while (itAP!=fires->end())
     {
-        distX = getPosition().x - itAP->getPosition().x;
-        distZ = getPosition().z - itAP->getPosition().z;
-        dist = sqrt(distX*distX + distZ*distZ);
-        if (itAP->getMask() + getMask() > dist) {
+        if (itAP->colision((ActorPhysique*)this)) {
             itAP = fires->erase(itAP);
-            setHealth(-itAP->getDamage());
+            col = true;
         }
         else {
             itAP++;
         }
     }
+    return col;
 }
+
+void ActorMissile::update(float time) // pas de deleration, gestion simple;
+{
+    velocity.x+=time*acceleration.x/1000;
+    velocity.y+=time*acceleration.y/1000;
+    velocity.z+=time*acceleration.z/1000;
+
+    position.x+=time*(velocity.x/coefVel)/1000;
+    position.y+=time*(velocity.y/coefVel)/1000;
+    position.z+=time*(velocity.z/coefVel)/1000;
+
+    // pas de frotement
+}
+
+//---------------------------------------------------------------
+// ActorMissileEnemy
+//---------------------------------------------------------------
+
+/*
+ActorMissileEnemy::ActorMissileEnemy(int idModel, vect position,vect rotation,vect scale, vect pDest, int damage, float mask) : ActorMissile(idModel,position,rotation,scale,damage, mask)
+{
+    this->pDest = pDest;
+}
+
+void ActorMissileEnemy::update(float time) {
+    velocity.x+=time*acceleration.x/1000;
+    velocity.y+=time*acceleration.y/1000;
+    velocity.z+=time*acceleration.z/1000;
+
+    position.x+=time*velocity.x/(pDest.x*1000);
+    position.y+=time*velocity.y/(pDest.y*1000);
+    position.z+=time*velocity.z/(pDest.z*1000);
+}
+
+void ActorMissileEnemy::setVelocity(int v) {
+  */
 
 //---------------------------------------------------------------
 // ActorPlayer
 //---------------------------------------------------------------
 
 
-ActorPlayer::ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask, int damage) : ActorPhysique(idModel,position,rotation,scale,health,damage,mask)
+ActorPlayer::ActorPlayer(int idModel, vect position,vect rotation,vect scale, int health, float mask) : ActorPhysique(idModel,position,rotation,scale,mask)
 {
-  resetPosition = true;
+    this->health = health;
 }
 
 void ActorPlayer::colisionBord(float width, float height)
@@ -156,7 +199,7 @@ void ActorPlayer::update(float time)
     velocity.x+=time*acceleration.x/1000;
     velocity.y+=time*acceleration.y/1000;
     velocity.z+=time*acceleration.z/1000;
-    
+
     position.x+=time*velocity.x/1000;
     position.y+=time*velocity.y/1000;
     position.z+=time*velocity.z/1000;
@@ -164,16 +207,33 @@ void ActorPlayer::update(float time)
     velocity.x*=0.98; // fortement plus grand car surface ++
     velocity.y*=0.99;
     velocity.z*=0.99;
-    
+
 }
 
+bool ActorPlayer::colisionFires(list<ActorMissile>* fires) {
+    bool col=false;
+    list<ActorMissile>::iterator itAP;
+    itAP = fires->begin();
+    while (itAP!=fires->end())
+    {
+        if (itAP->colision((ActorPhysique*)this)) {
+            itAP = fires->erase(itAP);
+            setHealth(-itAP->getDamage());
+            col = true;
+        }
+        else {
+            itAP++;
+        }
+    }
+    return col;
+}
 
 ////////////////////////////////////////
 // ActorEnemy
 ////////////////////////////////////////
 
 ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Trajectory * traj,int health, int damage)
-        : ActorPhysique(idModel,position,rotation,scale,damage,health) {
+        : ActorPhysique(idModel,position,rotation,scale,mask) {
     if (traj != NULL)
         this->traj = traj;
     else {
@@ -182,11 +242,15 @@ ActorEnemy::ActorEnemy(int idModel, vect position,vect rotation,vect scale,Traje
     }
     timeElapsed = 0;
     nextKeyStateRank = 0;
+    this->health = health;
+    this->damage = damage;
+    this->timerfire = 0;
 }
 
 void ActorEnemy::update(float time) {
     // TODO Faire fonctionner le shmilblick : copier les keystates dans un attribut propre a la classe ActorEnemy, puis en enlever un a chaque fois
     // qu'on l'atteint. Une fois cette liste vide, l'actor se comporte comme un actor physique
+    timerfire--;
     timeElapsed += time;
     vector<t_key_state> states = traj->getKeyStates();
     vector<t_key_state>::iterator rit;
@@ -210,4 +274,17 @@ void ActorEnemy::update(float time) {
     ActorPhysique::update(time);
 }
 
-
+void ActorEnemy::colisionFires(list<ActorMissile>* fires) {
+    list<ActorMissile>::iterator itAP;
+    itAP = fires->begin();
+    while (itAP!=fires->end())
+    {
+        if (itAP->colision((ActorPhysique*)this)) {
+            itAP = fires->erase(itAP);
+            setHealth(-itAP->getDamage());
+        }
+        else {
+            itAP++;
+        }
+    }
+}

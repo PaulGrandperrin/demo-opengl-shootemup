@@ -45,7 +45,7 @@ private:
     // tout les models qu'il peut exister
     Models models;
     graphicEngine GE;
-	SoundEngine SE;
+    SoundEngine SE;
     Camera cam;
 
     float dTime; // interval de temps pour les trajectoires ...
