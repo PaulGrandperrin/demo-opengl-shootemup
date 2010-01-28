@@ -23,12 +23,14 @@ extern Parameters * parametre;
 
 Game::~Game()
 {
-	SE.stop("ocean.wav");
+	SE.stop("sounds/ocean.wav");
+	SE.stop("sounds/blackpearl.wav");
 }
 
 Game::Game():SE() // construction des camera, du GE et des autre objets tell que les Mode, mais il seront reconstruit apres de toute maniere
 {
-	SE.load("ocean.wav");
+	SE.load("sounds/ocean.wav");
+	SE.load("sounds/blackpearl.wav");
 	etatGame = MENU;
 	switchMode = NONE;
 	shad=POSTFX_NOTHING;

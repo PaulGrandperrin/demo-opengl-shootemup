@@ -80,7 +80,9 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
 
 void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
-	SE->stop("ocean.wav");
+	SE->stop("sounds/ocean.wav");
+	SE->play("sounds/blackpearl.wav", false);
+	SE->play("sounds/ocean.wav", false);
     if (*switchMode == TOGAME && !camera->camOKGame()) {
         camera->toModeGameSmart();
     }
