@@ -54,7 +54,7 @@ Text::Text(Models* models, string text, vect position,vect rotation,vect scale, 
 	else if (text[i] == ':') { car = Actor(models->getMDpoint(), p, r, s); }
 	else if (text[i] == '!') { car = Actor(models->getMPointEx(), p, r, s); }
 	else if (text[i] == '?') { car = Actor(models->getMPointInt(), p, r, s); }
-	else if (text[i] == '.') { car = Actor(models->getMVirg(), p, r, s); }
+	else if (text[i] == ',') { car = Actor(models->getMVirg(), p, r, s); }
         else {
             car = Actor(-1, p, r, s);
         }

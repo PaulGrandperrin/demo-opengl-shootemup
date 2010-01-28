@@ -44,7 +44,8 @@ private:
     Score score;
     Health health;
     Text tHealth;
-    Text tEnd;
+    Text tEndWin;
+    Text tEndDead;
 
     bool end;
     bool toEnd;

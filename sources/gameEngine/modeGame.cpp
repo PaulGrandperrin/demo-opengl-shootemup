@@ -55,9 +55,9 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     vect pVie={12,0,-10}, rVie= {0,0,0}, sVie={1,1,0.5};
     health = Health(models, intHealth, "Health:" , pVie, rVie, sVie, 0.6, RIGHT); // test des chiffres
 
-    vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={3,3,2};
-    tEnd = Text(models, "End", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
-    
+    vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={2,2,1};
+    tEndDead = Text(models, "Oh, you dead !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
+    tEndWin = Text(models, "Nice, you win !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
 //     vect p={random(-12,12),0,random(-25,-15)}, r={0,0,0}, s={0.2,0.2,0.2}, v={0,0,4};
 //     bomb = ActorPhysique(models->getMBomb(), p, r, s, 10, 899, 0.4);
 //     bomb.setVelocity(v);
@@ -169,8 +169,14 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
         // on affiche le score ..., et autre info
         score.getRender(instances2D);
         health.getRender(instances2D);
-        if (end) {
-            vActor = tEnd.getText();
+        if (end && player.isMort()) {
+            vActor = tEndDead.getText();
+            for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
+                instances2D->push_back(itA->getInstance());
+            }
+        }
+	else if (end) {
+            vActor = tEndWin.getText();
             for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
                 instances2D->push_back(itA->getInstance());
             }
