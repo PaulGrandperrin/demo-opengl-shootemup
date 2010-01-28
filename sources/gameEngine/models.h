@@ -3,6 +3,7 @@
 
 
 #include "../graphicEngine/graphicEngine.h"
+#include "../soundEngine/soundEngine.h"
 #include "./objects/enemy.h"
 #include "./objects/trajectory.h"
 #include "../utilities.h"

@@ -12,7 +12,7 @@ class ModeGame : public Mode
 public:
     ~ModeGame();
     ModeGame() {}
-    ModeGame(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
+    ModeGame(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE);
     void gameManager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
 
     void getRender(vector<instance>* instances,vector<instance>* instances2D);
@@ -61,6 +61,7 @@ private:
     int timerGenShootGros;
     int timerGenEnemy;
     int timerFin;
+
 
 };
 

@@ -14,6 +14,8 @@
 #include "./modeOption.h"
 #include "../utilities.h"
 
+
+
 class Game
 {
 public:
@@ -43,6 +45,7 @@ private:
     // tout les models qu'il peut exister
     Models models;
     graphicEngine GE;
+	SoundEngine SE;
     Camera cam;
 
     float dTime; // interval de temps pour les trajectoires ...

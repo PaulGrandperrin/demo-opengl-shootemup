@@ -25,8 +25,9 @@ ModeGame::~ModeGame()
     cout << endl; //a cause du compteur de missile, avant de quitter, il faut un seut de ligne
 }
 
-ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode) : Mode(models, camera, etatGame, switchMode)
+ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode)
 {
+	this->SE=SE;
     // si on reconstruit le modeGame, se n'est pas la fin !!
     end = false;
     toEnd = false;
@@ -61,8 +62,6 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={2,2,1};
     tEndDead = Text(models, "Oh, you dead !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
     tEndWin = Text(models, "Nice, you win !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
-
-    playSound("ocean.wav");
 
     // Chargement des trajectoires
     TrajectoryFile tFile("levels/traj_lvl_default.data");

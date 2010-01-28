@@ -11,7 +11,7 @@
 #include "./objects/text.h"
 #include "./objects/fond.h"
 #include "./objects/camera.h"
-#include "../soundEngine/soundEngine.h"
+
 
 class Mode
 {
@@ -35,6 +35,9 @@ protected:
     float dTime;
     int widthView,heightView; // pixel
     float width, height; // correspond au nombre d'uniter "opengl" sur la larger et la hauteur
+
+	SoundEngine* SE;
+	
 
 };
 

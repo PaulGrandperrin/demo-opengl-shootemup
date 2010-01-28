@@ -17,8 +17,10 @@
 #include <iostream>
 using namespace std;
 extern Parameters *parametre;
-ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode) : Mode(models, camera, etatGame, switchMode)
+ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode)
 {
+	this->SE=SE;
+	SE->play("ocean.wav",false);
     keyDown=false;
     keyUp=false;
     bMouse=false;

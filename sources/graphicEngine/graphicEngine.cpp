@@ -429,7 +429,6 @@ void graphicEngine::loadMeshe (unsigned int id,const char* path)
 			vertex fTemp;
 			string vertex;
 			int lim;
-
 			for ( int i=0;i<3;i++ )
 			{
 				line >> vertex;
