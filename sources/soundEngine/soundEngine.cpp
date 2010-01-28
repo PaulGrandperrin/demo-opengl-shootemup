@@ -196,7 +196,7 @@ void * playInThread(void *idFile)
 		}
 		while (Status == AL_PLAYING );
 	}while(loop);
-	cout << "fin de "<< Buffer << " sur "<<Source<<endl;
+
 	// Destruction de la source
 	alSourcei(Source, AL_BUFFER, 0);
 	alDeleteSources(1, &Source);
