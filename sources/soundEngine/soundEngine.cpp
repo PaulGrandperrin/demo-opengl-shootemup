@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+vector<unsigned int>* caca;
+
 void * playInThread(void *idFile);
 
 SoundEngine::SoundEngine()
@@ -34,6 +36,12 @@ SoundEngine::SoundEngine()
 		cerr << "Impossible d'activer le contexte audio" << endl;
 		return;
 	}
+
+
+	sources.reserve(10000);
+	threads.reserve(10000);
+	playing.reserve(10000);
+	caca=&sources;
 }
 
 SoundEngine::~SoundEngine()
@@ -51,6 +59,8 @@ SoundEngine::~SoundEngine()
 	// Fermeture du device
 	alcCloseDevice(Device);
 
+
+	//TODO tt bien fermer
 }
 
 void SoundEngine::load(string file)
@@ -103,37 +113,47 @@ void SoundEngine::load(string file)
 		cerr << "Impossible de remplir le tampon OpenAL avec les �chantillons du fichier audio" << endl;
 		return;
 	}
-
-	ids.insert(pair<string,unsigned int>(file,Buffer));
-}
-
-void SoundEngine::unload(string file)
-{
-	alDeleteBuffers(1, &ids[file]);
-	ids.erase(file);
-}
-
-unsigned int SoundEngine::play(string file,bool loop)
-{
-	unsigned int* id=(unsigned int*)malloc(sizeof(unsigned int)*2);
-	id[0]=ids[file];
-	id[1]=loop?true:false;
-	pthread_t th;
-	pthread_create(&th,NULL,
-				&playInThread ,
-				(void*)id);
-	pthread_detach(th);
 	
-	threads.push_back(th);
-	return threads.size();
+	files.insert(pair<string,unsigned int>(file,Buffer));
+
+	playing[files[file]]=false;
 }
 
-void SoundEngine::stop(unsigned int idPlay)
+void SoundEngine::unload(string)
 {
-	//TODO
+
+	
 }
 
-bool SoundEngine::isFinished(unsigned int )
+void SoundEngine::play(string file,bool loop)
+{
+	if(playing[files[file]]==false)
+	{
+		playing[files[file]]=true;
+		unsigned int* id=(unsigned int*)malloc(sizeof(unsigned int)*2);
+		id[0]=files[file];
+		id[1]=loop?true:false;
+
+
+		pthread_t th;
+		pthread_create(&th,NULL,
+					&playInThread ,
+					(void*)id);
+		pthread_detach(th);
+
+		threads[files[file]]=th;
+	}
+}
+
+void SoundEngine::stop(string file)
+{
+	pthread_cancel(threads[files[file]]);
+	alSourcei(sources[files[file]], AL_BUFFER, 0);
+	alDeleteSources(1, &sources[files[file]]);
+	playing[files[file]]=false;
+}
+
+bool SoundEngine::isFinished(string )
 {
 	return false;//TODO a faire
 }
@@ -151,6 +171,8 @@ void * playInThread(void *idFile)
 	ALuint Source;
 	alGenSources(1, &Source);
 	alSourcei(Source, AL_BUFFER, Buffer);
+
+	(*caca)[Buffer]=Source;
 
 	do
 	{

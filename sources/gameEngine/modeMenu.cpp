@@ -20,7 +20,7 @@ extern Parameters *parametre;
 ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode)
 {
 	this->SE=SE;
-	SE->play("ocean.wav",false);
+	
     keyDown=false;
     keyUp=false;
     bMouse=false;
@@ -61,6 +61,7 @@ ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
 
 
 void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) {
+	SE->play("ocean.wav",true);
     Point deltaMouse = {coordMouse.x-oldMouse.x,coordMouse.y-oldMouse.y};
     oldMouse.x=coordMouse.x;
     oldMouse.y=coordMouse.y;

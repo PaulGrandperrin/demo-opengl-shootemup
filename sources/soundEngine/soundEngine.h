@@ -26,13 +26,17 @@ class SoundEngine
 	void load(string file);
 	void unload(string file);
 	
-	unsigned int play(string file,bool loop);
-	void stop(unsigned int idPlaying);
-	bool isFinished(unsigned int idPlaying);
+	void play(string file,bool loop);
+	void stop(string file);
+	bool isFinished(string file);
 	
 	private:
 		vector<pthread_t> threads;
-		map<string,unsigned int> ids;
+		vector<unsigned int> sources;
+		
+		map<string,unsigned int> files;
+
+		vector<bool> playing;
 };
 
 

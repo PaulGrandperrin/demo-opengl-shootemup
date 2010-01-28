@@ -32,14 +32,12 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     end = false;
     toEnd = false;
     playerHeart = 0;
-    firetimer = 0;
 
     // on vide les vecteur d'ennemi... pour la prochaine partie
     friendFires.clear();
     enemiesFires.clear();
     trajectories.clear();
     timersGenEnemy.clear();
-    deadEnemies.clear();
 
     int intHealth = parametre->getHealthPlayer();
     int intDamage = parametre->getDamagePlayer();
@@ -47,7 +45,6 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     timerGenShoot=INTERVALE_TEMP_SHOOT;
     timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
     timerGenTrajectorySequence = INTERVALE_TEMP_TRAJECTORY_SEQUENCE;
-    timerFin=INTERVALE_TEMP_FIN;
 
     // on reconstruit tout les objets
     vect pPlayer={0,0,0}, rPlayer= {0,-90,0}, sPlayer={1,1,1};
@@ -62,6 +59,9 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={2,2,1};
     tEndDead = Text(models, "Oh, you dead !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
     tEndWin = Text(models, "Nice, you win !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
+//     vect p={random(-12,12),0,random(-25,-15)}, r={0,0,0}, s={0.2,0.2,0.2}, v={0,0,4};
+//     bomb = ActorPhysique(models->getMBomb(), p, r, s, 10, 899, 0.4);
+//     bomb.setVelocity(v);
 
     // Chargement des trajectoires
     TrajectoryFile tFile("levels/traj_lvl_default.data");
@@ -80,6 +80,7 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
 
 void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
+	SE->stop("ocean.wav");
     if (*switchMode == TOGAME && !camera->camOKGame()) {
         camera->toModeGameSmart();
     }
@@ -101,33 +102,23 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
     }
     else {
         Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
-        if (timerFin == 0 && end) {
+        if (end) {
             if (toEnd && !(stateKeys[parametre->getEnter()] && stateButtons[parametre->getBLeft()])) { // et on attend une action pour sortir
                 *switchMode = TOMENU;
-                timerFin = INTERVALE_TEMP_FIN;
             }
             if (stateKeys[parametre->getEnter()] || stateButtons[parametre->getBLeft()]) {
                 toEnd = true;
             }
         }
         else {
+            playerManager();
             firesManager();
             trajectoriesManager();
+            enemiesManager();
             deadEnemiesManager();
             //bonusManager();
-            if ((timerFin == INTERVALE_TEMP_FIN) && (end)) {
-                killall(); // on vire tout les objet autre que le player
-                timerFin--;
-            }
-            if ((timerFin <= INTERVALE_TEMP_FIN) && (end)) {
-                timerFin--;
-            }
-            if (timerFin == INTERVALE_TEMP_FIN) {
-		playerManager(); // si c'est pas la fin, on peut gere le jeu correctement
-                enemiesManager();
-                bombManager();
-                collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
-            }
+            bombManager();
+            collisionManager(); //vérifie les collisions et detruie le vaisseau/missile/bonus si nécéssaire
             if ((timersGenEnemy.empty()) ||  (player.isMort())) {
                 end = true; // c'est la fin, on bloque les fonctions du jeu.
             }
@@ -184,7 +175,7 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
                 instances2D->push_back(itA->getInstance());
             }
         }
-        else if (end) {
+	else if (end) {
             vActor = tEndWin.getText();
             for (itA=vActor.begin(); itA!=vActor.end(); itA++) {
                 instances2D->push_back(itA->getInstance());
@@ -200,7 +191,7 @@ void ModeGame::getRender(vector<instance>* instances, vector<instance>* instance
 */
 void ModeGame::playerManager()
 {
-    /*
+	/*
     vect accl={0,0,0};
     if (stateKeys[parametre->getLeft()])  {// -x
         accl.x-=10;
@@ -215,9 +206,9 @@ void ModeGame::playerManager()
         accl.z+=20;
     }
     player.setAcceleration( accl );
-    */
-    vect velo={0,0,0};
-    if (stateKeys[parametre->getLeft()])  {// -x
+	*/
+	vect velo={0,0,0};
+	if (stateKeys[parametre->getLeft()])  {// -x
         velo.x-=8;
     }
     if (stateKeys[parametre->getRight()]) {// +x
@@ -229,10 +220,10 @@ void ModeGame::playerManager()
     if (stateKeys[parametre->getDown()]) { // -y
         velo.z+=8;
     }
-    player.setVelocity( velo );
+	player.setVelocity( velo );
 
 
-
+	
     player.update(dTime);
     // TODO ameliorer definition des bords
 
@@ -305,12 +296,12 @@ void ModeGame::firesManager()
 
 void ModeGame::bombManager() {
     if (bomb.getPosition().z > 20 || bomb.getScale().x < 0.02) {
-        vect p={random(-12,12),0,random(-25,-15)}, r={0,0,0}, s={0.2,0.2,0.2}, v={0,0,4};
-        bomb = ActorPhysique(models->getMBomb(), p, r, s, 10, 899, 0.4);
-        bomb.setVelocity(v);
+	vect p={random(-12,12),0,random(-25,-15)}, r={0,0,0}, s={0.2,0.2,0.2}, v={0,0,4};
+	bomb = ActorPhysique(models->getMBomb(), p, r, s, 10, 899, 0.4);
+	bomb.setVelocity(v);
     }
     else {
-        bomb.update (dTime); // si la bomb n'est pas morte, on update sa trajectoir.
+      bomb.update (dTime); // si la bomb n'est pas morte, on update sa trajectoir.
     }
 }
 
@@ -358,17 +349,6 @@ void ModeGame::enemiesManager()
         list<ActorEnemy> enemies = it_traj->getEnemies();
         for (it_enn = enemies.begin(); it_enn != enemies.end(); it_enn++) {
             it_enn->update(dTime);
-	       if ((firetimer==200) && ((player.getPosition().z-it_enn->getPosition().z)>0))
-	      {
-		  vect p={it_enn->getPosition().x,it_enn->getPosition().y,it_enn->getPosition().z}, r={0,0,0}, s={0.1,0.1,0.1};
-		  vect vel={(-it_enn->getPosition().x+player.getPosition().x)/3,(-it_enn->getPosition().y+player.getPosition().y)/3,(-it_enn->getPosition().z+player.getPosition().z)/3};
-		  ActorPhysique fire;
-		  fire=ActorPhysique(models->getMboulet(), p, r, s);
-		  fire.setVelocity( vel );
-		  enemiesFires.push_back(fire);
-		  firetimer=0;
-	      }
-	      firetimer++;
         }
         it_traj->setEnemies(enemies);
         if (it_traj->getRecordNumbers().size() && *it_gene <=0)
@@ -383,7 +363,6 @@ void ModeGame::enemiesManager()
         }
         else
             *it_gene = *it_gene - 1;
-
         it_traj++;
         it_gene++;
     }
@@ -447,7 +426,7 @@ void ModeGame::collisionManager()
         }
         it_traj->setEnemies(enemies);
     }
-
+    
     /* gestion colision  tir joueur */
     list<ActorPhysique>::iterator itAP;
     itAP = friendFires.begin();
@@ -458,7 +437,7 @@ void ModeGame::collisionManager()
         else
             itAP++;
     }
-
+    
     /* gestion colision tir enemis */
     itAP=enemiesFires.begin();
     while (itAP!=enemiesFires.end())
@@ -469,49 +448,21 @@ void ModeGame::collisionManager()
             itAP++;
     }
     
-    player.colisionFires(&enemiesFires);
-      
-
     /* gestion colision bomb */
     bomb.colisionFires(&friendFires); // regarde s'il y a colision avec les tir du joueur
     if (bomb.isMort()) {
 
-        deadEnemies.push_back(ActorPhysique(bomb.getIdModel(),bomb.getPosition(),bomb.getRotation(),  bomb.getScale()));
-        deadEnemies.back().setVelocity(bomb.getVelocity());
-
-        vect s={0,0,0}; // on la cache pour la faire reaparaitre plus tart sous la forme d'une nouvelle bomb
-        bomb.setScale(s);
+		deadEnemies.push_back(ActorPhysique(bomb.getIdModel(),bomb.getPosition(),bomb.getRotation(),  bomb.getScale()));
+		deadEnemies.back().setVelocity(bomb.getVelocity());
+		
+      vect s={0,0,0}; // on la cache pour la faire reaparaitre plus tart sous la forme d'une nouvelle bomb
+      bomb.setScale(s);
     }
     else if (player.colision(&bomb)) { // on regarde s'il y a colision avec le joueur en lui meme
-        vect s={0,0,0}; // on la cache pour la faire reaparaitre plus tart sous la forme d'une nouvelle bomb
-        bomb.setScale(s);
-        player.setHealth(-bomb.getDamage());
-        playerHeart = TEMP_BROUILLAGE_CAM_PLAYER_HEARTH_LONG;
+      vect s={0,0,0}; // on la cache pour la faire reaparaitre plus tart sous la forme d'une nouvelle bomb
+      bomb.setScale(s);
+      player.setHealth(-bomb.getDamage());
+      playerHeart = TEMP_BROUILLAGE_CAM_PLAYER_HEARTH_LONG;
     }
     health.setHealth(player.getHealth()); // al la fin, on met a jour l'objet graphi sante
-}
-
-void ModeGame::killall() {
-    /* gestion colision enemis avec player ou tir joueur. */
-    list<Trajectory>::iterator it_traj;
-    for (it_traj = trajectories.begin(); it_traj != trajectories.end(); it_traj++)
-    {
-        list<ActorEnemy> enemies = it_traj->getEnemies();
-        list<ActorEnemy>::iterator it_enn;
-        it_enn = enemies.begin();
-        while (it_enn != enemies.end())
-        {
-            deadEnemies.push_back(ActorPhysique(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
-            deadEnemies.back().setVelocity(it_enn->getVelocity());
-            it_enn = enemies.erase(it_enn);
-// 	    it_enn++;
-        }
-        it_traj->setEnemies(enemies);
-    }
-    deadEnemies.push_back(ActorPhysique(bomb.getIdModel(),bomb.getPosition(),bomb.getRotation(),  bomb.getScale()));
-    deadEnemies.back().setVelocity(bomb.getVelocity());
-    vect s={0,0,0}; // on la cache pour la faire reaparaitre plus tart sous la forme d'une nouvelle bomb
-    bomb.setScale(s);
-    friendFires.clear();
-    enemiesFires.clear();
 }
