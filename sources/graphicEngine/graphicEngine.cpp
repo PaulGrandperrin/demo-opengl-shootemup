@@ -112,7 +112,7 @@ graphicEngine::~graphicEngine()
 {
 	//TODO à completer
 
-	glDeleteFramebuffers(1, &fbo);
+	glDeleteFramebuffersEXT(1, &fbo);
 }
 
 void graphicEngine::init()
@@ -208,11 +208,11 @@ void graphicEngine::resize(int width,int height)
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 
 	// attache la texture au FBO
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0,
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
 							GL_TEXTURE_2D, textFbo, 0);
 
 	// attache le RBO de deph buffer au FBO
-	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT,
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
 								GL_RENDERBUFFER_EXT, rbo);
 
 	pthread_mutex_unlock(&mutex);
