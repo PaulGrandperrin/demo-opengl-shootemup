@@ -340,6 +340,7 @@ void ModeGame::trajectoriesManager() {
 
 void ModeGame::enemiesManager()
 {
+    int firetimer = 0;
     list<Trajectory>::iterator it_traj = trajectories.begin();
     list<int>::iterator it_gene = timersGenEnemy.begin();
     for (int i = 0; i<(int)timersGenEnemy.size(); i++)
@@ -363,8 +364,19 @@ void ModeGame::enemiesManager()
         }
         else
             *it_gene = *it_gene - 1;
+        if (firetimer==10)
+	{
+	    vect p={enemy.getPosition().x,enemy.getPosition().y,enemy.getPosition().z}, r={0,0,0}, s={0.1,0.1,0.1};
+	    vect vel={(enemy.getPosition().x-player.getPosition().x)/3,(enemy.getPosition().y-player.getPosition().y)/3,(enemy.getPosition().z-player.getPosition().z)/3};
+            ActorPhysique fire;
+            fire=ActorPhysique(models->getMboulet(), p, r, s);
+            fire.setVelocity( vel );
+            enemiesFires.push_back(fire);
+	    firetimer=0;
+	}
         it_traj++;
         it_gene++;
+	firetimer++;
     }
 
 }

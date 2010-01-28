@@ -41,6 +41,7 @@ private:
     list<ActorPhysique> deadEnemies;
     ActorPhysique bomb;
     ActorPlayer player;
+    ActorEnemy enemy;
     Score score;
     Health health;
     Text tHealth;
