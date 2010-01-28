@@ -96,7 +96,7 @@ private:
 
 	unsigned int sceneShader,postFXBlur,postFXWater,postFXFakeHDR, postFXBlackWhite,postFXCellShading, postFXNothing;
 
-	unsigned int shadWaterParam;
+	unsigned int shadWaterParam,shadBlurParam;
 	
 	pthread_mutex_t mutex;
 };

@@ -160,6 +160,7 @@ void graphicEngine::init()
 	loadShaders(&postFXNothing,"shaders/postFX/vsNothing.glsl","shaders/postFX/psNothing.glsl");
 	
 	shadWaterParam=glGetUniformLocation(postFXWater, "shadParam");
+	shadBlurParam=glGetUniformLocation(postFXBlur, "shadParam");
 
 	#endif
 	
@@ -337,7 +338,10 @@ void graphicEngine::render(vector<instance> inst,camera cam,vector<instance> ins
 		glUniform1f(shadWaterParam, time);
 	}
 	else if(postFX & POSTFX_BLUR)
+	{
 		glUseProgram(postFXBlur);
+		glUniform1f(shadBlurParam, widthV);
+	}
 	else
 		glUseProgram(postFXNothing);
 
