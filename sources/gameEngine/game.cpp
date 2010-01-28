@@ -90,7 +90,7 @@ void Game::update(bool stateKeys[], bool stateButtons[], Point coordMouse, int d
     }
     effectManager(stateKeys);
 
-    if (stateKeys[parametre->getCtrl()] && (stateKeys[parametre->getQuit()] || stateKeys[parametre->getQuitSecond()])) {
+    if (stateKeys[K_CTRL] && (stateKeys[K_QUIT] || stateKeys[K_QUIT_SECOND])) {
         etatGame=STOP;
     }
     render(); // a la fin on affiche tout
@@ -143,10 +143,10 @@ void Game::render()
 }
 
 void Game::effectManager(bool stateKeys[]) {
-    if (stateKeys[parametre->getPause()] && !changePostFX) {
+    if (stateKeys[K_PAUSE] && !changePostFX) {
         changePostFX = true;
     }
-    if (!stateKeys[parametre->getPause()] && changePostFX) {
+    if (!stateKeys[K_PAUSE] && changePostFX) {
         if (!shad)
             shad=1;
         else
@@ -158,7 +158,7 @@ void Game::effectManager(bool stateKeys[]) {
     if ((switchMode == TOGAME || switchMode == TOPAUSE) && shad!=POSTFX_NOTHING) {
         shad = POSTFX_NOTHING;
     }
-    if ((switchMode == TOMENU && cam.camOKMenu()) /*&& (mGame.isEnd() || etatGame==MENU))*/ && shad!=POSTFX_BLUR) {
+    if ((switchMode == TOMENU) /*&& (mGame.isEnd() || etatGame==MENU))*/ && shad!=POSTFX_BLUR) {
         shad = POSTFX_BLUR;
     }
 

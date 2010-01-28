@@ -107,7 +107,7 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
 
     Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
     //cout << "les coordonnées sont : x = " << coordMouse.x << " et y = " << coordMouse.y << endl;
-    if (stateKeys[parametre->getDown()] && !keyDown) {
+    if (stateKeys[K_DOWN] && !keyDown) {
         //si on appuye sur down et qu'il est pas activé
         keyDown=true;//on l'active
         vect s={-0.5,-0.5,-0.5}; // on diminue la taille du courant
@@ -126,13 +126,13 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
         }
         selectMouse = -1; // on annule la secection de la souris
     }
-    else if (!stateKeys[parametre->getDown()] && keyDown) {
+    else if (!stateKeys[K_DOWN] && keyDown) {
         //si keyDown est actif mais qu'on a relaché K_DOWN
         keyDown=false;
     }
 
 
-    if (stateKeys[parametre->getUp()] && !keyUp) {
+    if (stateKeys[K_UP] && !keyUp) {
         //si on appuye sur down et qu'il est pas activé
         keyUp=true;//on l'active
         vect s={-0.5,-0.5,-0.5};
@@ -151,13 +151,13 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
         }
         selectMouse = -1; // on annule la secection de la souris
     }
-    else if (!stateKeys[parametre->getUp()] && keyUp) {
+    else if (!stateKeys[K_UP] && keyUp) {
         //si keyDown est actif mais qu'on a relaché K_DOWN
         keyUp=false;
     }
 
     //gestion de la touche entrée en fonctione
-    if (stateKeys[parametre->getEnter()]) {
+    if (stateKeys[K_ENTER]) {
         for (int i=0; i<(int)vectorItems.size();i++) {
             if (i==select) {//si on est sur l'item selectionné
                 *etatGame = vectorItems[i].getState();
@@ -185,11 +185,11 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
         }
     }
 
-    if (stateButtons[parametre->getBLeft()] && !bMouse) { // si le bouton gauche de la souris est clicker, on previens le menu
+    if (stateButtons[B_LEFT] && !bMouse) { // si le bouton gauche de la souris est clicker, on previens le menu
         bMouse=true;
     }
 
-    if (bMouse && !stateButtons[parametre->getBLeft()] && selectMouse != -1) {//si le bouton de la souris n'est plus cliqué mais qu'il la etait juste avant, on change l'etat
+    if (bMouse && !stateButtons[B_LEFT] && selectMouse != -1) {//si le bouton de la souris n'est plus cliqué mais qu'il la etait juste avant, on change l'etat
         bMouse=false; // et on previens l'application quel peut resevoir d'autre click
         *etatGame=vectorItems[selectMouse].getState();
         *switchMode = vectorItems[selectMouse].getSwitchState();

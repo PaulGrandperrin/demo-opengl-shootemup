@@ -15,7 +15,9 @@ ViewOpenGl::ViewOpenGl( QWidget *parent) : QGLWidget(parent)
     grabMouse();
     setMouseTracking(true);
     connect(&thread, SIGNAL(updateGame()), this, SLOT(update()));
-
+    
+    if (parametre->getFullScreen())
+	setWindowState(Qt::WindowFullScreen);
     thread.start();
 }
 
@@ -42,18 +44,18 @@ void ViewOpenGl::paintGL()
     if (game->close()) //FIXME il ya surement une place plus adaptée pour ça
         close();
 
-    if (passageScreen && !(kb.getStateKeys()[parametre->getFullscreen()] || (kb.getStateKeys()[parametre->getAlt()] && kb.getStateKeys()[parametre->getFullscreenSecond()]))) {
+    if (passageScreen && !(kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
         if (!isFullScreen())
             setWindowState(Qt::WindowFullScreen);
         else
             setWindowState(Qt::WindowMaximized);
         passageScreen = false;
     }
-    else if (!passageScreen && (kb.getStateKeys()[parametre->getFullscreen()] || (kb.getStateKeys()[parametre->getAlt()] && kb.getStateKeys()[parametre->getFullscreenSecond()]))) {
+    else if (!passageScreen && (kb.getStateKeys()[K_FULLSCREEN] || (kb.getStateKeys()[K_ALT] && kb.getStateKeys()[K_FULLSCREEN_SECOND]))) {
         passageScreen = true;
     }
       
-    if(kb.getStateKeys()[parametre->getScreenshot()] && !(screenShot)) {  
+    if(kb.getStateKeys()[K_SCREENSHOT] && !(screenShot)) {  
 	screenShot=true;
 	QPixmap originalPixmap = QPixmap::grabWindow(winId());
 	QString format = "png";
@@ -65,7 +67,7 @@ void ViewOpenGl::paintGL()
 	}
 	originalPixmap.save("screenshots/"+dateTime+".png",format.toAscii());//folder+dateTime+format, format.toAscii());
     }
-    else if(!(kb.getStateKeys()[parametre->getScreenshot()] && screenShot))
+    else if(!(kb.getStateKeys()[K_SCREENSHOT] && screenShot))
 	screenShot=false;
     
 }

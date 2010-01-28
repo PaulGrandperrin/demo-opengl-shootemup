@@ -129,11 +129,11 @@ ModeAbout::ModeAbout(Models* models, Camera* camera, Etat* etatGame, SwitchEtat*
 void ModeAbout::aboutManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) {
     Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
 
-    if (*switchMode==TOMENU && !(stateKeys[parametre->getEsc()] || stateButtons[parametre->getBLeft()])) {
+    if (*switchMode==TOMENU && !(stateKeys[K_ESC] || stateButtons[B_LEFT])) {
         *etatGame=MENU;
         *switchMode=NONE;
     }
-    if (*switchMode==NONE &&  (stateKeys[parametre->getEsc()] || stateButtons[parametre->getBLeft()])) {
+    if (*switchMode==NONE &&  (stateKeys[K_ESC] || stateButtons[B_LEFT])) {
 // 	*etatGame=MENU;
         *switchMode=TOMENU;
     }

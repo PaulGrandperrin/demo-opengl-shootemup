@@ -142,11 +142,11 @@ void ModeOption::optionManager(bool stateKeys[], bool stateButtons[], Point coor
     Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
 
     //beaucoup de possibilité. On pourrait récuperer une touche en fonction de l'item selectionné.
-    if (*switchMode==TOMENU && !(stateKeys[parametre->getEsc()] || stateButtons[parametre->getBLeft()])) {
+    if (*switchMode==TOMENU && !(stateKeys[K_ESC] || stateButtons[B_LEFT])) {
         *etatGame=MENU;
         *switchMode=NONE;
     }
-    if (*switchMode==NONE &&  (stateKeys[parametre->getEsc()] || stateButtons[parametre->getBLeft()])) {
+    if (*switchMode==NONE &&  (stateKeys[K_ESC] || stateButtons[B_LEFT])) {
 // 	*etatGame=MENU;
         *switchMode=TOMENU;
     }

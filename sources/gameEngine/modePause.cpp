@@ -58,7 +58,7 @@ void ModePause::pauseManager(bool stateKeys[], bool stateButtons[], Point coordM
         *switchMode = NONE;
         *etatGame = MENU;
     }
-    else if (*switchMode == NONE && stateKeys[parametre->getEsc()]) {
+    else if (*switchMode == NONE && stateKeys[K_ESC]) {
         *switchMode = TOMENU;
 //         vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
 //         cursorPause = Actor(models->getMCursorPause(), p, r, s);
@@ -82,16 +82,16 @@ void ModePause::moveCam() {
             resetCam=false;
         }
     }
-    else if (stateKeys[parametre->getCtrl()]) {
-        if (stateKeys[parametre->getUp()]) {
+    else if (stateKeys[K_CTRL]) {
+        if (stateKeys[K_UP]) {
             if (vContrainteFond(ZOOM,-0.2))
                 camera->setZoom(-0.2);
         }
-        else if (stateKeys[parametre->getDown()]) {
+        else if (stateKeys[K_DOWN]) {
             if (vContrainteFond(ZOOM,0.2))
                 camera->setZoom(0.2);
         }
-        else if ((stateKeys[parametre->getLeft()]) && (stateKeys[parametre->getRight()])) {
+        else if ((stateKeys[K_LEFT]) && (stateKeys[K_RIGHT])) {
             resetCam=true;
 //             vect p={0,0,0}, r= {0,-90,0}, s={1,1,1};
 //             cursorPause = Actor(models->getMCursorPause(), p, r, s);
@@ -102,29 +102,29 @@ void ModePause::moveCam() {
         }
     }
 
-    else if (stateKeys[parametre->getShift()]) {
-        if (stateKeys[parametre->getUp()]) {
+    else if (stateKeys[K_SHIFT]) {
+        if (stateKeys[K_UP]) {
             if (vContrainteMove(0,-0.05)) {
                 camera->setCenterZ(-0.05); // axe Z ver le "bas"
                 vect t={0,0,-0.05};
                 cursorPause.translate(t);
             }
         }
-        else if  (stateKeys[parametre->getDown()]) {
+        else if  (stateKeys[K_DOWN]) {
             if (vContrainteMove(0,0.05)) {
                 camera->setCenterZ(0.05);
                 vect t={0,0,0.05};
                 cursorPause.translate( t);
             }
         }
-        if (stateKeys[parametre->getLeft()]) {
+        if (stateKeys[K_LEFT]) {
             if (vContrainteMove(-0.05,0)) {
                 camera->setCenterX(-0.05);
                 vect t={-0.05,0,0};
                 cursorPause.translate( t);
             }
         }
-        else if (stateKeys[parametre->getRight()]) {
+        else if (stateKeys[K_RIGHT]) {
             if (vContrainteMove(0.05,0)) {
                 camera->setCenterX(0.05);
                 vect t={0.05,0,0};
@@ -135,7 +135,7 @@ void ModePause::moveCam() {
             if (vContrainteFond(ZOOM,-deltaWheel/(float)240))
                 camera->setZoom(-deltaWheel/(float)240);
         }
-        if ((stateButtons[parametre->getBLeft()]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
+        if ((stateButtons[B_LEFT]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
             if (vContrainteMove(0,deltaMouse.y*NB_UNITY_HEIGHT/600.0)) {
                 camera->setCenterZ(deltaMouse.y*NB_UNITY_HEIGHT/600.0);
                 //             cursorPause.translate( {0,0,(deltaMouse.y*NB_UNITY_HEIGHT/(float)TAILLE_DEFAULT_Y)});
@@ -143,7 +143,7 @@ void ModePause::moveCam() {
                 cursorPause.translate( t);
             }
         }
-        if ((stateButtons[parametre->getBLeft()]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
+        if ((stateButtons[B_LEFT]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
             if (vContrainteMove(deltaMouse.x*NB_UNITY_WIDTH/600.0,0)) {
                 camera->setCenterX(deltaMouse.x*NB_UNITY_WIDTH/600.0);
                 //             cursorPause.translate( {(deltaMouse.x*NB_UNITY_WIDTH/(float)TAILLE_DEFAULT_X)});
@@ -156,40 +156,40 @@ void ModePause::moveCam() {
 
     else {
         //>=2 ou <= -2 pour la sensibiliter -> en 20ms, la souris a parcouru plus de 2 ou moin de -2 pixels (Delta).
-        if ((stateButtons[parametre->getBLeft()]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
+        if ((stateButtons[B_LEFT]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
             if (vContrainteMove(0,deltaMouse.y*NB_UNITY_HEIGHT*5/600.0)) {
                 camera->setCenterZ(deltaMouse.y*NB_UNITY_HEIGHT*5/600.0);
                 vect t={0,0,(deltaMouse.y*NB_UNITY_HEIGHT*5/600.0)};
                 cursorPause.translate( t);
             }
         }
-        if ((stateButtons[parametre->getBLeft()]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
+        if ((stateButtons[B_LEFT]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
             if (vContrainteMove(deltaMouse.x*NB_UNITY_WIDTH*5/600.0,0)) {
                 camera->setCenterX(deltaMouse.x*NB_UNITY_WIDTH*5/600.0);
                 vect t={(deltaMouse.x*NB_UNITY_WIDTH*5/600.0),0,0};
                 cursorPause.translate(t);
             }
         }
-        if ((stateButtons[parametre->getBMiddle()]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
+        if ((stateButtons[B_MIDLE]) && ((deltaMouse.y >= 2 || deltaMouse.y <= -2))) {
             if (vContrainteFond(LAT,0.01*deltaMouse.y))
                 camera->setLatitude(0.01*deltaMouse.y);
         }
-        if ((stateButtons[parametre->getBMiddle()]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
+        if ((stateButtons[B_MIDLE]) && ((deltaMouse.x >= 2 || deltaMouse.x <= -2))) {
             camera->setLongitude(0.01*deltaMouse.x);
         }
         if ((deltaWheel != 0)) {
             if (vContrainteFond(ZOOM,-deltaWheel/(float)60))
                 camera->setZoom(-deltaWheel/(float)60);
         }
-        if (stateKeys[parametre->getUp()])
+        if (stateKeys[K_UP])
             if (vContrainteFond(LAT,0.02))
                 camera->setLatitude(0.02);
-        if (stateKeys[parametre->getDown()])
+        if (stateKeys[K_DOWN])
             if (vContrainteFond(LAT,-0.02))
                 camera->setLatitude(-0.02);
-        if (stateKeys[parametre->getLeft()])
+        if (stateKeys[K_LEFT])
             camera->setLongitude(0.02);
-        if (stateKeys[parametre->getRight()])
+        if (stateKeys[K_RIGHT])
             camera->setLongitude(-0.02);
     }
 

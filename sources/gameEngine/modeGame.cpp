@@ -40,7 +40,7 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     trajectories.clear();
     timersGenEnemy.clear();
 
-    int intHealth = parametre->getHealthPlayer();
+    int intHealth = HEALTH_PLAYER;
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
     timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;
@@ -81,7 +81,6 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
     SE->stop("sounds/ocean.wav");
     SE->play("sounds/blackpearl.wav", false);
     SE->play("sounds/Bamboo.wav", false);
-
     if (*switchMode == TOGAME && !camera->camOKGame()) {
         camera->toModeGameSmart();
     }
@@ -98,16 +97,16 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
         *switchMode = NONE;
         *etatGame = MENU; // seulement une fois que la transition est fini, on change l'etat.
     }
-    else if (*switchMode == NONE && stateKeys[parametre->getEsc()]) {
+    else if (*switchMode == NONE && stateKeys[K_ESC]) {
         *switchMode = TOMENU;
     }
     else {
         Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
         if (timerFin == 0 && end) {
-            if (toEnd && !(stateKeys[parametre->getEnter()] && stateButtons[parametre->getBLeft()])) { // et on attend une action pour sortir
+            if (toEnd && !(stateKeys[K_ENTER] && stateButtons[B_LEFT])) { // et on attend une action pour sortir
                 *switchMode = TOMENU;
             }
-            if (stateKeys[parametre->getEnter()] || stateButtons[parametre->getBLeft()]) {
+            if (stateKeys[K_ENTER] || stateButtons[B_LEFT]) {
                 toEnd = true;
             }
         }
@@ -218,16 +217,16 @@ void ModeGame::playerManager()
     player.setAcceleration( accl );
     */
     vect velo={0,0,0};
-    if (stateKeys[parametre->getLeft()])  {// -x
+    if (stateKeys[K_LEFT])  {// -x
         velo.x-=8;
     }
-    if (stateKeys[parametre->getRight()]) {// +x
+    if (stateKeys[K_RIGHT]) {// +x
         velo.x+=8;
     }
-    if (stateKeys[parametre->getUp()]) { // +y
+    if (stateKeys[K_UP]) { // +y
         velo.z-=8;
     }
-    if (stateKeys[parametre->getDown()]) { // -y
+    if (stateKeys[K_DOWN]) { // -y
         velo.z+=8;
     }
     player.setVelocity( velo );
@@ -242,7 +241,7 @@ void ModeGame::playerManager()
     vect pRight={player.getPosition().x+0.3,player.getPosition().y,player.getPosition().z};
     vect vel={player.getVelocity().x/3,player.getVelocity().y/3,player.getVelocity().z/3};
 
-    if ((((stateKeys[parametre->getTir()]) || (stateButtons[parametre->getBLeft()])) and timerGenShoot<=0))
+    if ((((stateKeys[K_TIR]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
         ActorMissile fire;
         vel.z -= random(15,18);
@@ -254,7 +253,7 @@ void ModeGame::playerManager()
 
         timerGenShoot=INTERVALE_TEMP_SHOOT;
     }
-    if ((((stateKeys[parametre->getTirSecond()]) || (stateButtons[parametre->getBRight()])) and timerGenShootGros<=0))
+    if ((((stateKeys[K_TIR_SECOND]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
     {
         ActorMissile fire;
         for (float f =-0.8;f<=0.8;f+=0.2)
@@ -376,7 +375,7 @@ void ModeGame::enemiesManager()
         {
             int rec_num = *(it_traj->getRecordNumbers().begin());
             vect r={0,0,0}, s={1,1,1};
-            int damage = parametre->getActorDamage();
+            int damage = ACTOR_DAMAGE;
             ActorEnemy e(models->getEnemiesInfos()[rec_num].idModel,it_traj->getInitialPosition(),r,s,&(*it_traj),damage,models->getEnemiesInfos()[rec_num].health);
             it_traj->addEnemy(e);
             it_traj->removeFirstRecordNumber(); // On enleve le numero d'enregistrement pour dire qu'on a bien cree l'ennemi
