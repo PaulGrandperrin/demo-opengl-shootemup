@@ -31,12 +31,10 @@ class SoundEngine
 	bool isFinished(string file);
 	
 	private:
-		vector<pthread_t> threads;
-		vector<unsigned int> sources;
-		
 		map<string,unsigned int> files;
-
-		vector<bool> playing;
+		map<unsigned int,pthread_t> threads;
+		map<unsigned int,unsigned int> sources;
+		map<unsigned int,bool> playing;
 };
 
 

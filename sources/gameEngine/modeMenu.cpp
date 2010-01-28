@@ -95,7 +95,7 @@ ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
 
 
 void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) {
-    SE->play("sounds/ocean.wav",false);
+    SE->play("sounds/ocean.wav",true);
     Point deltaMouse = {coordMouse.x-oldMouse.x,coordMouse.y-oldMouse.y};
     oldMouse.x=coordMouse.x;
     oldMouse.y=coordMouse.y;

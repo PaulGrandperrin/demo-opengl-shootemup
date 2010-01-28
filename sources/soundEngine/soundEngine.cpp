@@ -9,11 +9,9 @@
  * Ne pas regarder plus bas, merci...
 */
 
-
-
-vector<unsigned int>* caca;
-
 void * playInThread(void *idFile);
+
+map<unsigned int,bool>* playingG;
 
 SoundEngine::SoundEngine()
 {
@@ -46,11 +44,7 @@ SoundEngine::SoundEngine()
 		return;
 	}
 
-
-	sources.reserve(10000);
-	threads.reserve(10000);
-	playing.reserve(10000);
-	caca=&sources;
+	playingG=&playing;
 }
 
 SoundEngine::~SoundEngine()
@@ -124,8 +118,8 @@ void SoundEngine::load(string file)
 	}
 	
 	files.insert(pair<string,unsigned int>(file,Buffer));
-	cout << Buffer<<endl;
-	playing[files[file]]=false;
+	
+	playing.insert(pair<unsigned int, bool>(files[file],false));
 }
 
 void SoundEngine::unload(string)
@@ -138,13 +132,18 @@ void SoundEngine::play(string file,bool loop)
 {
 	if(playing[files[file]]==false)
 	{
-		cout << "playing "<<file << endl;
 		playing[files[file]]=true;
-		unsigned int* id=(unsigned int*)malloc(sizeof(unsigned int)*2);
+		unsigned int* id=(unsigned int*)malloc(sizeof(unsigned int)*3);
 		id[0]=files[file];
 		id[1]=loop?true:false;
+		
 
+		ALuint Source;
+		alGenSources(1, &Source);
+		sources.insert(pair<unsigned int,unsigned int>(files[file],Source));
+		id[2]=Source;
 
+		
 		pthread_t th;
 		pthread_create(&th,NULL,
 					&playInThread ,
@@ -157,10 +156,13 @@ void SoundEngine::play(string file,bool loop)
 
 void SoundEngine::stop(string file)
 {
-	pthread_cancel(threads[files[file]]);
-	alSourcei(sources[files[file]], AL_BUFFER, 0);
-	alDeleteSources(1, &sources[files[file]]);
-	playing[files[file]]=false;
+	if(playing[files[file]]==true)
+	{
+		pthread_cancel(threads[files[file]]);
+		alSourcei(sources[files[file]], AL_BUFFER, 0);
+		alDeleteSources(1, &sources[files[file]]);
+		playing[files[file]]=false;
+	}
 }
 
 bool SoundEngine::isFinished(string )
@@ -174,16 +176,11 @@ void * playInThread(void *idFile)
 	// Chargement du fichier audio
 	ALuint Buffer = ((ALuint*)idFile)[0];
 	unsigned int loop=((ALuint*)idFile)[1];
-
+	ALuint Source=((ALuint*)idFile)[2];
 	free((unsigned int*)idFile);
 
-	// Cr�ation d'une source
-	ALuint Source;
-	alGenSources(1, &Source);
+	// Cr�ation d'une source 
 	alSourcei(Source, AL_BUFFER, Buffer);
-
-	(*caca)[Buffer]=Source;
-
 	do
 	{
 		// On joue le son
@@ -199,10 +196,12 @@ void * playInThread(void *idFile)
 		}
 		while (Status == AL_PLAYING );
 	}while(loop);
-
+	cout << "fin de "<< Buffer << " sur "<<Source<<endl;
 	// Destruction de la source
 	alSourcei(Source, AL_BUFFER, 0);
 	alDeleteSources(1, &Source);
+
+	(*(playingG))[Buffer]=false;
 
 	return NULL;
 }
