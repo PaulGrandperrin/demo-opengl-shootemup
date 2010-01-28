@@ -31,6 +31,8 @@ Game::Game():SE() // construction des camera, du GE et des autre objets tell que
 {
 	SE.load("sounds/ocean.wav");
 	SE.load("sounds/blackpearl.wav");
+	SE.load("sounds/Bamboo.wav");
+	SE.load("sounds/Bleep.wav");
 	etatGame = MENU;
 	switchMode = NONE;
 	shad=POSTFX_NOTHING;
