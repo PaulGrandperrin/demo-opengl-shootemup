@@ -25,9 +25,8 @@ ModeGame::~ModeGame()
     cout << endl; //a cause du compteur de missile, avant de quitter, il faut un seut de ligne
 }
 
-ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode)
+ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode,SE)
 {
-    this->SE=SE;
     // si on reconstruit le modeGame, se n'est pas la fin !!
     end = false;
     toEnd = false;
@@ -59,7 +58,7 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
 
     vect pEnd={0,0,0}, rEnd= {0,0,0}, sEnd={2,2,1};
     tEndDead = Text(models, "Oh, you died !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
-    tEndWin = Text(models, "Nice, you win !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
+    tEndWin = Text(models, "Nice, you won !", pEnd, rEnd, sEnd, 0.6, CENTER); // test du text, pour l'instant "abcde"
 
     // Chargement des trajectoires
     TrajectoryFile tFile("levels/traj_lvl_default.data");
@@ -78,9 +77,8 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
 
 void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) // NOTE peut etre passer un pointeur sur kb et mouse !
 {
-    SE->stop("sounds/ocean.wav");
-    SE->play("sounds/blackpearl.wav", false);
-    SE->play("sounds/Bamboo.wav", false);
+    SE->stop("sounds/menu-dark.wav");
+    SE->play("sounds/blackpearl.wav", true);
     if (*switchMode == TOGAME && !camera->camOKGame()) {
         camera->toModeGameSmart();
     }

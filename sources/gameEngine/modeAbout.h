@@ -12,7 +12,7 @@ class ModeAbout : public Mode
 public:
     ~ModeAbout() {};
     ModeAbout() {}
-    ModeAbout(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
+    ModeAbout(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE);
     void aboutManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
     
     void getRender(vector<instance>* instances,vector<instance>* instances2D);

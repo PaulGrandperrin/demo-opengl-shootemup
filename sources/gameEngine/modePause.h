@@ -16,7 +16,7 @@ class ModePause : public Mode
 public:
     ~ModePause();
     ModePause() {}
-    ModePause(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
+    ModePause(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE);
     void pauseManager(bool stateKeys[],  bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
     void getRender(vector<instance>* instances,vector<instance>* instances2D);
 

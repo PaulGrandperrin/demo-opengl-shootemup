@@ -17,9 +17,8 @@
 #include <iostream>
 using namespace std;
 extern Parameters *parametre;
-ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode)
+ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode,SE)
 {
-    this->SE=SE;
 
     keyDown=false;
     keyUp=false;
@@ -95,7 +94,9 @@ ModeMenu::ModeMenu(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
 
 
 void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height) {
-    SE->play("sounds/ocean.wav",true);
+  
+    SE->stop("sounds/blackpearl.wav");
+    SE->play("sounds/menu-dark.wav",true);
 	SE->stop("sounds/blackpearl.wav");
     SE->stop("sounds/Bamboo.wav");
     Point deltaMouse = {coordMouse.x-oldMouse.x,coordMouse.y-oldMouse.y};

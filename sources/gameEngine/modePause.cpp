@@ -21,7 +21,7 @@ ModePause::~ModePause()
 {
 }
 
-ModePause::ModePause(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode) : Mode(models, camera, etatGame, switchMode)
+ModePause::ModePause(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode,SE)
 {
     resetCam=false;
     oldMouse.x = 0;

@@ -18,12 +18,13 @@ using namespace std;
 
 
 
-Mode::Mode(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode)
+Mode::Mode(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode, SoundEngine* SE)
 {
     this->switchMode = switchMode;
     this->etatGame = etatGame;
     this->models = models;
     this->camera = camera;
+    this->SE=SE;
 }
 
 

@@ -18,7 +18,7 @@
 using namespace std;
 extern Parameters *parametre;
 
-ModeAbout::ModeAbout(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode) : Mode(models, camera, etatGame, switchMode)
+ModeAbout::ModeAbout(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode,SE)
 {
 
     vect p={0,0,-9}, r={0,0,0}, s={2,2,1};

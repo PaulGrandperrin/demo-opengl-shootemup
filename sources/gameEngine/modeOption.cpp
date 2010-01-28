@@ -18,7 +18,7 @@
 using namespace std;
 extern Parameters *parametre;
 
-ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode) : Mode(models, camera, etatGame, switchMode)
+ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode,SE)
 {
     // on reconstruit les objet du menu
     vect p={4,0,-9}, r={0,0,0}, s={1.5,2,0.75};

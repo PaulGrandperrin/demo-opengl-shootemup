@@ -23,17 +23,19 @@ extern Parameters * parametre;
 
 Game::~Game()
 {
-    SE.stop("sounds/ocean.wav");
+    SE.stop("sounds/menu-dark.wav");
     SE.stop("sounds/blackpearl.wav");
+    //SE.stop("sounds/single-canon.wav");
+    //SE.stop("sounds/multi-canon.wav");
 }
 
 Game::Game():SE() // construction des camera, du GE et des autre objets tell que les Mode, mais il seront reconstruit apres de toute maniere
 {
 
-    SE.load("sounds/ocean.wav");
+    SE.load("sounds/menu-dark.wav");
     SE.load("sounds/blackpearl.wav");
-    SE.load("sounds/Bamboo.wav");
-    SE.load("sounds/Bleep.wav");
+    //SE.load("sounds/single-canon.wav");
+    //SE.load("sounds/multi-canon.wav");
     etatGame = MENU;
     switchMode = NONE;
     shad=POSTFX_BLUR;
@@ -43,9 +45,9 @@ Game::Game():SE() // construction des camera, du GE et des autre objets tell que
     // on initialise les different mode (etat) du jeu
     mMenu = ModeMenu(&models, &cam,&etatGame, &switchMode,&SE);
     mGame = ModeGame(&models, &cam,&etatGame, &switchMode,&SE);
-    mPause = ModePause(&models, &cam,&etatGame, &switchMode);
-    mAbout = ModeAbout(&models, &cam,&etatGame, &switchMode);
-    mOption = ModeOption(&models, &cam,&etatGame, &switchMode);
+    mPause = ModePause(&models, &cam,&etatGame, &switchMode,&SE);
+    mAbout = ModeAbout(&models, &cam,&etatGame, &switchMode,&SE);
+    mOption = ModeOption(&models, &cam,&etatGame, &switchMode,&SE);
     vect pFond={0,-3,0}, rFond= {0,0,0}, sFond={1.6,1.6,1.6}, vFond={0,0,2.5};
     fond = Fond(models.getMNuages(), models.getMSol(), pFond, rFond, sFond, vFond);
 

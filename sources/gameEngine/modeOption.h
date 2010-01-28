@@ -12,7 +12,7 @@ class ModeOption : public Mode
 public:
     ~ModeOption() {};
     ModeOption() {}
-    ModeOption(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode);
+    ModeOption(Models* models, Camera* camera,Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE);
     void optionManager(bool stateKeys[], bool stateButtons[], Point coordMouse, int deltaWheel,float time, int width, int height);
     void getRender(vector<instance>* instances,vector<instance>* instances2D);
 
