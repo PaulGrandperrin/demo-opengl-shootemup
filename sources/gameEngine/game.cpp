@@ -30,7 +30,7 @@ Game::~Game()
     
 }
 
-Game::Game():SE() // construction des camera, du GE et des autre objets tell que les Mode, mais il seront reconstruit apres de toute maniere
+Game::Game() // construction des camera, du GE et des autre objets tell que les Mode, mais il seront reconstruit apres de toute maniere
 {
 
     SE.load("sounds/menu-dark.wav");

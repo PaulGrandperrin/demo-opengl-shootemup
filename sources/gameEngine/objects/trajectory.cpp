@@ -53,8 +53,9 @@ void TrajectoryFile::open(string fileName) {
 
 bool TrajectoryFile::isEnded() {
     bool at_the_end = file.peek() == EOF;
-    if (file.eof())
-        file.clear();
+    if (file.eof()) {
+         file.clear();
+    }
     return at_the_end;
 }
 
@@ -103,17 +104,26 @@ void TrajectoryFile::read(Trajectory & t) {
 		Enemy e((enemiesInfos->at(rec_num)).idModel,initPos,{0,0,0},{1,1,1},&t,(enemiesInfos->at(rec_num)).health);
 		t.addEnemy(e);
 		*/
+// 		for (int i = 0; i < 1000; ++i) {
+// 		;}
 	}
 }
 
 void TrajectoryFile::read(list<Trajectory> & l) {
     begin();
+    char a;
     Trajectory t;
-    while (!isEnded()) {
-		sleep(1);
-        read(t);
-        l.push_back(t);
+    while (!file.eof()) {
+	  file.get(a);
+	  if (file.peek() != EOF) {
+	    read(t);
+	    l.push_back(t);
+	  }
+	  else {
+	    break;
+	  }
     }
+    file.clear();
 }
 
 void TrajectoryFile::enterInfos() {

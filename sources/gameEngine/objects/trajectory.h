@@ -64,7 +64,7 @@ public:
     ~TrajectoryFile();
     void open(string fileName);
     inline void close() {file.close(); }
-    bool isEnded();
+     bool isEnded();
     inline void begin() {file.seekg(ios_base::beg);} // Place le pointeur de lecture au debut du fichier
     inline void end() {file.seekp(ios_base::end);} // Place le pointeur d'ecriture en fin de fichier
     void write(t_key_state s); // Ecrit un etat cle dans le fichier (ecrit en fait ses attributs les uns à la suite des autres)
