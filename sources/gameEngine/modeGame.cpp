@@ -242,6 +242,7 @@ void ModeGame::playerManager()
 
     if ((((stateKeys[K_TIR]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
+	SE->play("sounds/single-canon.wav",false);
         ActorMissile fire;
         vel.z -= random(15,18);
         vel.x += random(-0.5,0.5); // si le vaisseau a une rotation, on l'applique legerment au boulet
@@ -254,6 +255,7 @@ void ModeGame::playerManager()
     }
     if ((((stateKeys[K_TIR_SECOND]) || (stateButtons[B_RIGHT])) and timerGenShootGros<=0))
     {
+	SE->play("sounds/multi-canon.wav",false);
         ActorMissile fire;
         for (float f =-0.8;f<=0.8;f+=0.2)
         {
@@ -427,6 +429,7 @@ void ModeGame::collisionManager()
             } else {
                 it_enn->colisionFires(&friendFires); // idem avec les tir Player
                 if (it_enn->colision(&player)) { // on regarde si l'ennemi est en colision avec le playerManager
+		    SE->play("sounds/explosion.wav",false);
                     player.setHealth(-it_enn->getDamages());
                     playerHeart = TEMP_BROUILLAGE_CAM_PLAYER_HEARTH;
                     deadEnemies.push_back(ActorPhysique(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
@@ -434,6 +437,7 @@ void ModeGame::collisionManager()
                     it_enn = enemies.erase(it_enn);
                 }
                 else if (it_enn->isMort()) { // si l'ennemi est mort, on le suprime et on modifie le score
+		    SE->play("sounds/cri.wav",false);
                     score.setScore(it_enn->getScore());
                     deadEnemies.push_back(ActorPhysique(it_enn->getIdModel(),it_enn->getPosition(),it_enn->getRotation(),  it_enn->getScale()));
                     deadEnemies.back().setVelocity(it_enn->getVelocity());

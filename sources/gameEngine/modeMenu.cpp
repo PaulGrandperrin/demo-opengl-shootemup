@@ -111,6 +111,7 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
     Mode::Manager(stateKeys, stateButtons, coordMouse, deltaWheel, time, width, height);
     //cout << "les coordonnées sont : x = " << coordMouse.x << " et y = " << coordMouse.y << endl;
     if (stateKeys[K_DOWN] && !keyDown) {
+	SE->play("sounds/beep.wav",false);
         //si on appuye sur down et qu'il est pas activé
         keyDown=true;//on l'active
         vect s={-0.5,-0.5,-0.5}; // on diminue la taille du courant
@@ -137,6 +138,7 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
 
     if (stateKeys[K_UP] && !keyUp) {
         //si on appuye sur down et qu'il est pas activé
+	SE->play("sounds/beep.wav",false);
         keyUp=true;//on l'active
         vect s={-0.5,-0.5,-0.5};
         vectorItems[select].changeScale(s);
@@ -178,6 +180,7 @@ void ModeMenu::menuManager(bool stateKeys[], bool stateButtons[], Point coordMou
         }
         if (vectorItems[i].mouseOver(coordMouse,halfWidth,halfHeight,height/curHeightScale/2,width/curWidthScale/2) && selectMouse != i && i != select
                 && (deltaMouse.x != 0 || deltaMouse.y != 0)) {//si la souris est sur l'item
+            SE->play("sounds/beep.wav",false);
             vectorItems[select].changeScale(s);
             select = i;
             s.x = 0.5;
