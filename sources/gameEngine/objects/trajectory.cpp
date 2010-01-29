@@ -110,6 +110,7 @@ void TrajectoryFile::read(list<Trajectory> & l) {
     begin();
     Trajectory t;
     while (!isEnded()) {
+		sleep(1);
         read(t);
         l.push_back(t);
     }
