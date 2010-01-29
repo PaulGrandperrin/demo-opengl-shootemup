@@ -14,11 +14,11 @@ class Parameters {
 public :
     Parameters() {
         ifstream fichier("parameters.txt", ios::in); //ouverture du fichier
-        string tDX,tDY,tMX,tMY,fS; // paramtre fentre
-        int vTDX,vTDY,vTMX,vTMY,vFS; // valeur P fenetre
+        string tDX,tDY,tMX,tMY,fS, dif; // paramtre fentre
+        int vTDX,vTDY,vTMX,vTMY,vFS, vdif; // valeur P fenetre
         if (fichier) {
 	    // on recupere les parametre de l'affichage
-            fichier >> tDX >> vTDX >> tDY >> vTDY >> tMX >> vTMX >> tMY >> vTMY >> fS >> vFS;
+            fichier >> tDX >> vTDX >> tDY >> vTDY >> tMX >> vTMX >> tMY >> vTMY >> fS >> vFS >> dif >> vdif;
 
 	    fichier.close();
         }
@@ -30,7 +30,7 @@ public :
         this->tailleMinX = vTMX;
         this->tailleMinY = vTMY;
 	this->fullSreen = vFS;
-	
+	this->dif = vdif;	
     }
     ~Parameters() {
     }
@@ -49,6 +49,9 @@ public :
     inline int getFullScreen() {
         return fullSreen;
     }
+    inline int getdif() {
+        return dif;
+    }
     
 
 private :
@@ -57,9 +60,11 @@ private :
     int tailleMinX;
     int tailleMinY;
     int fullSreen;
+    int dif;
 };
 
-#define HEALTH_PLAYER 1000
+#define HEALTH_PLAYER_EASY 2000
+#define HEALTH_PLAYER_HARD 1
 #define DAMAGE_PLAYER 0
 #define ACTOR_DAMAGE 100
 

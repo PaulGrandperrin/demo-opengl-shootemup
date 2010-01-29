@@ -37,8 +37,14 @@ ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* s
     enemiesFires.clear();
     trajectories.clear();
     timersGenEnemy.clear();
+    
+    int intHealth = 0;
 
-    int intHealth = HEALTH_PLAYER;
+    if (parametre->getdif() == 2)
+	intHealth = HEALTH_PLAYER_HARD;
+    else
+	intHealth = HEALTH_PLAYER_EASY;
+
     timerGenEnemy=INTERVALE_TEMP_ENEMY;
     timerGenShoot=INTERVALE_TEMP_SHOOT;
     timerGenShootGros=INTERVALE_TEMP_SHOOT_GROS;

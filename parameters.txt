@@ -2,7 +2,9 @@ TAILLE_DEFAULT_X 600
 TAILLE_DEFAULT_Y 600
 TAILLE_MIN_X 300
 TAILLE_MIN_Y 300
-FULL_SCREN 1
+FULL_SCREN 0
+DIF 1
 
+Difficule : facile = 1, difficile = 2
 
 Fichier de configuration, pour l'instant, on ne peut que configurer les parametre de la fenetre !
