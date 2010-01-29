@@ -192,7 +192,7 @@ void * playInThread(void *idFile)
 		{
 			// R�cup�ration de l'�tat du son
 			alGetSourcei(Source, AL_SOURCE_STATE, &Status);
-			sleep(1); //HACK c'est moche
+			usleep(1); //HACK c'est moche
 		}
 		while (Status == AL_PLAYING );
 	}while(loop);

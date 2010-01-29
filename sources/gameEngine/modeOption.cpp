@@ -34,7 +34,7 @@ ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEta
     s.x=1;
     s.y=1.5;
     s.z=1;
-    MenuItem up(models, "UP:     Key UP",p,r,s, 0.55, CENTER,OPTION,NONE);
+    MenuItem up(models, "UP:           Key UP",p,r,s, 0.55, CENTER,OPTION,NONE);
     this->vectorItems.push_back(up);
 
     p.x=0;
@@ -46,7 +46,7 @@ ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEta
     s.x=1;
     s.y=1.5;
     s.z=1;
-    MenuItem down(models, "DOWN:     Key Down",p,r,s, 0.55, CENTER,OPTION,NONE);
+    MenuItem down(models, "DOWN:       Key Down",p,r,s, 0.55, CENTER,OPTION,NONE);
     this->vectorItems.push_back(down);
 
     p.x=0;
@@ -70,7 +70,7 @@ ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEta
     s.x=1;
     s.y=1.5;
     s.z=1;
-    MenuItem left(models, "LEFT:     Key Left",p,r,s, 0.55, CENTER,OPTION,NONE);
+    MenuItem left(models, "LEFT:       Key Left",p,r,s, 0.55, CENTER,OPTION,NONE);
     this->vectorItems.push_back(left);
 
     p.x=0;
@@ -82,7 +82,7 @@ ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEta
     s.x=1;
     s.y=1.5;
     s.z=1;
-    MenuItem fire1(models, "FIRE:     W",p,r,s, 0.55, CENTER,OPTION,NONE);
+    MenuItem fire1(models, "FIRE:          Key W",p,r,s, 0.55, CENTER,OPTION,NONE);
     this->vectorItems.push_back(fire1);
 
     p.x=0;
@@ -94,7 +94,7 @@ ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEta
     s.x=1;
     s.y=1.5;
     s.z=1;
-    MenuItem fire2(models, "FIRE 2:     X",p,r,s, 0.55, CENTER,OPTION,NONE);
+    MenuItem fire2(models, "FIRE 2:        key X",p,r,s, 0.55, CENTER,OPTION,NONE);
     this->vectorItems.push_back(fire2);
 
     p.x=0;
@@ -106,7 +106,7 @@ ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEta
     s.x=1;
     s.y=1.5;
     s.z=1;
-    MenuItem full(models, "Fullscreen:     F11",p,r,s, 0.55, CENTER,OPTION,NONE);
+    MenuItem full(models, "Fullscreen:  Key F11",p,r,s, 0.55, CENTER,OPTION,NONE);
     this->vectorItems.push_back(full);
 
     p.x=0;
@@ -118,7 +118,7 @@ ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEta
     s.x=1;
     s.y=1.5;
     s.z=1;
-    MenuItem screen(models, "Screenshot:     F10",p,r,s,0.55, CENTER,OPTION,NONE);
+    MenuItem screen(models, "Screenshot:   Key F10",p,r,s,0.55, CENTER,OPTION,NONE);
     this->vectorItems.push_back(screen);
 
     p.x=0;
@@ -130,7 +130,7 @@ ModeOption::ModeOption(Models* models, Camera* camera, Etat* etatGame, SwitchEta
     s.x=1;
     s.y=1.5;
     s.z=1;
-    MenuItem menu(models, "Menu:     Esc",p,r,s, 0.55, CENTER,OPTION,NONE);
+    MenuItem menu(models, "Menu:        key Esc",p,r,s, 0.55, CENTER,OPTION,NONE);
     this->vectorItems.push_back(menu);
 
     vect pFond={0,-1,0}, rFond={-90,0,0}, sFond={13,12,2};

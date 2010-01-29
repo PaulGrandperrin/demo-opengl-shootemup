@@ -22,7 +22,6 @@ extern Parameters *parametre;
 
 ModeGame::~ModeGame()
 {
-    cout << endl; //a cause du compteur de missile, avant de quitter, il faut un seut de ligne
 }
 
 ModeGame::ModeGame(Models* models, Camera* camera, Etat* etatGame, SwitchEtat* switchMode,SoundEngine* SE) : Mode(models, camera, etatGame, switchMode,SE)
@@ -129,6 +128,8 @@ void ModeGame::gameManager(bool stateKeys[], bool stateButtons[], Point coordMou
             }
             if ((timersGenEnemy.empty()) ||  (player.isMort())) {
                 end = true; // c'est la fin, on bloque les fonctions du jeu.
+                if (player.isMort())
+		    SE->play("sounds/cri2.wav",false);
             }
         }
     }
@@ -242,7 +243,7 @@ void ModeGame::playerManager()
 
     if ((((stateKeys[K_TIR]) || (stateButtons[B_LEFT])) and timerGenShoot<=0))
     {
-	SE->play("sounds/single-canon.wav",false);
+	SE->play("sounds/single-canon-modif.wav",false);
         ActorMissile fire;
         vel.z -= random(15,18);
         vel.x += random(-0.5,0.5); // si le vaisseau a une rotation, on l'applique legerment au boulet

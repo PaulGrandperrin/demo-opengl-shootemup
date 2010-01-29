@@ -25,11 +25,13 @@ Game::~Game()
 {
     SE.stop("sounds/menu-dark.wav");
     SE.stop("sounds/blackpearl.wav");
-    SE.stop("sounds/single-canon.wav");
+    SE.stop("sounds/single-canon-modif.wav");
     SE.stop("sounds/multi-canon.wav");
     SE.stop("sounds/explosion.wav");
     SE.stop("sounds/cri.wav");
+    SE.stop("sounds/cri2.wav");
     SE.stop("sounds/beep.wav");
+    cout << endl; //a cause du compteur de missile, avant de quitter, il faut un seut de ligne
 }
 
 Game::Game() // construction des camera, du GE et des autre objets tell que les Mode, mais il seront reconstruit apres de toute maniere
@@ -37,10 +39,11 @@ Game::Game() // construction des camera, du GE et des autre objets tell que les 
 
     SE.load("sounds/menu-dark.wav");
     SE.load("sounds/blackpearl.wav");
-    SE.load("sounds/single-canon.wav");
+    SE.load("sounds/single-canon-modif.wav");
     SE.load("sounds/multi-canon.wav");
     SE.load("sounds/explosion.wav");
     SE.load("sounds/cri.wav");
+    SE.load("sounds/cri2.wav");
     SE.load("sounds/beep.wav");
     etatGame = MENU;
     switchMode = NONE;
