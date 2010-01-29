@@ -306,7 +306,7 @@ void ModeGame::firesManager()
 
 void ModeGame::bombManager() {
     if (bomb.getPosition().z > 20 || bomb.getScale().x < 0.02) {
-        vect p={random(-12,12),0,random(-18,-15)}, r={0,0,0}, s={0.3,0.3,0.3}, v={0,0,4};
+        vect p={random(-12,12),0,random(-18,-15)}, r={0,0,0}, s={0.6,0.6,0.6}, v={0,0,4};
         bomb = ActorMissile(models->getMBomb(), p, r, s, 500, 0.4);
         bomb.setVelocity(v);
     }
